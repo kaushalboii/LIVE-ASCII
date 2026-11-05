@@ -2,6 +2,11 @@
  * Realistic Procedural Rose Blooming Simulation
  * Simulates a photorealistic crimson rose blooming organically over time.
  * Supports realistic petals, sepals, stem, velvet shading, lighting, and dew drops.
+ * 
+ * Features:
+ * - Single majestic rose (scaled up for high-definition grandeur)
+ * - Multi-harmonic organic breeze simulation (wind sway, stem arching, fluttering petals)
+ * - Continuous living bloom respiration cycle (breathing & swaying endlessly in the air)
  */
 
 export class RoseSimulator {
@@ -15,123 +20,118 @@ export class RoseSimulator {
 
     // Simulation state
     this.bloomProgress = 0.0; // 0.0 (tight bud) to 1.0 (full bloom)
-    this.targetProgress = 1.0;
     this.speed = 0.32; // Smooth, realistic blooming speed (~3.1s from bud to full bloom)
     this.isPlaying = true;
-    this.loopMode = 'pingpong'; // 'pingpong', 'loop', 'once'
-    this.direction = 1; // 1 for blooming, -1 for closing
+    this.hasReachedFullBloom = false;
     this.time = 0; // organic sway clock
+    this.breathTime = 0; // continuous living bloom breath clock
+
+    // Multi-frequency wind breeze physics
+    this.breezeX = 0;
+    this.breezeY = 0;
+    this.breezeAngle = 0;
 
     // Visual configurations
-    this.colorScheme = 'crimson'; // 'crimson', 'pink', 'white', 'black', 'sunset', 'cyber'
+    this.colorScheme = 'crimson';
     this.showDewDrops = true;
     this.showStem = true;
-    this.swayAmount = 0.03;
 
-    // Two-Rose Bloom Lifecycle: First rose blooms, then unfurls into 2 intertwined roses
-    this.stage = 'single'; // 'single' -> 'duo'
-    this.duoProgress = 0.0;
-    this.onDuoReady = null;
+    // Notification callback when first full bloom is reached
+    this.onBloomReady = null;
 
     // Pre-generate petal configurations for botanical realism
     this.initPetalArchitecture();
   }
 
   initPetalArchitecture() {
-    // A realistic rose has 5 sepals (calyx) and 25-35 layered petals arranged in Fibonacci whorls
+    // Botanical sepal configuration (5 sepals that peel back smoothly as bud opens)
     this.sepals = [];
     const sepalCount = 5;
     for (let i = 0; i < sepalCount; i++) {
       const angle = (i * 2 * Math.PI) / sepalCount + 0.15;
       this.sepals.push({
         baseAngle: angle,
-        length: 140,
-        width: 38,
-        curl: 0.8 + (i % 2) * 0.2,
-        leafTipSpread: 1.2
+        length: 185,
+        width: 48,
+        curl: 0.85 + (i % 2) * 0.2,
+        leafTipSpread: 1.25
       });
     }
 
-    // Concentric petal whorls from outer (opens first) to inner core (opens last)
-    // Layer 0: Calyx base
-    // Layer 1: Outer guard petals (5 massive petals)
-    // Layer 2: Outer mid petals (6 petals)
-    // Layer 3: Middle whorl (7 petals)
-    // Layer 4: Inner whorl (8 petals)
-    // Layer 5: Spiral heart/core (9 small tight petals)
+    // Concentric petal whorls scaled up for a magnificent single centerpiece rose
     this.layers = [
       {
         name: 'outerGuard',
         count: 5,
-        startT: 0.08,
-        endT: 0.55,
-        baseRadius: 155,
-        budRadius: 40,
-        petalWidth: 150,
-        budWidth: 45,
-        petalHeight: 180,
-        budHeight: 85,
-        curlFactor: 0.85,
-        shadowIntensity: 0.45,
+        startT: 0.06,
+        endT: 0.52,
+        baseRadius: 215, // Grand outer petals
+        budRadius: 48,
+        petalWidth: 205,
+        budWidth: 54,
+        petalHeight: 245,
+        budHeight: 108,
+        curlFactor: 0.88,
+        shadowIntensity: 0.48,
         angleOffset: 0.2
       },
       {
         name: 'outerMid',
         count: 6,
-        startT: 0.2,
-        endT: 0.7,
-        baseRadius: 130,
-        budRadius: 32,
-        petalWidth: 135,
-        budWidth: 38,
-        petalHeight: 160,
-        budHeight: 80,
-        curlFactor: 0.75,
-        shadowIntensity: 0.4,
+        startT: 0.18,
+        endT: 0.68,
+        baseRadius: 180,
+        budRadius: 38,
+        petalWidth: 180,
+        budWidth: 45,
+        petalHeight: 215,
+        budHeight: 98,
+        curlFactor: 0.78,
+        shadowIntensity: 0.42,
         angleOffset: 0.55
       },
       {
         name: 'middle',
         count: 7,
-        startT: 0.35,
-        endT: 0.82,
-        baseRadius: 105,
-        budRadius: 26,
-        petalWidth: 115,
-        budWidth: 32,
-        petalHeight: 135,
-        budHeight: 72,
-        curlFactor: 0.65,
-        shadowIntensity: 0.35,
+        startT: 0.32,
+        endT: 0.80,
+        baseRadius: 145,
+        budRadius: 30,
+        petalWidth: 152,
+        budWidth: 36,
+        petalHeight: 180,
+        budHeight: 86,
+        curlFactor: 0.68,
+        shadowIntensity: 0.36,
         angleOffset: 0.15
       },
       {
         name: 'innerMid',
         count: 8,
-        startT: 0.5,
-        endT: 0.92,
-        baseRadius: 75,
-        budRadius: 20,
-        petalWidth: 90,
-        budWidth: 26,
-        petalHeight: 110,
-        budHeight: 65,
-        curlFactor: 0.5,
+        startT: 0.48,
+        endT: 0.90,
+        baseRadius: 105,
+        budRadius: 24,
+        petalWidth: 120,
+        budWidth: 28,
+        petalHeight: 145,
+        budHeight: 74,
+        curlFactor: 0.52,
         shadowIntensity: 0.3,
         angleOffset: 0.4
       },
       {
         name: 'coreSpiral',
         count: 9,
-        startT: 0.65,
+        startT: 0.62,
         endT: 1.0,
-        baseRadius: 48,
-        budRadius: 14,
-        petalWidth: 60,
-        budWidth: 20,
-        petalHeight: 80,
-        budHeight: 55,
-        curlFactor: 0.35,
+        baseRadius: 66,
+        budRadius: 16,
+        petalWidth: 82,
+        budWidth: 22,
+        petalHeight: 108,
+        budHeight: 62,
+        curlFactor: 0.36,
         shadowIntensity: 0.25,
         angleOffset: 0.7
       }
@@ -139,12 +139,12 @@ export class RoseSimulator {
 
     // Dew drops positioned on petals
     this.dewDrops = [
-      { layerIdx: 0, petalIdx: 1, relX: 0.25, relY: -0.65, r: 4.5 },
-      { layerIdx: 0, petalIdx: 3, relX: -0.3, relY: -0.55, r: 3.5 },
-      { layerIdx: 1, petalIdx: 0, relX: 0.15, relY: -0.7, r: 3.0 },
-      { layerIdx: 1, petalIdx: 4, relX: -0.2, relY: -0.6, r: 4.0 },
-      { layerIdx: 2, petalIdx: 2, relX: 0.1, relY: -0.5, r: 2.8 },
-      { layerIdx: 2, petalIdx: 5, relX: -0.15, relY: -0.45, r: 3.2 }
+      { layerIdx: 0, petalIdx: 1, relX: 0.25, relY: -0.65, r: 5.0 },
+      { layerIdx: 0, petalIdx: 3, relX: -0.3, relY: -0.55, r: 4.0 },
+      { layerIdx: 1, petalIdx: 0, relX: 0.15, relY: -0.7, r: 3.5 },
+      { layerIdx: 1, petalIdx: 4, relX: -0.2, relY: -0.6, r: 4.5 },
+      { layerIdx: 2, petalIdx: 2, relX: 0.1, relY: -0.5, r: 3.2 },
+      { layerIdx: 2, petalIdx: 5, relX: -0.15, relY: -0.45, r: 3.8 }
     ];
   }
 
@@ -161,41 +161,49 @@ export class RoseSimulator {
   update(dt = 0.016) {
     this.time += dt;
 
+    // Multi-harmonic organic breeze physics
+    // Compound sinusoidal wind sway: slow drift + medium wave + micro-gust flutter
+    const slowWind = Math.sin(this.time * 0.75) * 14;
+    const gust = Math.sin(this.time * 1.6 + 0.5) * 8;
+    const microFlutter = Math.sin(this.time * 3.2) * 3;
+    this.breezeX = slowWind + gust + microFlutter;
+    this.breezeY = Math.cos(this.time * 1.1) * 4;
+    this.breezeAngle = (slowWind * 0.0028) + Math.sin(this.time * 1.3) * 0.018;
+
     if (this.isPlaying) {
-      if (this.stage === 'single') {
+      if (!this.hasReachedFullBloom) {
+        // Initial bloom sequence from tight bud to magnificent full open blossom
         this.bloomProgress += this.speed * dt;
         if (this.bloomProgress >= 1.0) {
           this.bloomProgress = 1.0;
-          this.stage = 'duo';
-        }
-      } else if (this.stage === 'duo') {
-        if (this.duoProgress < 1.0) {
-          this.duoProgress += dt * 0.42;
-          if (this.duoProgress >= 1.0) {
-            this.duoProgress = 1.0;
-            if (this.onDuoReady) {
-              const cb = this.onDuoReady;
-              this.onDuoReady = null;
-              cb();
-            }
+          this.hasReachedFullBloom = true;
+          if (this.onBloomReady) {
+            const cb = this.onBloomReady;
+            this.onBloomReady = null;
+            cb();
           }
         }
+      } else {
+        // Continuous living bloom respiration:
+        // The petals continuously breathe, flex, and undulate in the air
+        this.breathTime += dt;
+        this.bloomProgress = 0.96 + 0.04 * Math.sin(this.breathTime * 1.3);
       }
     }
   }
 
   resetBloom() {
     this.bloomProgress = 0.0;
-    this.duoProgress = 0.0;
-    this.stage = 'single';
+    this.hasReachedFullBloom = false;
+    this.breathTime = 0;
     this.isPlaying = true;
   }
 
   setBloomProgress(val) {
     this.bloomProgress = Math.max(0, Math.min(1, val));
     if (val === 0) {
-      this.stage = 'single';
-      this.duoProgress = 0.0;
+      this.hasReachedFullBloom = false;
+      this.breathTime = 0;
     }
   }
 
@@ -271,21 +279,6 @@ export class RoseSimulator {
     }
   }
 
-  getDuoRightPalette() {
-    return {
-      petalDeep: '#660820',
-      petalBase: '#ad1136',
-      petalMid: '#eb2352',
-      petalHighlight: '#ff4d7a',
-      petalRim: '#ff94b0',
-      calyx: '#2e6b2c',
-      calyxHighlight: '#4e9e49',
-      stem: '#2a5a28',
-      stemShadow: '#153314',
-      stamens: '#ffcc33'
-    };
-  }
-
   render() {
     const ctx = this.ctx;
     const w = this.canvas.width;
@@ -297,87 +290,45 @@ export class RoseSimulator {
     ctx.clearRect(0, 0, w, h);
 
     const centerX = w / 2;
-    const centerY = h / 2 + 15;
+    const centerY = h / 2 - 25; // Elevated to reveal stem and sepals gracefully
 
-    // Organic micro sway
-    const swayX = Math.sin(this.time * 1.5) * 4 * this.swayAmount * 30;
-    const swayY = Math.cos(this.time * 1.8) * 2 * this.swayAmount * 30;
-    const swayAngle = Math.sin(this.time * 1.2) * 0.015;
+    // Single grand blooming rose moving in the breeze
+    ctx.save();
+    ctx.translate(centerX + this.breezeX, centerY + this.breezeY);
+    ctx.rotate(this.breezeAngle);
 
-    if (this.duoProgress <= 0.001) {
-      // 1. Single central blooming rose
-      ctx.save();
-      ctx.translate(centerX + swayX, centerY + swayY);
-      ctx.rotate(swayAngle);
+    if (this.showStem) this.drawStem(ctx, pal, p);
+    this.drawSepals(ctx, pal, p);
+    this.drawPetalLayers(ctx, pal, p);
+    if (p > 0.5) this.drawStamens(ctx, pal, p);
+    if (this.showDewDrops && p > 0.25) this.drawDewDrops(ctx, p);
 
-      if (this.showStem) this.drawStem(ctx, pal, p);
-      this.drawSepals(ctx, pal, p);
-      this.drawPetalLayers(ctx, pal, p);
-      if (p > 0.6) this.drawStamens(ctx, pal, p);
-      if (this.showDewDrops && p > 0.25) this.drawDewDrops(ctx, p);
-      ctx.restore();
-    } else {
-      // 2. TWO intertwined blooming roses side by side
-      const duoP = this.duoProgress;
-
-      // Left Rose (Kaushal's rose - deep crimson ruby)
-      ctx.save();
-      const leftX = centerX - duoP * 120 + swayX;
-      const leftY = centerY + swayY - duoP * 10;
-      ctx.translate(leftX, leftY);
-      ctx.rotate(swayAngle - 0.18 * duoP);
-      const leftScale = 1.0 - 0.15 * duoP;
-      ctx.scale(leftScale, leftScale);
-
-      if (this.showStem) this.drawStem(ctx, pal, p, duoP * 35);
-      this.drawSepals(ctx, pal, p);
-      this.drawPetalLayers(ctx, pal, p);
-      if (p > 0.6) this.drawStamens(ctx, pal, p);
-      if (this.showDewDrops) this.drawDewDrops(ctx, p);
-      ctx.restore();
-
-      // Right Rose (Her rose - glowing warm scarlet pink)
-      const rightPal = this.getDuoRightPalette();
-      ctx.save();
-      const rightX = centerX + duoP * 120 + swayX * 0.9;
-      const rightY = centerY + swayY + duoP * 14;
-      ctx.translate(rightX, rightY);
-      ctx.rotate(swayAngle + 0.22 * duoP);
-      const rightScale = (1.0 - 0.18 * duoP) * Math.min(1, duoP * 1.35);
-      ctx.scale(rightScale, rightScale);
-
-      if (this.showStem) this.drawStem(ctx, rightPal, p, -duoP * 35);
-      this.drawSepals(ctx, rightPal, p);
-      this.drawPetalLayers(ctx, rightPal, p);
-      if (p > 0.6) this.drawStamens(ctx, rightPal, p);
-      if (this.showDewDrops) this.drawDewDrops(ctx, p);
-      ctx.restore();
-    }
+    ctx.restore();
   }
 
-  drawStem(ctx, pal, p, curveOffset = 0) {
+  drawStem(ctx, pal, p) {
     ctx.save();
-    // Stem grows downward
-    const stemStartY = 35 - p * 15;
-    const stemLength = 340;
+    const stemStartY = 45 - p * 18;
+    const stemLength = 400;
+    // Stem flexes organically with wind breeze
+    const flex = this.breezeX * 0.45;
 
-    // Stem path with natural curvature toward partner stem
     ctx.beginPath();
-    ctx.moveTo(-10, stemStartY);
+    ctx.moveTo(-13, stemStartY);
     ctx.bezierCurveTo(
-      -14 + curveOffset * 0.4, stemStartY + 100,
-      -6 + curveOffset * 0.8, stemStartY + 200,
-      -8 + curveOffset, stemStartY + stemLength
+      -18 - flex * 0.35, stemStartY + 120,
+      -10 - flex * 0.7, stemStartY + 240,
+      -10, stemStartY + stemLength
     );
-    ctx.lineTo(10 + curveOffset, stemStartY + stemLength);
+    ctx.lineTo(12, stemStartY + stemLength);
     ctx.bezierCurveTo(
-      8 + curveOffset * 0.8, stemStartY + 200,
-      14 + curveOffset * 0.4, stemStartY + 100,
-      12, stemStartY
+      10 - flex * 0.7, stemStartY + 240,
+      18 - flex * 0.35, stemStartY + 120,
+      15, stemStartY
     );
     ctx.closePath();
 
-    const stemGrad = ctx.createLinearGradient(-12, stemStartY, 12, stemStartY);
+    const stemGrad = ctx.createLinearGradient(-15, stemStartY, 15, stemStartY);
     stemGrad.addColorStop(0, pal.stemShadow);
     stemGrad.addColorStop(0.35, pal.stem);
     stemGrad.addColorStop(0.7, '#2f6826');
@@ -385,13 +336,13 @@ export class RoseSimulator {
     ctx.fillStyle = stemGrad;
     ctx.fill();
 
-    // Stem thorns
-    this.drawThorn(ctx, -11, stemStartY + 95, -1, 14, pal.stem);
-    this.drawThorn(ctx, 10, stemStartY + 175, 1, 12, pal.stem);
+    // Natural stem thorns
+    this.drawThorn(ctx, -14 - flex * 0.28, stemStartY + 110, -1, 16, pal.stem);
+    this.drawThorn(ctx, 12 - flex * 0.6, stemStartY + 210, 1, 14, pal.stem);
 
-    // Stem Leaves
-    this.drawStemLeaf(ctx, -10, stemStartY + 120, -1, p, pal);
-    this.drawStemLeaf(ctx, 10, stemStartY + 210, 1, p, pal);
+    // Stem leaves fluttering gently in the breeze
+    this.drawStemLeaf(ctx, -12 - flex * 0.35, stemStartY + 135, -1, p, pal);
+    this.drawStemLeaf(ctx, 12 - flex * 0.65, stemStartY + 245, 1, p, pal);
 
     ctx.restore();
   }
@@ -412,17 +363,20 @@ export class RoseSimulator {
     ctx.save();
     ctx.translate(x, y);
     const leafProgress = Math.min(1, p * 1.4);
-    const leafScale = 0.5 + leafProgress * 0.5;
+    const leafScale = 0.55 + leafProgress * 0.55;
     ctx.scale(dir * leafScale, leafScale);
 
-    ctx.rotate(0.35 * dir);
+    // Breeze flutter on leaf
+    const leafFlutter = Math.sin(this.time * 2.2 + (dir > 0 ? 1 : 0)) * 0.08;
+    ctx.rotate(0.35 * dir + leafFlutter);
+
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.bezierCurveTo(35, -20, 80, -15, 110, 10);
-    ctx.bezierCurveTo(80, 35, 30, 25, 0, 0);
+    ctx.bezierCurveTo(40, -22, 95, -18, 130, 12);
+    ctx.bezierCurveTo(95, 40, 35, 30, 0, 0);
     ctx.closePath();
 
-    const leafGrad = ctx.createLinearGradient(0, -15, 90, 25);
+    const leafGrad = ctx.createLinearGradient(0, -18, 105, 30);
     leafGrad.addColorStop(0, pal.stemShadow);
     leafGrad.addColorStop(0.5, pal.calyx);
     leafGrad.addColorStop(1, '#3b7a30');
@@ -432,17 +386,15 @@ export class RoseSimulator {
     // Leaf main vein
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.quadraticCurveTo(55, -2, 105, 10);
+    ctx.quadraticCurveTo(65, -2, 125, 12);
     ctx.strokeStyle = '#4e9940';
-    ctx.lineWidth = 1.8;
+    ctx.lineWidth = 2.0;
     ctx.stroke();
 
     ctx.restore();
   }
 
   drawSepals(ctx, pal, p) {
-    // Sepals are the green bracts at the base of the flower.
-    // In a bud, they tightly hold the flower; as it blooms, they peel backward.
     ctx.save();
     const sepalPeel = this.smoothstep(0.0, 0.45, p);
 
@@ -458,21 +410,21 @@ export class RoseSimulator {
       const width = sepal.width;
 
       ctx.beginPath();
-      ctx.moveTo(0, 15);
-      // Serrated / pointed botanical sepal tip
+      ctx.moveTo(0, 18);
+      // Serrated botanical sepal tip
       ctx.bezierCurveTo(
-        width * 0.8, 30,
+        width * 0.8, 35,
         width * 0.6, length * 0.6,
         0, length
       );
       ctx.bezierCurveTo(
         -width * 0.6, length * 0.6,
-        -width * 0.8, 30,
-        0, 15
+        -width * 0.8, 35,
+        0, 18
       );
       ctx.closePath();
 
-      const sepalGrad = ctx.createLinearGradient(0, 15, 0, length);
+      const sepalGrad = ctx.createLinearGradient(0, 18, 0, length);
       sepalGrad.addColorStop(0, pal.stemShadow);
       sepalGrad.addColorStop(0.4, pal.calyx);
       sepalGrad.addColorStop(0.85, pal.calyxHighlight || '#3c7a31');
@@ -482,10 +434,10 @@ export class RoseSimulator {
 
       // Sepal spine
       ctx.beginPath();
-      ctx.moveTo(0, 15);
+      ctx.moveTo(0, 18);
       ctx.lineTo(0, length - 5);
       ctx.strokeStyle = 'rgba(78, 153, 64, 0.6)';
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 1.6;
       ctx.stroke();
 
       ctx.restore();
@@ -494,9 +446,6 @@ export class RoseSimulator {
   }
 
   drawPetalLayers(ctx, pal, p) {
-    // We draw from outer to inner to build depth,
-    // but in blooming roses, back petals are behind, center is middle, foreground petals curl forward.
-    // We can order the rendering naturally:
     for (let layerIdx = 0; layerIdx < this.layers.length; layerIdx++) {
       const layer = this.layers[layerIdx];
       const layerProgress = this.smoothstep(layer.startT, layer.endT, p);
@@ -513,22 +462,20 @@ export class RoseSimulator {
     const petalW = layer.budWidth + (layer.petalWidth - layer.budWidth) * eased;
     const petalH = layer.budHeight + (layer.petalHeight - layer.budHeight) * eased;
 
-    // Angle step
     const angleStep = (2 * Math.PI) / count;
 
     for (let i = 0; i < count; i++) {
       const baseAngle = i * angleStep + layer.angleOffset;
-      // Slight natural variation per petal
       const petalJitter = Math.sin(i * 3.7 + layerIdx) * 0.08;
       const angle = baseAngle + petalJitter;
 
       ctx.save();
       ctx.rotate(angle);
 
-      // Petal tilt/unfurl distance from center
+      // Petal tilt distance from center
       const dist = radius * (0.3 + eased * 0.7);
 
-      // Petal opening curl (flares outwards as it blooms)
+      // Petal opening curl
       const flare = eased * layer.curlFactor;
 
       this.renderPetal(
@@ -552,42 +499,42 @@ export class RoseSimulator {
     ctx.save();
     ctx.translate(x, y);
 
-    // Individual petal rotation and curvature
     const w2 = width / 2;
     const h = height;
 
-    // Outer lip curl control
-    const lipCurl = flare * 35;
-    const ruffle = Math.sin(petalIdx * 2.5 + globalProgress * 2) * 5 * flare;
+    // Flutter on petal edge from ambient breeze
+    const breezeFlutter = Math.sin(this.time * 2.4 + petalIdx * 1.6 + layerIdx) * (3.0 + 2.0 * Math.abs(this.breezeAngle) * 25) * flare;
+    const lipCurl = flare * 38;
+    const ruffle = (Math.sin(petalIdx * 2.5 + globalProgress * 2) * 5 + breezeFlutter) * flare;
 
     // Petal ambient drop shadow for deep velvety dimensionality
-    ctx.shadowColor = 'rgba(10, 0, 4, 0.65)';
-    ctx.shadowBlur = 12 + layerIdx * 4;
+    ctx.shadowColor = 'rgba(10, 0, 4, 0.70)';
+    ctx.shadowBlur = 14 + layerIdx * 4;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 6;
 
-    // 1. Draw Petal Body Path (delicately rounded heart/cup shape)
+    // 1. Draw Petal Body Path (magnificent rounded cup)
     ctx.beginPath();
-    ctx.moveTo(0, 0); // Petal base anchored towards center
+    ctx.moveTo(0, 0);
 
     // Left outer contour
     ctx.bezierCurveTo(
-      -w2 * 0.9, -h * 0.25,
-      -w2 * 1.15, -h * 0.75,
-      -w2 * 0.45 + ruffle, -h - lipCurl
+      -w2 * 0.92, -h * 0.25,
+      -w2 * 1.18, -h * 0.75,
+      -w2 * 0.46 + ruffle, -h - lipCurl
     );
 
     // Top ruffled edge
     ctx.bezierCurveTo(
-      -w2 * 0.15, -h - lipCurl * 1.15,
-      w2 * 0.15, -h - lipCurl * 1.15,
-      w2 * 0.45 - ruffle, -h - lipCurl
+      -w2 * 0.16, -h - lipCurl * 1.18,
+      w2 * 0.16, -h - lipCurl * 1.18,
+      w2 * 0.46 - ruffle, -h - lipCurl
     );
 
     // Right outer contour
     ctx.bezierCurveTo(
-      w2 * 1.15, -h * 0.75,
-      w2 * 0.9, -h * 0.25,
+      w2 * 1.18, -h * 0.75,
+      w2 * 0.92, -h * 0.25,
       0, 0
     );
 
@@ -596,32 +543,30 @@ export class RoseSimulator {
     // 2. Realistic Petal Gradient (Subsurface Scattering & Velvet Sheen)
     const petalGrad = ctx.createRadialGradient(
       0, -h * 0.2, 5,
-      0, -h * 0.7, h * 0.85
+      0, -h * 0.7, h * 0.88
     );
 
-    // Color distribution varies from core to outer layers
     if (layerIdx >= 3) {
-      // Core petals are deeper, more mysterious and concentrated
+      // Core petals: deep mysterious velvet
       petalGrad.addColorStop(0, pal.petalDeep);
       petalGrad.addColorStop(0.35, pal.petalBase);
       petalGrad.addColorStop(0.7, pal.petalMid);
       petalGrad.addColorStop(1, pal.petalHighlight);
     } else {
-      // Outer petals have luminous highlights and translucent rim glow
+      // Outer petals: luminous highlights and translucent rim glow
       petalGrad.addColorStop(0, pal.petalDeep);
-      petalGrad.addColorStop(0.3, pal.petalBase);
-      petalGrad.addColorStop(0.65, pal.petalMid);
-      petalGrad.addColorStop(0.88, pal.petalHighlight);
+      petalGrad.addColorStop(0.28, pal.petalBase);
+      petalGrad.addColorStop(0.62, pal.petalMid);
+      petalGrad.addColorStop(0.86, pal.petalHighlight);
       petalGrad.addColorStop(1, pal.petalRim);
     }
 
     ctx.fillStyle = petalGrad;
     ctx.fill();
 
-    // Disable shadow for internal petal textures
     ctx.shadowColor = 'transparent';
 
-    // 3. Delicate petal vein highlights (fine velvety micro-textures)
+    // 3. Delicate petal vein highlights
     this.drawPetalTexture(ctx, w2, h, lipCurl, pal, layerIdx);
 
     // 4. Curled outer edge highlight (gives photorealistic thickness and rim lighting)
@@ -635,10 +580,9 @@ export class RoseSimulator {
   drawPetalTexture(ctx, w2, h, lipCurl, pal, layerIdx) {
     ctx.save();
     ctx.globalCompositeOperation = 'soft-light';
-    ctx.strokeStyle = 'rgba(255, 180, 195, 0.18)';
-    ctx.lineWidth = 0.9;
+    ctx.strokeStyle = 'rgba(255, 180, 195, 0.20)';
+    ctx.lineWidth = 1.0;
 
-    // 5 radiating micro-veins
     const veinCount = 5;
     for (let v = -2; v <= 2; v++) {
       ctx.beginPath();
@@ -653,7 +597,6 @@ export class RoseSimulator {
 
   drawPetalRimCurl(ctx, w2, h, lipCurl, ruffle, pal, flare) {
     ctx.save();
-    // Glowing curled lip on top of petal
     ctx.beginPath();
     ctx.moveTo(-w2 * 0.5 + ruffle, -h - lipCurl);
     ctx.bezierCurveTo(
@@ -681,30 +624,27 @@ export class RoseSimulator {
   drawStamens(ctx, pal, p) {
     ctx.save();
     const stamenProgress = this.smoothstep(0.65, 1.0, p);
-    const count = 38;
-    const maxRadius = 26 * stamenProgress;
+    const count = 42;
+    const maxRadius = 30 * stamenProgress;
 
     ctx.fillStyle = pal.stamens;
     ctx.strokeStyle = '#8a5d00';
     ctx.lineWidth = 1.0;
 
     for (let i = 0; i < count; i++) {
-      // Golden spiral distribution
       const r = Math.sqrt((i + 1) / count) * maxRadius;
-      const theta = i * 2.39996; // Golden angle (137.5 degrees)
+      const theta = i * 2.39996; // Golden angle
 
       const sx = Math.cos(theta) * r;
       const sy = Math.sin(theta) * r;
 
-      // Filament
       ctx.beginPath();
       ctx.moveTo(sx * 0.2, sy * 0.2);
       ctx.lineTo(sx, sy);
       ctx.stroke();
 
-      // Pollen Anther with glowing golden tip
       ctx.beginPath();
-      ctx.arc(sx, sy, 1.8 + Math.sin(i) * 0.4, 0, Math.PI * 2);
+      ctx.arc(sx, sy, 2.0 + Math.sin(i) * 0.4, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.restore();
@@ -731,13 +671,13 @@ export class RoseSimulator {
       const dx = drop.relX * (layer.petalWidth * 0.4);
       const dy = -radius * 0.5 + drop.relY * (petalH * 0.5);
 
-      // Dew drop base shadow
+      // Dew drop shadow
       ctx.beginPath();
       ctx.arc(dx + 1, dy + 1.5, drop.r, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(10, 0, 5, 0.45)';
       ctx.fill();
 
-      // Clear water droplet body with refraction gradient
+      // Droplet body with refraction
       const dropGrad = ctx.createRadialGradient(
         dx - drop.r * 0.35, dy - drop.r * 0.35, drop.r * 0.1,
         dx, dy, drop.r
@@ -751,7 +691,7 @@ export class RoseSimulator {
       ctx.arc(dx, dy, drop.r, 0, Math.PI * 2);
       ctx.fill();
 
-      // Specular glistening micro-flare
+      // Specular highlight
       ctx.beginPath();
       ctx.arc(dx - drop.r * 0.35, dy - drop.r * 0.35, drop.r * 0.3, 0, Math.PI * 2);
       ctx.fillStyle = '#ffffff';

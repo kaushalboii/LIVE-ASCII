@@ -71,7 +71,8 @@ body.pure-black {
   height: 100vh;
   height: 100dvh;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: center bottom;
   background: #000000;
   z-index: 3;
 }
@@ -84,7 +85,8 @@ body.pure-black {
   height: 100vh;
   height: 100dvh;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: center bottom;
   background: transparent;
   cursor: pointer;
   z-index: 5;
@@ -142,12 +144,12 @@ body.pure-black {
 
 .seamless-rose-wrapper {
   position: absolute;
-  top: 33%;
+  top: 36%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 88vmin;
-  max-width: 580px;
-  max-height: 580px;
+  width: 92vmin;
+  max-width: 680px;
+  max-height: 680px;
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
@@ -259,7 +261,7 @@ body.pure-black {
 }
 
 /* ==========================================================================
-   Pure ASCII Value Signature of Kaushal Maran at Right Bottom Corner
+   Pure ASCII Key Design Signature of Kaushal Maran at Right Bottom Corner
    ========================================================================== */
 .corner-signature {
   position: fixed;
@@ -282,42 +284,91 @@ body.pure-black {
 
 .ascii-sig-box {
   font-family: 'JetBrains Mono', 'Courier New', monospace;
-  background: rgba(14, 5, 10, 0.70);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 140, 170, 0.25);
-  border-radius: 10px;
-  padding: 8px 14px;
+  background: rgba(14, 5, 11, 0.78);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 140, 175, 0.28);
+  border-radius: 12px;
+  padding: 10px 16px;
   text-align: right;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 30, 80, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 24px rgba(255, 30, 80, 0.16);
 }
 
 .ascii-sig-head {
-  font-size: 10px;
+  font-size: 11px;
   color: #ff9ebb;
-  letter-spacing: 1.5px;
-  opacity: 0.85;
-  margin-bottom: 2px;
+  letter-spacing: 1.6px;
+  opacity: 0.95;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-bottom: 5px;
 }
 
 .sig-prompt {
-  color: #ff4d7a;
-  margin-right: 2px;
+  color: #ff3366;
+  font-weight: 700;
 }
 
-.ascii-sig-name {
-  font-size: 15px;
+.sig-label {
+  color: #ffb3c6;
+  text-transform: lowercase;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+}
+
+.sig-colon {
+  color: #ff6690;
+}
+
+.ascii-key-cluster {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  justify-content: flex-end;
+  margin: 4px 0 6px 0;
+}
+
+.ascii-key-word {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.ascii-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 22px;
+  padding: 0 4px;
+  background: linear-gradient(180deg, rgba(42, 16, 26, 0.95) 0%, rgba(18, 6, 12, 0.98) 100%);
+  border: 1px solid rgba(255, 140, 175, 0.45);
+  border-bottom: 2px solid rgba(255, 50, 95, 0.75);
+  border-radius: 4px;
+  box-shadow: 
+    0 2px 5px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 10px rgba(255, 40, 85, 0.28);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 2px;
   color: #fff0f4;
-  text-shadow: 0 0 10px rgba(255, 60, 100, 0.8), 0 0 22px rgba(220, 20, 60, 0.5);
+  text-shadow: 0 0 8px rgba(255, 60, 100, 0.85);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.ascii-key:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 180, 210, 0.7);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8), 0 0 14px rgba(255, 60, 110, 0.5);
 }
 
 .ascii-sig-bytes {
   font-size: 9.5px;
   color: #d88fa2;
   letter-spacing: 1.2px;
-  margin-top: 3px;
+  margin-top: 4px;
   opacity: 0.9;
 }
 
@@ -335,7 +386,7 @@ body.pure-black {
   font-size: 8px;
   color: rgba(255, 120, 150, 0.35);
   letter-spacing: 1px;
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
 @keyframes noteFloat {
@@ -343,33 +394,137 @@ body.pure-black {
   100% { transform: translateX(-50%) translateY(-6px) scale(1.008); }
 }
 
+/* ==========================================================================
+   Full Responsive Layout (Mobile & Tablet Portrait Mode)
+   ========================================================================== */
 @media (max-width: 640px) {
+  /* Screen 1: Knight & Letter */
   .whisper-hint {
     left: 50%;
-    font-size: 16px;
-    bottom: 18px;
+    bottom: 20px;
+    font-size: 15px;
+    letter-spacing: 2px;
   }
+
+  /* Screen 2: Docked Mini Heart Logo */
   .heart-canvas.docked-corner {
-    transform: translate(calc(-50vw + 48px), calc(-50vh + 48px)) scale(0.12);
+    transform: translate(calc(-50vw + 42px), calc(-50vh + 42px)) scale(0.10);
   }
+
+  /* Screen 2: Living Single Rose in Upper Half */
   .seamless-rose-wrapper {
     top: 30%;
-    max-width: 360px;
+    width: 92vmin;
+    max-width: 350px;
+    max-height: 350px;
   }
+
+  /* Screen 2: Minimal Love Note Card (Above signature) */
   .minimal-note {
-    padding: 12px 18px;
-    bottom: 14px;
-    max-width: 90%;
+    position: fixed;
+    bottom: 84px;
+    left: 50%;
+    transform: translateX(-50%) translateY(16px) scale(0.96);
+    max-width: 340px;
+    width: 90%;
+    padding: 10px 16px;
+    border-radius: 14px;
   }
+
+  .minimal-note.visible {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  .note-pill {
+    font-size: 7.5px;
+    letter-spacing: 1.8px;
+    margin-bottom: 5px;
+  }
+
   .note-quote {
-    font-size: 15px;
+    font-size: 13.5px;
+    line-height: 1.4;
+    margin-bottom: 4px;
   }
+
+  .note-subtext {
+    font-size: 10.5px;
+    margin-bottom: 6px;
+  }
+
+  .note-replay {
+    font-size: 7.5px;
+    padding: 3px 12px;
+  }
+
+  /* Screen 2: ASCII Key Signature (Centered at Bottom) */
   .corner-signature {
-    bottom: 12px;
-    right: 14px;
-    transform: scale(0.85);
+    bottom: 10px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) translateY(8px);
+    align-items: center;
   }
+
   .corner-signature.visible {
-    transform: scale(0.85);
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .ascii-sig-box {
+    padding: 6px 12px;
+    text-align: center;
+    border-radius: 9px;
+  }
+
+  .ascii-sig-head {
+    justify-content: center;
+    font-size: 9.5px;
+    letter-spacing: 1.2px;
+    margin-bottom: 3px;
+  }
+
+  .ascii-key-cluster {
+    justify-content: center;
+    gap: 5px;
+    margin: 3px 0 4px 0;
+  }
+
+  .ascii-key-word {
+    gap: 2px;
+  }
+
+  .ascii-key {
+    min-width: 16px;
+    height: 19px;
+    font-size: 10.5px;
+    padding: 0 2.5px;
+  }
+
+  .ascii-sig-bytes {
+    font-size: 8px;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  .ascii-sig-rule {
+    display: none;
+  }
+}
+
+/* Extra breakpoint for compact mobile screens (e.g. iPhone SE) */
+@media (max-height: 680px) and (max-width: 640px) {
+  .seamless-rose-wrapper {
+    top: 26%;
+    max-width: 280px;
+    max-height: 280px;
+  }
+
+  .minimal-note {
+    bottom: 74px;
+    padding: 8px 14px;
+  }
+
+  .note-quote {
+    font-size: 12.5px;
   }
 }

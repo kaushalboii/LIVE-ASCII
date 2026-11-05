@@ -26,8 +26,8 @@ export class AsciiRose {
 
     // High-resolution offscreen canvas for rendering the realistic rose simulation
     this.offscreenCanvas = document.createElement('canvas');
-    this.offscreenCanvas.width = 680;
-    this.offscreenCanvas.height = 680;
+    this.offscreenCanvas.width = 800;
+    this.offscreenCanvas.height = 800;
 
     // 1. Realistic procedural blooming rose simulation
     this.roseSim = new RoseSimulator(this.offscreenCanvas);
@@ -38,17 +38,17 @@ export class AsciiRose {
 
     // 2. High-performance colored ASCII art engine with crisp edge definition
     this.asciiEngine = new AsciiEngine({
-      columns: 112,
+      columns: 116,
       charSet: 'standard',
       colorMode: 'crimsonglow',
       brightness: 1.28,
-      contrast: 1.34,
+      contrast: 1.35,
       glow: true
     });
   }
 
   setupCallback() {
-    this.roseSim.onDuoReady = () => {
+    this.roseSim.onBloomReady = () => {
       if (!this.hasTriggeredBloom) {
         this.hasTriggeredBloom = true;
         if (this.onBloomComplete) {

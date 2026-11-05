@@ -145,6 +145,7 @@ class LiveAsciiLoveApp {
     });
 
     window.addEventListener('resize', () => {
+      if (this.knightRenderer) this.knightRenderer.resize();
       if (this.envelopeRenderer) this.envelopeRenderer.resize();
       if (this.heartRenderer) this.heartRenderer.resize();
       if (this.roseRenderer) this.roseRenderer.resize();
