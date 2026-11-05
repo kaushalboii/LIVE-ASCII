@@ -1,5 +1,6 @@
 /* ==========================================================================
-   A Rose For You — Pure ASCII Love Gift
+   Minimal & Soft Luxury Love Theme
+   Understated, poetic, elegant and quiet intimacy.
    ========================================================================== */
 
 *, *::before, *::after {
@@ -8,26 +9,27 @@
   padding: 0;
 }
 
-body.romantic-theme {
-  background: #050208;
+body.minimal-love {
+  background-color: #090709;
   background-image:
-    radial-gradient(circle at 50% 30%, rgba(225, 29, 72, 0.16) 0%, transparent 60%),
-    radial-gradient(circle at 10% 80%, rgba(136, 19, 55, 0.12) 0%, transparent 50%),
-    radial-gradient(circle at 90% 90%, rgba(244, 63, 94, 0.1) 0%, transparent 50%),
-    linear-gradient(180deg, #07020a 0%, #030105 100%);
+    radial-gradient(circle at 50% 40%, rgba(136, 19, 55, 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 20% 80%, rgba(76, 5, 25, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, #090709 0%, #050305 100%);
   background-attachment: fixed;
-  color: #fff1f2;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #f3eded;
+  font-family: 'Cormorant Garamond', serif;
   min-height: 100vh;
-  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Ambient Floating Petals */
-#ambient-petals-canvas {
+/* Ambient Particles */
+#ambient-canvas {
   position: fixed;
   top: 0;
   left: 0;
@@ -37,426 +39,195 @@ body.romantic-theme {
   z-index: 1;
 }
 
-/* Discreet Music Toggle */
-.top-audio-toggle {
+/* Discreet Sound Pill in Corner */
+.sound-pill {
   position: fixed;
-  top: 20px;
-  right: 24px;
+  top: 24px;
+  right: 28px;
   z-index: 50;
-}
-
-.btn-music {
-  background: rgba(24, 8, 30, 0.65);
-  border: 1px solid rgba(244, 63, 94, 0.35);
-  color: #fda4af;
-  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #9c7a82;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  padding: 6px 14px;
   border-radius: 9999px;
-  font-size: 13px;
-  font-weight: 600;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  backdrop-filter: blur(14px);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
 }
 
-.btn-music:hover, .btn-music.active {
-  background: rgba(225, 29, 72, 0.25);
-  border-color: #f43f5e;
-  color: #fff;
-  box-shadow: 0 0 16px rgba(244, 63, 94, 0.4);
+.sound-pill:hover, .sound-pill.active {
+  border-color: rgba(225, 29, 72, 0.35);
+  color: #f3eded;
 }
 
-/* Main Container */
-.love-center-stage {
+/* Viewport Stage */
+.viewport-stage {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 40px 20px 60px;
+  max-width: 600px;
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-/* ==========================================================================
-   STAGE 1: THE ASCII HAND SCREEN
-   ========================================================================== */
-.hand-screen {
+.scene {
   display: none;
   width: 100%;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  animation: fadeIn 0.4s ease;
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(6px);
 }
 
-.hand-screen.active {
+.scene.active {
   display: flex;
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.hand-content-box {
+/* ==========================================================================
+   Screen 1: The Minimal ASCII Hand
+   ========================================================================== */
+.intro-box {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.love-tag {
-  background: rgba(225, 29, 72, 0.15);
-  border: 1px solid rgba(244, 63, 94, 0.4);
-  color: #fb7185;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2.5px;
-  padding: 5px 16px;
-  border-radius: 9999px;
-  margin-bottom: 22px;
-  text-transform: uppercase;
-}
-
-.ascii-hand-wrapper {
-  background: rgba(18, 5, 22, 0.85);
-  border: 1px solid rgba(244, 63, 94, 0.4);
-  border-radius: 24px;
-  padding: 26px 36px;
-  backdrop-filter: blur(18px);
-  box-shadow:
-    0 16px 50px rgba(0, 0, 0, 0.85),
-    0 0 35px rgba(225, 29, 72, 0.25);
-  cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  user-select: none;
-}
-
-.ascii-hand-wrapper:hover {
-  transform: translateY(-4px) scale(1.02);
-  border-color: #f43f5e;
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.95),
-    0 0 50px rgba(244, 63, 94, 0.5);
-}
-
-.ascii-hand-pre {
-  font-family: 'JetBrains Mono', 'Courier New', monospace;
-  font-size: clamp(12px, 2.4vw, 15px);
-  font-weight: 700;
-  line-height: 1.25;
-  color: #ff4d73;
-  margin: 0;
-  text-shadow: 0 0 14px rgba(244, 63, 94, 0.65);
-  pointer-events: none;
-}
-
-.btn-love-trigger {
-  margin-top: 20px;
-  background: linear-gradient(135deg, #e11d48, #be123c);
-  border: 1px solid #fb7185;
-  color: #fff;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 700;
-  padding: 14px 30px;
-  border-radius: 9999px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  box-shadow: 0 6px 25px rgba(225, 29, 72, 0.5);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  animation: pulse-glow 2.5s infinite;
-}
-
-.btn-love-trigger:hover {
-  transform: scale(1.04);
-  box-shadow: 0 8px 30px rgba(225, 29, 72, 0.7);
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 15px rgba(225, 29, 72, 0.4); }
-  50% { box-shadow: 0 0 35px rgba(244, 63, 94, 0.75); }
-}
-
-.love-hint {
-  font-size: 13px;
-  color: #fda4af;
-  margin-top: 14px;
+.whisper-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
   font-style: italic;
-  letter-spacing: 0.5px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  color: #a8848d;
+  margin-bottom: 24px;
+}
+
+.ascii-hand-minimal {
+  position: relative;
+  background: rgba(18, 12, 18, 0.6);
+  border: 1px solid rgba(225, 29, 72, 0.2);
+  border-radius: 20px;
+  padding: 24px 34px;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  transition: all 0.4s ease;
+}
+
+.ascii-hand-minimal:hover {
+  border-color: rgba(225, 29, 72, 0.45);
+  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(225, 29, 72, 0.15);
+  transform: translateY(-2px);
+}
+
+.ascii-art {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.35;
+  color: #e28d9d;
+  margin: 0;
+  pointer-events: none;
+  text-shadow: 0 0 12px rgba(225, 29, 72, 0.4);
+}
+
+.tap-hint {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #8c6870;
+  margin-top: 22px;
+  animation: breathing 3s infinite ease-in-out;
+}
+
+@keyframes breathing {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
 }
 
 /* ==========================================================================
-   STAGE 2: THE ROSE & NOTE SCREEN
+   Screen 2: The Soft Living ASCII Rose
    ========================================================================== */
-.rose-screen {
-  display: none;
-  width: 100%;
+.rose-box {
+  display: flex;
   flex-direction: column;
   align-items: center;
-  animation: fadeIn 0.6s ease;
+  width: 100%;
 }
 
-.rose-screen.active {
-  display: flex;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.love-rose-title {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(26px, 4.5vw, 42px);
-  font-weight: 700;
-  letter-spacing: 1px;
-  background: linear-gradient(135deg, #ffffff 20%, #fecdd3 60%, #fb7185 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 14px rgba(225, 29, 72, 0.45));
-  margin-bottom: 20px;
-}
-
-/* The Living ASCII Rose Frame */
-.ascii-rose-frame {
+.canvas-holder {
   position: relative;
   width: 100%;
-  max-width: 580px;
+  max-width: 480px;
   aspect-ratio: 1 / 1;
-  background: radial-gradient(circle at 50% 50%, #160515 0%, #050107 70%);
-  border-radius: 28px;
-  border: 1px solid rgba(244, 63, 94, 0.35);
+  background: radial-gradient(circle at 50% 50%, #140710 0%, #060206 75%);
+  border-radius: 24px;
+  border: 1px solid rgba(225, 29, 72, 0.18);
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.95),
-    0 0 50px rgba(225, 29, 72, 0.25);
+    0 16px 50px rgba(0, 0, 0, 0.85),
+    0 0 40px rgba(136, 19, 55, 0.2);
   overflow: hidden;
   margin-bottom: 24px;
 }
 
-.ascii-rose-frame canvas {
+.canvas-holder canvas {
   width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
 }
 
-/* Sweet Small Love Note */
-.sweet-love-note {
-  position: relative;
-  width: 100%;
-  max-width: 520px;
-  background: linear-gradient(145deg, rgba(26, 8, 30, 0.85), rgba(14, 4, 18, 0.95));
-  border: 1px solid rgba(244, 63, 94, 0.35);
-  border-radius: 20px;
-  padding: 26px 26px 18px;
-  box-shadow:
-    0 14px 40px rgba(0, 0, 0, 0.8),
-    0 0 30px rgba(225, 29, 72, 0.15);
-  backdrop-filter: blur(18px);
-  text-align: left;
-}
-
-.note-rose-badge {
-  position: absolute;
-  top: -16px;
-  right: 22px;
-  font-size: 22px;
-  background: #18051c;
-  border: 1px solid #f43f5e;
-  border-radius: 50%;
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 12px rgba(225, 29, 72, 0.45);
-}
-
-.note-greeting {
-  font-family: 'Cinzel', serif;
-  font-size: 17px;
-  font-weight: 700;
-  color: #fecdd3;
-  margin-bottom: 8px;
+/* The Love Note */
+.love-note {
+  max-width: 440px;
+  margin: 0 auto 18px;
+  padding: 0 10px;
 }
 
 .note-quote {
-  font-size: 14.5px;
-  line-height: 1.7;
-  color: #ffe4e6;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
   font-style: italic;
-  margin-bottom: 16px;
+  font-weight: 300;
+  line-height: 1.65;
+  color: #f7eded;
+  margin-bottom: 10px;
+  letter-spacing: 0.3px;
 }
 
-.note-sign {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 14px;
-}
-
-.sign-text {
-  font-size: 12px;
-  color: #fda4af;
-  text-transform: uppercase;
+.note-author {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-style: normal;
   letter-spacing: 1px;
+  color: #c49ba2;
 }
 
-.sign-name {
-  font-family: 'Great Vibes', cursive;
-  font-size: 30px;
-  color: #fff;
-  letter-spacing: 1px;
-  text-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
-}
-
-.note-foot-actions {
-  display: flex;
-  gap: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 12px;
-}
-
-.btn-subtle {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(244, 63, 94, 0.25);
-  color: #fda4af;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 9999px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
-}
-
-.btn-subtle:hover {
-  background: rgba(225, 29, 72, 0.2);
-  border-color: #f43f5e;
-  color: #fff;
-}
-
-/* Modal */
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(12px);
-  z-index: 1000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.modal-backdrop.active {
-  display: flex;
-}
-
-.modal-card {
-  background: #16081c;
-  border: 1px solid #f43f5e;
-  border-radius: 20px;
-  max-width: 440px;
-  width: 100%;
-  padding: 24px;
-  text-align: left;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 30px rgba(225, 29, 72, 0.3);
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.modal-header h3 {
-  font-size: 17px;
-  color: #fff;
-}
-
-.modal-close {
+/* Replay Link */
+.replay-link {
   background: transparent;
   border: none;
-  color: #fda4af;
-  font-size: 24px;
-  cursor: pointer;
-  line-height: 1;
-}
-
-.form-group {
-  margin-bottom: 14px;
-}
-
-.form-group label {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  color: #fda4af;
-  margin-bottom: 5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.form-group input, .form-group textarea {
-  width: 100%;
-  background: #0f0414;
-  border: 1px solid rgba(244, 63, 94, 0.3);
-  color: #fff;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 14px;
-  outline: none;
-}
-
-.form-group input:focus, .form-group textarea:focus {
-  border-color: #f43f5e;
-}
-
-.btn-save-note {
-  width: 100%;
-  background: linear-gradient(135deg, #e11d48, #be123c);
-  border: 1px solid #fb7185;
-  color: #fff;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  padding: 12px;
-  border-radius: 10px;
+  color: #63474f;
   cursor: pointer;
   margin-top: 8px;
+  transition: color 0.3s ease;
 }
 
-/* Toast */
-.toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: rgba(22, 6, 26, 0.95);
-  border: 1px solid #f43f5e;
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(225, 29, 72, 0.4);
-  font-size: 13px;
-  font-weight: 600;
-  z-index: 1000;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateY(0);
+.replay-link:hover {
+  color: #c49ba2;
 }

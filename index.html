@@ -3,142 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A Rose For You 🌹 — With All My Love</title>
-  <meta name="description" content="A romantic love gift: An ASCII hand saying click to show the love, revealing a living colored ASCII blooming rose and a love note.">
-  <meta name="theme-color" content="#060208">
+  <title>for you 🌹</title>
+  <meta name="description" content="A gentle flower for someone special.">
+  <meta name="theme-color" content="#090709">
 
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Great+Vibes&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="romantic-theme">
+<body class="minimal-love">
 
-  <!-- Ambient Floating Rose Petals -->
-  <canvas id="ambient-petals-canvas"></canvas>
+  <!-- Ambient canvas for soft gentle floating particles -->
+  <canvas id="ambient-canvas"></canvas>
 
-  <!-- Discreet Music Toggle in Top Corner -->
-  <div class="top-audio-toggle">
-    <button id="btn-audio-toggle" class="btn-music" title="Toggle Soft Music Box Melody">
-      <span>🎵</span> <span id="music-label">Music</span>
-    </button>
-  </div>
+  <!-- Discreet sound button -->
+  <button id="btn-sound" class="sound-pill" aria-label="Toggle sound">
+    <span id="sound-icon">sound &bull; off</span>
+  </button>
 
-  <main class="love-center-stage">
+  <main class="viewport-stage">
 
-    <!-- ==================================================================
-         STAGE 1: THE ASCII HAND ("Click to show the love")
-         ================================================================== -->
-    <section id="ascii-hand-screen" class="hand-screen active">
-      <div class="hand-content-box">
-        <div class="love-tag">✧ TOUCH WITH YOUR HEART ✧</div>
-
-        <!-- Interactive 2D ASCII Hand Artwork -->
-        <div class="ascii-hand-wrapper" id="ascii-hand-trigger" title="Click to show the love">
-          <pre class="ascii-hand-pre">
-     .-----------------------.
-    (   💖 CLICK TO SHOW 💖   )
-    (        THE LOVE         )
-     '----------.------------'
-                 \
-                  \   .---.
-                     /     \
-                    |   |   |
-                    |   |   |
-               .---.|   |   |
-              /     |   |   |
-             |  /\  |   |   |
-             | |  | |   |   | .---.
-             | |  | |   |   |/     \
-             | |  | |   '   '   /\  |
-             |  \/   \         |  | |
-              \       \        ' /  |
-               \       '           /
-                |                 |
-                |    [ TOUCH ]    |
-                '-----------------'
+    <!-- Screen 1: The Minimal Hand Invitation -->
+    <div id="intro-screen" class="scene active">
+      <div class="intro-box">
+        <p class="whisper-text">a gift for you</p>
+        
+        <div class="ascii-hand-minimal" id="trigger-bloom" role="button" tabindex="0">
+          <pre class="ascii-art">
+          .
+         / \
+        |   |
+        |   |
+    .-. |   |
+   /   \|   | .-.
+  |     |   |/   \
+  |     '   '     |
+   \             /
+    \           /
+     |    ♡    |
           </pre>
         </div>
 
-        <button id="btn-show-love" class="btn-love-trigger">
-          <span>💖</span> Click to Show The Love <span>👆</span>
-        </button>
-        <p class="love-hint">A secret rose blooms inside...</p>
+        <p class="tap-hint">touch gently to bloom</p>
       </div>
-    </section>
+    </div>
 
-    <!-- ==================================================================
-         STAGE 2: THE LIVING COLORED ASCII ROSE & LOVE NOTE
-         ================================================================== -->
-    <section id="rose-love-screen" class="rose-screen">
-
-      <h1 class="love-rose-title" id="display-recipient">A Rose For You 🌹</h1>
-
-      <!-- The Living Colored ASCII Rose Canvas -->
-      <div class="ascii-rose-frame">
-        <canvas id="hero-canvas" width="800" height="800"></canvas>
-      </div>
-
-      <!-- ================================================================
-           THE SWEET SMALL LOVE NOTE
-           ================================================================ -->
-      <div class="sweet-love-note" id="love-letter-card">
-        <div class="note-rose-badge">🌹</div>
-        <div class="note-greeting" id="letter-title">For You, My Love</div>
-        <p class="note-quote" id="letter-text">
-          "Just like this rose unfolds its petals in the quiet night, my love for you blooms deeper with every beat of my heart. You bring colors to my world that words could never describe."
-        </p>
-        <div class="note-sign">
-          <span class="sign-text">Forever yours,</span>
-          <span class="sign-name" id="display-sender">Kaushal 💖</span>
+    <!-- Screen 2: The Soft Blooming ASCII Rose & Intimate Note -->
+    <div id="rose-screen" class="scene">
+      <div class="rose-box">
+        <!-- Canvas rendering the living colored ASCII rose -->
+        <div class="canvas-holder">
+          <canvas id="rose-canvas" width="700" height="700"></canvas>
         </div>
 
-        <div class="note-foot-actions">
-          <button id="btn-replay-hand" class="btn-subtle" title="Replay ASCII Hand">
-            <span>👆</span> Replay
-          </button>
-          <button id="btn-edit-note" class="btn-subtle" title="Edit name & message">
-            <span>✏️</span> Edit Note
-          </button>
+        <!-- The Soft Love Note -->
+        <div class="love-note">
+          <p class="note-quote">
+            &ldquo;In every petal, a quiet thought of you.<br>
+            You bring warmth and grace to everything.&rdquo;
+          </p>
+          <p class="note-author">— forever yours, Kaushal</p>
         </div>
-      </div>
 
-    </section>
-
-    <!-- Simple Edit Note Modal -->
-    <div class="modal-backdrop" id="edit-modal">
-      <div class="modal-card">
-        <div class="modal-header">
-          <h3>💌 Personalize Love Note</h3>
-          <button class="modal-close" id="modal-close-btn">&times;</button>
-        </div>
-        <div class="modal-content">
-          <div class="form-group">
-            <label>For (Her Name)</label>
-            <input type="text" id="input-recipient" placeholder="e.g. My Love, Sophia...">
-          </div>
-          <div class="form-group">
-            <label>Love Note</label>
-            <textarea id="input-message" rows="3" placeholder="Write your heartfelt note..."></textarea>
-          </div>
-          <div class="form-group">
-            <label>From (Your Name)</label>
-            <input type="text" id="input-sender" placeholder="e.g. Kaushal">
-          </div>
-          <button id="btn-save-note" class="btn-save-note">
-            <span>💖</span> Save & Copy Love Link
-          </button>
-        </div>
+        <!-- Subtle replay link -->
+        <button id="btn-replay" class="replay-link">hold again</button>
       </div>
     </div>
 
   </main>
 
-  <div id="app-toast" class="toast"></div>
-
-  <!-- App Script -->
   <script type="module" src="js/app.js"></script>
 </body>
 </html>
