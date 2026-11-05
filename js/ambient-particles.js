@@ -25,16 +25,24 @@ export class AmbientParticles {
       'rgba(255, 200, 150, '  // Rose Gold
     ];
 
+    this.dpr = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1;
     this.resize();
-    this.initParticles(75);
+    this.initParticles(85);
     this.initEvents();
   }
 
   resize() {
+    this.dpr = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1;
     this.width = window.innerWidth;
     this.height = window.innerHeight;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
+    this.canvas.width = this.width * this.dpr;
+    this.canvas.height = this.height * this.dpr;
+    this.canvas.style.width = `${this.width}px`;
+    this.canvas.style.height = `${this.height}px`;
+    if (this.ctx.resetTransform) {
+      this.ctx.resetTransform();
+    }
+    this.ctx.scale(this.dpr, this.dpr);
   }
 
   initParticles(count) {
@@ -154,3 +162,4 @@ export class AmbientParticles {
     }
   }
 }
+

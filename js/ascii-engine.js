@@ -105,8 +105,9 @@ export class AsciiEngine {
           b = Math.min(255, Math.max(0, b * this.brightness));
         }
 
-        // Perceptual human eye luminance: Y = 0.2126*R + 0.7152*G + 0.0722*B
-        let lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+        // Color-aware luminance for rich, glowing colored ASCII art on pitch black
+        const maxC = Math.max(r, g, b);
+        let lum = (0.55 * (maxC / 255) + 0.45 * (0.299 * r + 0.587 * g + 0.114 * b) / 255);
 
         if (this.gamma !== 1.0) {
           lum = Math.pow(lum, 1 / this.gamma);
@@ -152,9 +153,9 @@ export class AsciiEngine {
     switch (this.colorMode) {
       case 'crimsonglow': {
         // Boost rich reds and ruby highlights specifically for roses
-        const boostedR = Math.min(255, Math.floor(r * 1.3));
-        const boostedG = Math.floor(g * 0.85);
-        const boostedB = Math.floor(b * 0.9);
+        const boostedR = Math.min(255, Math.floor(r * 1.25 + 14));
+        const boostedG = Math.floor(g * 0.95);
+        const boostedB = Math.floor(b * 0.95 + 8);
         return `rgb(${boostedR}, ${boostedG}, ${boostedB})`;
       }
 
@@ -221,7 +222,7 @@ export class AsciiEngine {
 
     // Optional subtle blooming glow
     if (this.glow) {
-      ctx.shadowBlur = 4;
+      ctx.shadowBlur = 6;
     } else {
       ctx.shadowBlur = 0;
     }
@@ -235,7 +236,7 @@ export class AsciiEngine {
 
       for (let x = 0; x < cols; x++) {
         const cell = row[x];
-        if (cell.lum < 0.04) continue; // Skip nearly black background for speed & contrast
+        if (cell.lum < 0.025) continue; // Skip truly empty background for contrast
 
         const posX = x * cellW + halfCellW;
 

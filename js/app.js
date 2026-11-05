@@ -33,12 +33,12 @@ class MinimalLoveRoseApp {
 
     // Offscreen canvas for rendering the realistic rose before ASCII conversion
     this.offscreenCanvas = document.createElement('canvas');
-    this.offscreenCanvas.width = 640;
-    this.offscreenCanvas.height = 640;
+    this.offscreenCanvas.width = 680;
+    this.offscreenCanvas.height = 680;
 
     if (this.displayCanvas) {
-      this.displayCanvas.width = 640;
-      this.displayCanvas.height = 640;
+      this.displayCanvas.width = 680;
+      this.displayCanvas.height = 680;
     }
   }
 
@@ -74,11 +74,11 @@ class MinimalLoveRoseApp {
 
     // 2. High-performance colored ASCII engine with luminous velvety glow
     this.asciiEngine = new AsciiEngine({
-      columns: 92,
+      columns: 96,
       charSet: 'standard',
       colorMode: 'crimsonglow',
-      brightness: 1.15,
-      contrast: 1.25,
+      brightness: 1.25,
+      contrast: 1.30,
       glow: true // Soft radiant velvety glow for rich visibility on large screens
     });
   }

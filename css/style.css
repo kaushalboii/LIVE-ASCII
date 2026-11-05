@@ -102,8 +102,8 @@ body.pure-black {
 }
 
 #hand-canvas {
-  max-width: 360px;
-  max-height: 620px;
+  max-width: 380px;
+  max-height: 660px;
   width: 100%;
   height: auto;
   background: transparent;
@@ -111,8 +111,6 @@ body.pure-black {
   outline: none;
   box-shadow: none;
   display: block;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
 }
 
 .whisper-hint {
@@ -142,12 +140,12 @@ body.pure-black {
 .seamless-rose-wrapper {
   position: relative;
   width: 100%;
-  max-width: 580px;
+  max-width: 660px;
   aspect-ratio: 1 / 1;
   background: transparent;
   border: none;
   box-shadow: none;
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 
 .seamless-rose-wrapper canvas {

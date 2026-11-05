@@ -239,16 +239,16 @@ export class RoseSimulator {
       case 'crimson':
       default:
         return {
-          petalDeep: '#260207',      // Deep velvety dark shadow
-          petalBase: '#5c0514',      // Base burgundy
-          petalMid: '#9b0d24',       // Core crimson red
-          petalHighlight: '#d4193b', // Vibrant ruby
-          petalRim: '#ff4d73',       // Soft luminous edge curl
-          calyx: '#21471b',          // Rich emerald sepal
-          calyxHighlight: '#3c7a31', // Calyx highlight
-          stem: '#193b14',           // Natural stem green
-          stemShadow: '#0f240c',     // Stem shadow
-          stamens: '#ffcc00'         // Center golden pollen
+          petalDeep: '#5c0818',      // Rich burgundy shadow
+          petalBase: '#990c28',      // Deep ruby velvet
+          petalMid: '#d9183d',       // Brilliant crimson
+          petalHighlight: '#ff3362', // Glowing scarlet-rose highlight
+          petalRim: '#ff7a98',       // Luminous petal edge curl
+          calyx: '#2e6b2c',          // Natural emerald sepal
+          calyxHighlight: '#4e9e49', // Fresh leaf highlight
+          stem: '#2a5a28',           // Natural vibrant stem
+          stemShadow: '#153314',     // Deep forest stem
+          stamens: '#ffcc33'         // Center golden pollen
         };
     }
   }
