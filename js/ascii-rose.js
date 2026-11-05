@@ -36,13 +36,13 @@ export class AsciiRose {
     this.roseSim.colorScheme = 'crimson';
     this.setupCallback();
 
-    // 2. High-performance colored ASCII art engine
+    // 2. High-performance colored ASCII art engine with crisp edge definition
     this.asciiEngine = new AsciiEngine({
-      columns: 96,
+      columns: 112,
       charSet: 'standard',
       colorMode: 'crimsonglow',
-      brightness: 1.25,
-      contrast: 1.30,
+      brightness: 1.28,
+      contrast: 1.34,
       glow: true
     });
   }
