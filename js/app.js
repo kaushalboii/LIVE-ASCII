@@ -182,15 +182,23 @@ class LiveAsciiLoveApp {
   }
 
   bloomRose() {
-    // When the Multilingual Heart glides to top-left corner, start the blooming Rose in center!
+    // When the Multilingual Heart glides to the left edge as a logo:
     try {
       this.audioManager.playChime(587.33, 'sine', 0.22, 2.5); // D5 chime
     } catch (e) {}
 
+    // 1. Bloom the lush organic Rose in center
     if (this.roseRenderer) {
       this.roseRenderer.reset();
       this.roseRenderer.start();
     }
+
+    // 2. Reveal the minimal love note card with the poetic words & signature right after!
+    setTimeout(() => {
+      if (this.cloudNote) {
+        this.cloudNote.classList.add('visible');
+      }
+    }, 450);
   }
 
   restartExperience() {

@@ -338,13 +338,13 @@ export class AsciiHeart {
         }
       }, 160);
 
-      // After 1.8s of shimmering, glide to top-left corner and trigger Rose bloom!
+      // Glide to top-left edge as logo and trigger note & Rose bloom immediately!
       setTimeout(() => {
         this.moveToCorner();
         if (this.onComplete) {
           this.onComplete();
         }
-      }, 1800);
+      }, 700);
     }
   }
 
@@ -392,3 +392,4 @@ export class AsciiHeart {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 }
+

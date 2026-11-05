@@ -135,8 +135,9 @@ body.pure-black {
 }
 
 .heart-canvas.docked-corner {
-  transform: scale(0.38) translate(40px, 36px);
-  opacity: 0.92;
+  transform: scale(0.20) translate(28px, 20px);
+  opacity: 0.95;
+  filter: drop-shadow(0 0 16px rgba(255, 30, 80, 0.45));
 }
 
 .rose-canvas {
@@ -285,7 +286,7 @@ body.pure-black {
     bottom: 18px;
   }
   .heart-canvas.docked-corner {
-    transform: scale(0.32) translate(14px, 18px);
+    transform: scale(0.18) translate(14px, 14px);
   }
   .minimal-note {
     padding: 16px 20px;
