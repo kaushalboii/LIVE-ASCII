@@ -1,11 +1,12 @@
 /**
- * High-Definition ASCII Hand Gesture Renderer
- * Recreates the exact After Effects style ASCII pointing/clicking hand
- * from the reference video:
- * - Anatomical human forearm, palm, and extended pointing index finger
+ * Photorealistic ASCII Hand Gesture Renderer
+ * Recreates the exact After Effects style ASCII pointing hand from the reference video:
+ * - Anatomical human forearm, wrist, palm, and extended pointing index finger
+ * - Exact circular click target with upward arrow (↑) above fingertip
+ * - Electric cyan-blue accent rim lighting along the forearm and palm
  * - Dense ASCII matrix of 'O', 'X', '1', '/', '*', '.', '#' characters
- * - Electric cyan-blue edge rim lighting along the forearm
- * - Interactive tap/click animation and ambient breathing sway
+ * - Faint dot grid background matching After Effects
+ * - Interactive tap/click animation with fingertip shockwave
  */
 
 export class AsciiHandRenderer {
@@ -19,14 +20,14 @@ export class AsciiHandRenderer {
 
     // Offscreen high-res canvas for rendering the hand shape before ASCII conversion
     this.handCanvas = document.createElement('canvas');
-    this.handCanvas.width = 400;
-    this.handCanvas.height = 560;
+    this.handCanvas.width = 440;
+    this.handCanvas.height = 620;
     this.handCtx = this.handCanvas.getContext('2d');
 
     // Glyph matrix setup matching the video: O, X, 1, /, etc.
     this.glyphs = [' ', '.', ':', '/', '1', 'X', 'O', '#', '@'];
-    this.cols = 54;
-    this.rows = 74;
+    this.cols = 62;
+    this.rows = 84;
 
     // Sampling canvas
     this.sampleCanvas = document.createElement('canvas');
@@ -44,7 +45,7 @@ export class AsciiHandRenderer {
     this.time += dt;
 
     if (this.isClicking) {
-      this.clickProgress += dt * 4;
+      this.clickProgress += dt * 3.5;
       if (this.clickProgress >= 1.0) {
         this.isClicking = false;
         this.clickProgress = 0;
@@ -59,7 +60,7 @@ export class AsciiHandRenderer {
 
     ctx.clearRect(0, 0, w, h);
 
-    // 1. Draw subtle background dot grid (matching the video's After Effects background)
+    // 1. Draw subtle background dot grid (matching the reference video's AE background)
     this.drawDotGrid(ctx, w, h);
 
     // 2. Render smooth anatomical hand onto offscreen canvas
@@ -67,12 +68,15 @@ export class AsciiHandRenderer {
 
     // 3. Sample offscreen canvas and blit ASCII glyph matrix with white body & blue rim lighting
     this.renderAsciiMatrix(ctx, w, h);
+
+    // 4. Render click target circle with upward arrow (↑) right above the index finger
+    this.renderClickTarget(ctx, w, h);
   }
 
   drawDotGrid(ctx, w, h) {
     ctx.save();
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
-    const spacing = 18;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    const spacing = 16;
     for (let x = spacing / 2; x < w; x += spacing) {
       for (let y = spacing / 2; y < h; y += spacing) {
         ctx.beginPath();
@@ -90,95 +94,104 @@ export class AsciiHandRenderer {
 
     ctx.clearRect(0, 0, w, h);
 
-    // Breathing sway
+    // Gentle breathing sway
     const swayY = Math.sin(this.time * 2) * 3;
-    // Click displacement (finger bends down slightly on click)
     let tapDisplacement = 0;
     if (this.isClicking) {
-      tapDisplacement = Math.sin(this.clickProgress * Math.PI) * 16;
+      tapDisplacement = Math.sin(this.clickProgress * Math.PI) * 18;
     } else if (this.isHovered) {
-      tapDisplacement = 4;
+      tapDisplacement = 5;
     }
 
     ctx.save();
     ctx.translate(w / 2, h + swayY);
 
-    // 1. Forearm & Wrist (extending up from bottom)
+    // --- 1. FOREARM & WRIST ---
     ctx.beginPath();
-    ctx.moveTo(-38, 0);
-    ctx.lineTo(-34, -140);
-    ctx.quadraticCurveTo(-38, -200, -42, -230); // wrist left
-    ctx.lineTo(44, -230); // wrist right
-    ctx.quadraticCurveTo(40, -200, 36, -140);
-    ctx.lineTo(40, 0);
+    ctx.moveTo(-42, 0);
+    ctx.lineTo(-38, -150);
+    ctx.quadraticCurveTo(-42, -210, -46, -240); // wrist left
+    ctx.lineTo(48, -240); // wrist right
+    ctx.quadraticCurveTo(44, -210, 40, -150);
+    ctx.lineTo(44, 0);
     ctx.closePath();
 
-    const armGrad = ctx.createLinearGradient(-40, 0, 40, 0);
-    armGrad.addColorStop(0, '#00b4d8'); // Blue accent along left edge (like the video!)
+    const armGrad = ctx.createLinearGradient(-46, 0, 48, 0);
+    armGrad.addColorStop(0, '#00b4d8'); // Electric blue accent along left edge (from video)
     armGrad.addColorStop(0.18, '#ffffff');
-    armGrad.addColorStop(0.7, '#d1d5db');
-    armGrad.addColorStop(1, '#4b5563');
+    armGrad.addColorStop(0.65, '#e2e8f0');
+    armGrad.addColorStop(1, '#334155');
     ctx.fillStyle = armGrad;
     ctx.fill();
 
-    // Blue accent stroke on left forearm
+    // Distinct cyan neon accent stroke along the left forearm contour
     ctx.save();
     ctx.strokeStyle = '#00f0ff';
-    ctx.lineWidth = 6;
+    ctx.lineWidth = 8;
     ctx.beginPath();
-    ctx.moveTo(-38, 0);
-    ctx.lineTo(-34, -140);
-    ctx.lineTo(-42, -230);
+    ctx.moveTo(-42, 0);
+    ctx.lineTo(-38, -150);
+    ctx.lineTo(-46, -240);
     ctx.stroke();
     ctx.restore();
 
-    // 2. Palm
+    // --- 2. PALM & THENAR EMINENCE ---
     ctx.beginPath();
-    ctx.moveTo(-42, -230);
-    ctx.quadraticCurveTo(-60, -280, -56, -340); // Thenar (thumb base)
-    ctx.lineTo(54, -340); // Pinky knuckle
-    ctx.quadraticCurveTo(52, -280, 44, -230);
+    ctx.moveTo(-46, -240);
+    ctx.quadraticCurveTo(-66, -290, -62, -350); // Thenar muscle (thumb base)
+    ctx.lineTo(58, -350); // Pinky knuckle base
+    ctx.quadraticCurveTo(54, -290, 48, -240);
     ctx.closePath();
 
-    const palmGrad = ctx.createRadialGradient(0, -280, 15, 0, -280, 75);
+    const palmGrad = ctx.createRadialGradient(-5, -295, 20, 0, -295, 80);
     palmGrad.addColorStop(0, '#ffffff');
-    palmGrad.addColorStop(0.5, '#e2e8f0');
-    palmGrad.addColorStop(0.85, '#94a3b8');
+    palmGrad.addColorStop(0.45, '#f1f5f9');
+    palmGrad.addColorStop(0.8, '#94a3b8');
     palmGrad.addColorStop(1, '#1e293b');
     ctx.fillStyle = palmGrad;
     ctx.fill();
 
-    // 3. Curled Thumb
+    // Blue accent continues along lower thumb base
+    ctx.save();
+    ctx.strokeStyle = '#00f0ff';
+    ctx.lineWidth = 6;
     ctx.beginPath();
-    ctx.moveTo(-56, -300);
-    ctx.quadraticCurveTo(-80, -320, -70, -360);
-    ctx.quadraticCurveTo(-48, -370, -38, -330);
+    ctx.moveTo(-46, -240);
+    ctx.quadraticCurveTo(-66, -290, -62, -330);
+    ctx.stroke();
+    ctx.restore();
+
+    // --- 3. CURLED THUMB ---
+    ctx.beginPath();
+    ctx.moveTo(-62, -310);
+    ctx.quadraticCurveTo(-86, -330, -74, -370);
+    ctx.quadraticCurveTo(-50, -380, -40, -340);
     ctx.closePath();
     ctx.fillStyle = '#cbd5e1';
     ctx.fill();
 
-    // 4. Curled Fingers (Middle, Ring, Pinky curled into palm)
+    // --- 4. CURLED FINGERS (Middle, Ring, Pinky curled into palm) ---
     // Pinky
-    this.drawCurledFinger(ctx, 32, -340, 16, 42, '#94a3b8');
+    this.drawCurledFinger(ctx, 36, -350, 18, 46, '#94a3b8');
     // Ring finger
-    this.drawCurledFinger(ctx, 12, -344, 18, 48, '#cbd5e1');
+    this.drawCurledFinger(ctx, 14, -354, 20, 52, '#cbd5e1');
     // Middle finger
-    this.drawCurledFinger(ctx, -8, -346, 20, 52, '#e2e8f0');
+    this.drawCurledFinger(ctx, -9, -356, 22, 56, '#e2e8f0');
 
-    // 5. Extended Pointing Index Finger (Pointing straight up!)
-    const fingerBaseX = -28;
-    const fingerBaseY = -345;
-    const fingerW = 24;
-    const fingerLen = 145 - tapDisplacement; // flexes down when clicking
+    // --- 5. EXTENDED POINTING INDEX FINGER ---
+    const fingerBaseX = -32;
+    const fingerBaseY = -355;
+    const fingerW = 26;
+    const fingerLen = 160 - tapDisplacement; // Taps down on hover/click
 
     ctx.beginPath();
     ctx.moveTo(fingerBaseX, fingerBaseY);
     ctx.lineTo(fingerBaseX - 2, fingerBaseY - fingerLen * 0.4);
-    ctx.lineTo(fingerBaseX + 1, fingerBaseY - fingerLen + 12);
-    // Fingertip curve
+    ctx.lineTo(fingerBaseX + 1, fingerBaseY - fingerLen + 14);
+    // Smooth fingertip curve
     ctx.quadraticCurveTo(
       fingerBaseX + fingerW * 0.5, fingerBaseY - fingerLen,
-      fingerBaseX + fingerW - 1, fingerBaseY - fingerLen + 12
+      fingerBaseX + fingerW - 1, fingerBaseY - fingerLen + 14
     );
     ctx.lineTo(fingerBaseX + fingerW, fingerBaseY - fingerLen * 0.4);
     ctx.lineTo(fingerBaseX + fingerW, fingerBaseY);
@@ -189,15 +202,15 @@ export class AsciiHandRenderer {
       fingerBaseX + fingerW, fingerBaseY
     );
     fingerGrad.addColorStop(0, '#ffffff');
-    fingerGrad.addColorStop(0.3, '#f8fafc');
-    fingerGrad.addColorStop(0.7, '#cbd5e1');
+    fingerGrad.addColorStop(0.35, '#f8fafc');
+    fingerGrad.addColorStop(0.75, '#cbd5e1');
     fingerGrad.addColorStop(1, '#64748b');
     ctx.fillStyle = fingerGrad;
     ctx.fill();
 
-    // Knuckle creases
-    ctx.strokeStyle = 'rgba(100, 116, 139, 0.4)';
-    ctx.lineWidth = 1.5;
+    // Finger knuckle crease lines
+    ctx.strokeStyle = 'rgba(71, 85, 105, 0.45)';
+    ctx.lineWidth = 1.8;
     ctx.beginPath();
     ctx.moveTo(fingerBaseX + 2, fingerBaseY - fingerLen * 0.35);
     ctx.lineTo(fingerBaseX + fingerW - 2, fingerBaseY - fingerLen * 0.35);
@@ -205,45 +218,17 @@ export class AsciiHandRenderer {
     ctx.lineTo(fingerBaseX + fingerW - 2, fingerBaseY - fingerLen * 0.68);
     ctx.stroke();
 
-    // Fingertip glowing indicator circle (like the video's click target)
-    const tipX = fingerBaseX + fingerW * 0.5;
-    const tipY = fingerBaseY - fingerLen - 14;
-
-    ctx.save();
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 2;
-    ctx.shadowColor = '#00f0ff';
-    ctx.shadowBlur = 12;
-    ctx.beginPath();
-    ctx.arc(tipX, tipY, 14, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // Upward arrow inside the click circle
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.moveTo(tipX, tipY - 6);
-    ctx.lineTo(tipX - 5, tipY);
-    ctx.lineTo(tipX - 2, tipY);
-    ctx.lineTo(tipX - 2, tipY + 6);
-    ctx.lineTo(tipX + 2, tipY + 6);
-    ctx.lineTo(tipX + 2, tipY);
-    ctx.lineTo(tipX + 5, tipY);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.restore();
-
     ctx.restore();
   }
 
   drawCurledFinger(ctx, x, y, w, h, color) {
     ctx.save();
     ctx.beginPath();
-    ctx.roundRect(x, y - h, w, h, [w * 0.5, w * 0.5, 4, 4]);
+    ctx.roundRect(x, y - h, w, h, [w * 0.5, w * 0.5, 5, 5]);
     ctx.fillStyle = color;
     ctx.fill();
-    ctx.strokeStyle = 'rgba(15, 23, 42, 0.6)';
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(15, 23, 42, 0.65)';
+    ctx.lineWidth = 1.6;
     ctx.stroke();
     ctx.restore();
   }
@@ -276,9 +261,8 @@ export class AsciiHandRenderer {
         const b = data[offset + 2];
         const a = data[offset + 3] / 255;
 
-        if (a < 0.08) continue; // skip transparent background
+        if (a < 0.08) continue;
 
-        // Luminance
         const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
         const charIdx = Math.min(glyphCount, Math.floor(lum * glyphCount));
         const char = this.glyphs[charIdx];
@@ -287,14 +271,14 @@ export class AsciiHandRenderer {
 
         const posX = x * cellW + cellW * 0.5;
 
-        // Check if pixel is part of the blue accent rim (blue dominant over red)
+        // Electric cyan-blue accent along left edge
         if (b > r + 30 && b > 100) {
           targetCtx.fillStyle = '#00e5ff';
           targetCtx.shadowColor = '#00e5ff';
-          targetCtx.shadowBlur = 6;
+          targetCtx.shadowBlur = 8;
         } else {
           // Pure monochrome white/silver ASCII hand
-          const val = Math.min(255, Math.floor(lum * 255 + 40));
+          const val = Math.min(255, Math.floor(lum * 255 + 35));
           targetCtx.fillStyle = `rgb(${val}, ${val}, ${val})`;
           targetCtx.shadowColor = 'transparent';
           targetCtx.shadowBlur = 0;
@@ -303,5 +287,58 @@ export class AsciiHandRenderer {
         targetCtx.fillText(char, posX, posY);
       }
     }
+  }
+
+  renderClickTarget(ctx, w, h) {
+    // Exact circular target with upward arrow (↑) matching Frame 00:01
+    const swayY = Math.sin(this.time * 2) * 3;
+    let tapDisplacement = 0;
+    if (this.isClicking) {
+      tapDisplacement = Math.sin(this.clickProgress * Math.PI) * 18;
+    } else if (this.isHovered) {
+      tapDisplacement = 5;
+    }
+
+    const tipX = w * 0.45;
+    const tipY = h * 0.16 + swayY + tapDisplacement * 0.4;
+
+    ctx.save();
+
+    // Subtle pulsing ring
+    const pulse = Math.sin(this.time * 4) * 2;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2.2;
+    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur = 14;
+
+    ctx.beginPath();
+    ctx.arc(tipX, tipY, 16 + pulse, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Upward arrow icon (↑) inside the circle
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.moveTo(tipX, tipY - 7);
+    ctx.lineTo(tipX - 6, tipY);
+    ctx.lineTo(tipX - 2.5, tipY);
+    ctx.lineTo(tipX - 2.5, tipY + 7);
+    ctx.lineTo(tipX + 2.5, tipY + 7);
+    ctx.lineTo(tipX + 2.5, tipY);
+    ctx.lineTo(tipX + 6, tipY);
+    ctx.closePath();
+    ctx.fill();
+
+    // Expanding shockwave ring on click
+    if (this.isClicking) {
+      const ringR = this.clickProgress * 70;
+      const ringAlpha = 1.0 - this.clickProgress;
+      ctx.strokeStyle = `rgba(0, 240, 255, ${ringAlpha})`;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(tipX, tipY, ringR, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    ctx.restore();
   }
 }
