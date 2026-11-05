@@ -173,14 +173,14 @@ export class AsciiEnvelope {
 
     // Center and sizing for Envelope in the Bottom-Left
     if (this.W > 720) {
-      this.CX = Math.max(160, this.W * 0.23);
-      this.ECY = this.H * 0.68;
-      const maxEW = Math.min(this.W * 0.34, 380);
-      this.EW = Math.max(250, maxEW);
+      this.CX = Math.min(260, this.W * 0.18);
+      this.ECY = this.H * 0.70;
+      const maxEW = Math.min(this.W * 0.28, 330);
+      this.EW = Math.max(220, maxEW);
     } else {
-      this.CX = Math.max(140, this.W * 0.34);
-      this.ECY = this.H * 0.72;
-      this.EW = Math.min(this.W * 0.62, 300);
+      this.CX = this.W * 0.5;
+      this.ECY = this.H * 0.74;
+      this.EW = Math.min(this.W * 0.78, 280);
     }
     this.EH = 0.64 * this.EW;
 

@@ -32,15 +32,17 @@
       <p class="whisper-hint" id="knight-hint">touch the letter to open</p>
     </div>
 
-    <!-- Screen 2: Multilingual Love Heart & Pure Mathematical ASCII Rose -->
+    <!-- Screen 2: Multilingual Love Heart & Realistic Blooming Rose -->
     <div id="flower-screen" class="scene">
-      <!-- 1. The Multilingual Love Heart (Builds in center, then glides to top-left corner) -->
+      <!-- 1. The Multilingual Love Heart (Builds in center, then glides to top-left corner as logo badge) -->
       <canvas id="heart-canvas" class="heart-canvas" aria-label="Multilingual Love Heart"></canvas>
 
-      <!-- 2. The Pure Mathematical ASCII Blooming Rose with Light Rays -->
-      <canvas id="rose-canvas" class="rose-canvas" aria-label="Pure ASCII Blooming Rose"></canvas>
+      <!-- 2. The Living Colored ASCII Rose (Blooms organically, then unfurls into 2 intertwined roses) -->
+      <div class="seamless-rose-wrapper">
+        <canvas id="rose-canvas" width="680" height="680" aria-label="Blooming ASCII Rose"></canvas>
+      </div>
 
-      <!-- 3. Minimal, Lightweight Love Note with Handwritten Signature -->
+      <!-- 3. Minimal, Lightweight Love Note -->
       <div id="cloud-note" class="minimal-note">
         <div class="note-pill">✦ &nbsp;forever written in starlight &nbsp;✦</div>
         
@@ -53,12 +55,16 @@
           Every quiet thought finds its way to you &mdash; today, tomorrow, always.
         </p>
 
-        <div class="note-signature-block">
-          <span class="sign-prefix">forever yours,</span>
-          <span class="sign-name">Kaushal Maran</span>
-        </div>
-
         <button id="btn-replay" class="note-replay" title="Experience again">hold again ↺</button>
+      </div>
+
+      <!-- 4. Handwritten Signature of Kaushal Maran at the Right Bottom Corner -->
+      <div id="corner-signature" class="corner-signature">
+        <div class="sig-label">signed by</div>
+        <div class="sig-name">Kaushal Maran</div>
+        <svg class="sig-swash" viewBox="0 0 160 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 12 C 35 22, 75 2, 120 14 C 138 18, 150 14, 156 10 M 105 20 C 122 24, 142 18, 150 12" stroke="rgba(255, 120, 160, 0.75)" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
       </div>
     </div>
 

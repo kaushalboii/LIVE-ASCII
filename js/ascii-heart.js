@@ -262,6 +262,26 @@ export class AsciiHeart {
     this.canvas.classList.add("docked-corner");
   }
 
+  fastForward() {
+    if (this.isDocked) return;
+    this.spawning = false;
+    this.itemsQueue = [];
+    for (const p of this.placed) {
+      if (!this.active.includes(p)) this.active.push(p);
+      p.isSettled = true;
+      p.renderX = this.CX + p.x;
+      p.renderY = this.CY - p.y;
+      p.currentColor = [...p.color];
+    }
+    this.moveToCorner();
+    if (!this.hasTriggeredComplete) {
+      this.hasTriggeredComplete = true;
+      if (this.onComplete) {
+        this.onComplete();
+      }
+    }
+  }
+
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 

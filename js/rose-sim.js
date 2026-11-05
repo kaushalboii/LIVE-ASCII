@@ -16,7 +16,7 @@ export class RoseSimulator {
     // Simulation state
     this.bloomProgress = 0.0; // 0.0 (tight bud) to 1.0 (full bloom)
     this.targetProgress = 1.0;
-    this.speed = 0.08; // speed of blooming
+    this.speed = 0.32; // Smooth, realistic blooming speed (~3.1s from bud to full bloom)
     this.isPlaying = true;
     this.loopMode = 'pingpong'; // 'pingpong', 'loop', 'once'
     this.direction = 1; // 1 for blooming, -1 for closing

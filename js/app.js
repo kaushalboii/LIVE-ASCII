@@ -39,6 +39,7 @@ class LiveAsciiLoveApp {
     this.heartCanvas = document.getElementById('heart-canvas');
     this.roseCanvas = document.getElementById('rose-canvas');
     this.cloudNote = document.getElementById('cloud-note');
+    this.cornerSignature = document.getElementById('corner-signature');
     this.replayBtn = document.getElementById('btn-replay');
   }
 
@@ -73,12 +74,15 @@ class LiveAsciiLoveApp {
       });
     }
 
-    // 4. Pure Mathematical ASCII Rose with volumetric light rays
+    // 4. Living Colored ASCII Rose (Blooms organically, then unfurls into 2 roses)
     if (this.roseCanvas) {
       this.roseRenderer = new AsciiRose(this.roseCanvas, () => {
-        // When Rose reaches full bloom, pop up the Cloud Love Note!
+        // When Rose completes blooming duo roses, ensure Note & Signature are visible!
         if (this.cloudNote) {
           this.cloudNote.classList.add('visible');
+        }
+        if (this.cornerSignature) {
+          this.cornerSignature.classList.add('visible');
         }
       });
     }
@@ -121,6 +125,16 @@ class LiveAsciiLoveApp {
 
     if (this.knightHint) {
       this.knightHint.addEventListener('click', handleLetterOpen);
+    }
+
+    // Tap flower screen during heart build to fast-forward to roses
+    if (this.flowerScreen) {
+      this.flowerScreen.addEventListener('click', (e) => {
+        if (e.target && (e.target.id === 'btn-replay' || e.target.closest('#btn-replay'))) return;
+        if (this.heartRenderer && !this.heartRenderer.isDocked) {
+          this.heartRenderer.fastForward();
+        }
+      });
     }
 
     window.addEventListener('keydown', (e) => {
@@ -170,6 +184,9 @@ class LiveAsciiLoveApp {
       if (this.cloudNote) {
         this.cloudNote.classList.remove('visible');
       }
+      if (this.cornerSignature) {
+        this.cornerSignature.classList.remove('visible');
+      }
 
       // 3. Start Multilingual Love Heart in center
       if (this.heartRenderer) {
@@ -184,21 +201,24 @@ class LiveAsciiLoveApp {
   bloomRose() {
     // When the Multilingual Heart glides to the left edge as a logo:
     try {
-      this.audioManager.playChime(587.33, 'sine', 0.22, 2.5); // D5 chime
+      this.audioManager.playBloomChime();
     } catch (e) {}
 
-    // 1. Bloom the lush organic Rose in center
+    // 1. Bloom the realistic ASCII Rose in center (Blooms 1st rose, then unfurls 2 intertwined roses)
     if (this.roseRenderer) {
       this.roseRenderer.reset();
       this.roseRenderer.start();
     }
 
-    // 2. Reveal the minimal love note card with the poetic words & signature right after!
+    // 2. Reveal the minimal love note card & signature right after!
     setTimeout(() => {
       if (this.cloudNote) {
         this.cloudNote.classList.add('visible');
       }
-    }, 450);
+      if (this.cornerSignature) {
+        this.cornerSignature.classList.add('visible');
+      }
+    }, 500);
   }
 
   restartExperience() {
@@ -207,6 +227,9 @@ class LiveAsciiLoveApp {
 
     if (this.cloudNote) {
       this.cloudNote.classList.remove('visible');
+    }
+    if (this.cornerSignature) {
+      this.cornerSignature.classList.remove('visible');
     }
     if (this.flowerScreen) {
       this.flowerScreen.classList.remove('active');
