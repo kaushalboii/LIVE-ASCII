@@ -64,7 +64,7 @@ body.pure-black {
 }
 
 /* ==========================================================================
-   Screen 1: The Seamless ASCII Hand Video (No Box, No Border)
+   Screen 1: The Seamless After Effects ASCII Hand (No Box, No Border)
    ========================================================================== */
 .seamless-hand-trigger {
   position: relative;
@@ -87,9 +87,9 @@ body.pure-black {
   transform: scale(0.97);
 }
 
-#hand-video {
-  max-width: 360px;
-  max-height: 560px;
+#hand-canvas {
+  max-width: 340px;
+  max-height: 580px;
   width: 100%;
   height: auto;
   background: transparent;
@@ -97,11 +97,8 @@ body.pure-black {
   outline: none;
   box-shadow: none;
   display: block;
-  /* Screen blend mode ensures pure black in the video is completely transparent */
-  mix-blend-mode: screen;
-  /* Soft radial mask to feather edges into pure black */
-  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 72%, rgba(0,0,0,0) 98%);
-  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 72%, rgba(0,0,0,0) 98%);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 .whisper-hint {
@@ -131,7 +128,7 @@ body.pure-black {
 .seamless-rose-wrapper {
   position: relative;
   width: 100%;
-  max-width: 460px;
+  max-width: 480px;
   aspect-ratio: 1 / 1;
   background: transparent;
   border: none;
@@ -200,9 +197,9 @@ body.pure-black {
 }
 
 @media (max-width: 480px) {
-  #hand-video {
+  #hand-canvas {
     max-width: 290px;
-    max-height: 440px;
+    max-height: 480px;
   }
   .seamless-rose-wrapper {
     max-width: 340px;

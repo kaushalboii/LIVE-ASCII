@@ -4,6 +4,7 @@
  * Pure seamless visuals on pitch black (#000000) — no boxes, no cards, no borders.
  */
 
+import { AsciiHandRenderer } from './ascii-hand.js';
 import { RoseSimulator } from './rose-sim.js';
 import { AsciiEngine } from './ascii-engine.js';
 import { AudioManager } from './audio-fx.js';
@@ -12,7 +13,7 @@ class MinimalLoveRoseApp {
   constructor() {
     this.currentScreen = 'hand'; // 'hand' or 'rose'
     this.initElements();
-    this.initVideo();
+    this.initHandRenderer();
     this.initRoseEngines();
     this.initInteractions();
     this.startLoop();
@@ -22,7 +23,7 @@ class MinimalLoveRoseApp {
     this.handScreen = document.getElementById('hand-screen');
     this.roseScreen = document.getElementById('rose-screen');
     this.handTrigger = document.getElementById('hand-trigger');
-    this.handVideo = document.getElementById('hand-video');
+    this.handCanvas = document.getElementById('hand-canvas');
     this.whisperHint = document.querySelector('.whisper-hint');
     this.displayCanvas = document.getElementById('rose-canvas');
     this.replayBtn = document.getElementById('btn-replay');
@@ -38,29 +39,17 @@ class MinimalLoveRoseApp {
     }
   }
 
-  initVideo() {
-    if (!this.handVideo) return;
+  initHandRenderer() {
+    if (!this.handCanvas) return;
+    this.handRenderer = new AsciiHandRenderer(this.handCanvas);
 
-    // Loop the pointing and clicking sequence seamlessly (0.0s to 2.95s)
-    this.handVideo.addEventListener('timeupdate', () => {
-      if (this.handVideo.currentTime >= 2.95) {
-        this.handVideo.currentTime = 0;
-      }
-    });
-
-    // Ensure muted playback allows autoplay across iOS Safari and desktop browsers
-    this.handVideo.muted = true;
-    const playPromise = this.handVideo.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // Retry upon initial click
-        const unlock = () => {
-          this.handVideo.play().catch(() => {});
-          document.removeEventListener('click', unlock);
-          document.removeEventListener('touchstart', unlock);
-        };
-        document.addEventListener('click', unlock, { once: true });
-        document.addEventListener('touchstart', unlock, { once: true });
+    // Track mouse hover on hand
+    if (this.handTrigger) {
+      this.handTrigger.addEventListener('mouseenter', () => {
+        if (this.handRenderer) this.handRenderer.isHovered = true;
+      });
+      this.handTrigger.addEventListener('mouseleave', () => {
+        if (this.handRenderer) this.handRenderer.isHovered = false;
       });
     }
   }
@@ -89,27 +78,34 @@ class MinimalLoveRoseApp {
       if (this.currentScreen === 'rose') return;
       this.currentScreen = 'rose';
 
-      // 1. Play romantic harmonic chime
+      // 1. Trigger tap & shockwave on the hand canvas
+      if (this.handRenderer) {
+        this.handRenderer.triggerClick();
+      }
+
+      // 2. Play romantic harmonic chime
       try {
         this.audioManager.init();
         this.audioManager.playChime(523.25, 'sine', 0.15, 2.4); // C5 soft chime
       } catch (e) {}
 
-      // 2. Smoothly fade out hand gesture screen
-      if (this.handScreen) {
-        this.handScreen.classList.remove('active');
-      }
-
-      // 3. Smoothly fade in rose screen
+      // 3. Smoothly fade out hand gesture screen after click animation
       setTimeout(() => {
-        if (this.roseScreen) {
-          this.roseScreen.classList.add('active');
+        if (this.handScreen) {
+          this.handScreen.classList.remove('active');
         }
-        if (this.roseSim) {
-          this.roseSim.setBloomProgress(0); // Gracefully blossom from tight bud
-          this.roseSim.isPlaying = true;
-        }
-      }, 350);
+
+        // 4. Smoothly fade in rose screen
+        setTimeout(() => {
+          if (this.roseScreen) {
+            this.roseScreen.classList.add('active');
+          }
+          if (this.roseSim) {
+            this.roseSim.setBloomProgress(0); // Gracefully blossom from tight bud
+            this.roseSim.isPlaying = true;
+          }
+        }, 350);
+      }, 250);
     };
 
     if (this.handTrigger) {
@@ -138,10 +134,6 @@ class MinimalLoveRoseApp {
           if (this.handScreen) {
             this.handScreen.classList.add('active');
           }
-          if (this.handVideo) {
-            this.handVideo.currentTime = 0;
-            this.handVideo.play().catch(() => {});
-          }
         }, 350);
       });
     }
@@ -165,6 +157,12 @@ class MinimalLoveRoseApp {
     const loop = (now) => {
       const dt = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
+
+      // When hand screen is active, animate the After Effects ASCII hand
+      if (this.currentScreen === 'hand' && this.handRenderer) {
+        this.handRenderer.update(dt);
+        this.handRenderer.render();
+      }
 
       // When rose screen is active, simulate and blit ASCII frame
       if (this.currentScreen === 'rose' && this.roseSim && this.asciiEngine && this.displayCanvas) {

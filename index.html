@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -18,10 +18,10 @@
 
   <main class="stage">
 
-    <!-- Screen 1: The Exact Video ASCII Hand (100% Seamless, No Box) -->
+    <!-- Screen 1: The Exact After Effects ASCII Hand (Pure Programmatic Canvas, No Video, No Box) -->
     <div id="hand-screen" class="scene active">
       <div class="seamless-hand-trigger" id="hand-trigger" role="button" tabindex="0" title="Click to show the love">
-        <video id="hand-video" src="assets/hand-video.mp4" autoplay loop muted playsinline preload="auto"></video>
+        <canvas id="hand-canvas" width="340" height="580"></canvas>
       </div>
       <p class="whisper-hint">click to show the love</p>
     </div>
