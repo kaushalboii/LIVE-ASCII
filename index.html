@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Homemade+Apple&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -28,13 +28,6 @@
       
       <!-- Foreground: Sealed ASCII Letter For You positioned in bottom-left -->
       <canvas id="envelope-canvas" aria-label="ASCII Sealed Letter For You"></canvas>
-      
-      <!-- Thematic Quote in Unique Decorative Typeface -->
-      <div id="knight-quote" class="thematic-quote">
-        <span class="quote-symbol">✦</span>
-        <span class="quote-text">my feelings for you will never end</span>
-        <span class="quote-symbol">✦</span>
-      </div>
 
       <p class="whisper-hint" id="knight-hint">touch the letter to open</p>
     </div>
@@ -47,23 +40,25 @@
       <!-- 2. The Pure Mathematical ASCII Blooming Rose with Light Rays -->
       <canvas id="rose-canvas" class="rose-canvas" aria-label="Pure ASCII Blooming Rose"></canvas>
 
-      <!-- 3. Dreamy Floating Cloud Love Note (Pops after the Rose Blooms) -->
-      <div id="cloud-note" class="cloud-note">
-        <div class="cloud-puff puff-tl"></div>
-        <div class="cloud-puff puff-tr"></div>
-        <div class="cloud-puff puff-bl"></div>
-        <div class="cloud-puff puff-br"></div>
-        <div class="cloud-body">
-          <div class="cloud-tag">☁️ &nbsp;a quiet note for you &nbsp;✦</div>
-          <p class="cloud-quote">
-            &ldquo;My feelings for you will never end.<br>
-            In every language, in every beat of time &mdash;<br>
-            you are my favorite thought in a crowded room,<br>
-            the warmth in every cold day, and the sweetest part of my life.&rdquo;
-          </p>
-          <p class="cloud-author">&mdash; forever yours, Kaushal</p>
-          <button id="btn-replay" class="cloud-replay" title="Experience again">hold again ↺</button>
+      <!-- 3. Minimal, Lightweight Love Note with Handwritten Signature -->
+      <div id="cloud-note" class="minimal-note">
+        <div class="note-pill">✦ &nbsp;forever written in starlight &nbsp;✦</div>
+        
+        <p class="note-quote">
+          &ldquo;In a world of fleeting moments, you are my constant.<br>
+          My feelings for you will never end.&rdquo;
+        </p>
+
+        <p class="note-subtext">
+          Every quiet thought finds its way to you &mdash; today, tomorrow, always.
+        </p>
+
+        <div class="note-signature-block">
+          <span class="sign-prefix">forever yours,</span>
+          <span class="sign-name">Kaushal Maran</span>
         </div>
+
+        <button id="btn-replay" class="note-replay" title="Experience again">hold again ↺</button>
       </div>
     </div>
 

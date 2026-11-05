@@ -34,7 +34,6 @@ class LiveAsciiLoveApp {
 
     this.knightCanvas = document.getElementById('knight-canvas');
     this.envelopeCanvas = document.getElementById('envelope-canvas');
-    this.knightQuote = document.getElementById('knight-quote');
     this.knightHint = document.getElementById('knight-hint');
 
     this.heartCanvas = document.getElementById('heart-canvas');
