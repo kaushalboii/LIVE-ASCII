@@ -16,29 +16,22 @@
 </head>
 <body class="pure-black">
 
-  <!-- Live Looping Clicking Hand Video (Direct Stream) -->
-  <video id="hand-video" src="assets/hand-video.mp4" playsinline muted autoplay loop preload="auto" style="display:none;"></video>
-
   <!-- Ambient Botanical ASCII Petals & Stardust Field (Fills Desktop Flanks) -->
   <canvas id="ambient-canvas"></canvas>
 
   <main class="stage">
 
-    <!-- Screen 1: The Exact After Effects ASCII Hand & Animated Button -->
-    <div id="hand-screen" class="scene active">
-      <div class="seamless-hand-trigger" id="hand-trigger" role="button" tabindex="0" title="Click to show the love">
-        <canvas id="hand-canvas" width="380" height="660"></canvas>
-      </div>
-      <p class="whisper-hint">click to show the love</p>
+    <!-- Screen 1: The ASCII Knight with Flowing Red Cloak (Replaces Click Hand) -->
+    <div id="knight-screen" class="scene active">
+      <canvas id="knight-canvas" aria-label="ASCII Knight with waving red cloak"></canvas>
+      <p class="whisper-hint" id="knight-hint">touch the knight to reveal the love</p>
     </div>
 
-    <!-- Screen 2: The Living Colored ASCII Rose (Blooms into 2 Roses + Cloud Note) -->
-    <div id="rose-screen" class="scene">
-      <div class="seamless-rose-wrapper">
-        <canvas id="rose-canvas" width="680" height="680"></canvas>
-      </div>
+    <!-- Screen 2: 3D Blooming Rose & Lily Bouquet with Golden Fireflies -->
+    <div id="bouquet-screen" class="scene">
+      <canvas id="bouquet-canvas" aria-label="3D Blooming Rose Bouquet in ASCII"></canvas>
 
-      <!-- Dreamy Floating Cloud Note (Pops after 2 Roses Bloom) -->
+      <!-- Dreamy Floating Cloud Love Note (Pops after the Bouquet Blooms) -->
       <div id="cloud-note" class="cloud-note">
         <div class="cloud-puff puff-tl"></div>
         <div class="cloud-puff puff-tr"></div>
@@ -49,7 +42,7 @@
           <p class="cloud-quote">
             &ldquo;You are my favorite thought in a crowded room,<br>
             the warmth in every cold day, and the sweetest plot twist of my life.<br>
-            Two flowers blooming together, just like us &mdash; side by side, forever.&rdquo;
+            Blooming together, just like us &mdash; side by side, forever.&rdquo;
           </p>
           <p class="cloud-author">&mdash; all my love, Kaushal</p>
           <button id="btn-replay" class="cloud-replay" title="Experience again">hold again ↺</button>

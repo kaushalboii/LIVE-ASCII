@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Pure Seamless ASCII Love Experience — No Boxes, No Borders
+   Pure Seamless ASCII Love Experience — ASCII Knight & 3D Bouquet
    ========================================================================== */
 
 *, *::before, *::after {
@@ -17,14 +17,9 @@ html, body {
 
 body.pure-black {
   background-color: #000000;
-  /* Deep, warm ambient velvet radial glow that removes flat blackness without adding boxes */
-  background-image: radial-gradient(circle at 50% 46%, rgba(150, 16, 45, 0.10) 0%, rgba(32, 5, 12, 0.03) 52%, #000000 82%);
+  background-image: radial-gradient(circle at 50% 50%, rgba(150, 16, 45, 0.08) 0%, rgba(20, 5, 10, 0.02) 55%, #000000 85%);
   color: #f7eded;
   font-family: 'Cormorant Garamond', serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   user-select: none;
   -webkit-font-smoothing: antialiased;
 }
@@ -40,131 +35,100 @@ body.pure-black {
   display: block;
 }
 
-/* Centered Stage */
+/* Screen Scenes */
 .stage {
   position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 800px;
+  width: 100vw;
   height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 20px;
+  overflow: hidden;
 }
 
 .scene {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  max-width: 680px;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: translate(-50%, -48%) scale(0.98);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
 }
 
 .scene.active {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, -50%) scale(1);
 }
 
-/* ==========================================================================
-   Screen 1: The Seamless After Effects ASCII Hand & Animated Button
-   ========================================================================== */
-.seamless-hand-trigger {
-  position: relative;
-  background: transparent;
-  border: none;
-  outline: none;
-  box-shadow: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.seamless-hand-trigger:hover {
-  transform: scale(1.02);
-}
-
-.seamless-hand-trigger:active {
-  transform: scale(0.98);
-}
-
-#hand-canvas {
-  max-width: 380px;
-  max-height: 660px;
-  width: 100%;
-  height: auto;
-  background: transparent;
-  border: none;
-  outline: none;
-  box-shadow: none;
+/* Screen 1: Canvas for ASCII Knight with Red Cloak */
+#knight-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   display: block;
+  object-fit: contain;
+  background: #000000;
+  cursor: pointer;
+  z-index: 3;
 }
 
 .whisper-hint {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: 'Cormorant Garamond', serif;
-  font-size: 19px;
+  font-size: 20px;
   font-style: italic;
-  letter-spacing: 2.4px;
-  color: #c98e99;
-  margin-top: 14px;
+  letter-spacing: 2.8px;
+  color: #ff9ebb;
+  text-shadow: 0 0 16px rgba(255, 20, 80, 0.55);
   cursor: pointer;
+  z-index: 10;
   animation: breathing 3s infinite ease-in-out;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
 }
 
 .whisper-hint:hover {
-  color: #ff9ebb;
+  color: #ffffff;
+  transform: translateX(-50%) scale(1.04);
 }
 
 @keyframes breathing {
-  0%, 100% { opacity: 0.42; }
+  0%, 100% { opacity: 0.45; }
   50% { opacity: 0.95; }
 }
 
-/* ==========================================================================
-   Screen 2: The Seamless Living Colored ASCII Rose (Majestic & Prominent)
-   ========================================================================== */
-.seamless-rose-wrapper {
-  position: relative;
-  width: 100%;
-  max-width: 660px;
-  aspect-ratio: 1 / 1;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  margin-bottom: 24px;
-}
-
-.seamless-rose-wrapper canvas {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+/* Screen 2: Canvas for 3D Blooming Rose Bouquet */
+#bouquet-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   display: block;
-  background: transparent;
-  border: none;
-  box-shadow: none;
+  object-fit: contain;
+  background: #000000;
   cursor: pointer;
+  z-index: 3;
 }
 
 /* ==========================================================================
-   Dreamy Floating Cloud Love Note (Pops like a cloud after 2 roses bloom)
+   Dreamy Floating Cloud Love Note (Pops after the Bouquet Blooms)
    ========================================================================== */
 .cloud-note {
-  position: relative;
+  position: fixed;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%) translateY(28px) scale(0.88);
   max-width: 540px;
+  width: 90%;
   margin: 0 auto;
   padding: 24px 32px;
   background: rgba(22, 12, 18, 0.82);
@@ -177,15 +141,14 @@ body.pure-black {
     0 0 36px rgba(230, 26, 68, 0.18),
     inset 0 1px 1px rgba(255, 255, 255, 0.2);
   opacity: 0;
-  transform: translateY(28px) scale(0.88);
   pointer-events: none;
   transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 10;
+  z-index: 20;
 }
 
 .cloud-note.visible {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translateX(-50%) translateY(0) scale(1);
   pointer-events: auto;
   animation: cloudFloat 4.8s infinite ease-in-out alternate 1.1s;
 }
@@ -291,32 +254,20 @@ body.pure-black {
 }
 
 @keyframes cloudFloat {
-  0% { transform: translateY(0) scale(1); }
-  100% { transform: translateY(-7px) scale(1.01); }
+  0% { transform: translateX(-50%) translateY(0) scale(1); }
+  100% { transform: translateX(-50%) translateY(-7px) scale(1.01); }
 }
 
 @media (max-width: 640px) {
-  #hand-canvas {
-    max-width: 320px;
-    max-height: 550px;
+  .whisper-hint {
+    font-size: 16px;
+    bottom: 18px;
   }
-  .seamless-rose-wrapper {
-    max-width: 380px;
+  .cloud-note {
+    padding: 18px 22px;
+    bottom: 20px;
   }
-  .note-quote {
-    font-size: 19px;
-  }
-}
-
-@media (max-width: 480px) {
-  #hand-canvas {
-    max-width: 280px;
-    max-height: 480px;
-  }
-  .seamless-rose-wrapper {
-    max-width: 320px;
-  }
-  .note-quote {
-    font-size: 17px;
+  .cloud-quote {
+    font-size: 18px;
   }
 }
