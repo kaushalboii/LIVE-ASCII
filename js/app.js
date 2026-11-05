@@ -265,3 +265,4 @@ class LiveAsciiApp {
 window.addEventListener('DOMContentLoaded', () => {
   window.app = new LiveAsciiApp();
 });
+

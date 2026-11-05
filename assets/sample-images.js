@@ -143,3 +143,4 @@ export function generatePreset(type = 'rose', width = 600, height = 600) {
 
   return canvas;
 }
+

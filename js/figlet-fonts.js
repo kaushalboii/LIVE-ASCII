@@ -103,3 +103,4 @@ export const AsciiBannerGenerator = {
     return lines.join('\n');
   }
 };
+
