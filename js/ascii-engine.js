@@ -212,9 +212,8 @@ export class AsciiEngine {
     const cellW = w / cols;
     const cellH = h / rows;
 
-    // Dark terminal background
-    ctx.fillStyle = '#050308';
-    ctx.fillRect(0, 0, w, h);
+    // 100% transparent background — borderless, seamless floating ASCII art
+    ctx.clearRect(0, 0, w, h);
 
     ctx.font = `${cellH * 0.95}px ${this.fontFamily}`;
     ctx.textAlign = 'center';

@@ -5,59 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>for you 🌹</title>
   <meta name="description" content="A gentle flower for someone special.">
-  <meta name="theme-color" content="#090709">
+  <meta name="theme-color" content="#000000">
 
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="minimal-love">
+<body class="pure-black">
 
-  <!-- Ambient canvas for soft gentle floating particles -->
-  <canvas id="ambient-canvas"></canvas>
+  <main class="stage">
 
-  <!-- Discreet sound button in top corner -->
-  <button id="btn-sound" class="sound-pill" aria-label="Toggle sound">
-    <span id="sound-icon">sound &bull; off</span>
-  </button>
-
-  <main class="viewport-stage">
-
-    <!-- Screen 1: The Exact ASCII Hand from Reference Video -->
-    <div id="intro-screen" class="scene active">
-      <div class="intro-box">
-        <p class="whisper-text">a gift for you</p>
-        
-        <!-- Interactive ASCII Hand Canvas (Forearm, Pointing Index Finger, Blue Rim Accent) -->
-        <div class="ascii-hand-container" id="hand-trigger" role="button" tabindex="0" title="Touch to bloom">
-          <canvas id="hand-canvas" width="400" height="540"></canvas>
-        </div>
-
-        <p class="tap-hint">touch to bloom</p>
+    <!-- Screen 1: The Exact Video ASCII Hand (100% Seamless, No Box) -->
+    <div id="hand-screen" class="scene active">
+      <div class="seamless-hand-trigger" id="hand-trigger" role="button" tabindex="0" title="Click to show the love">
+        <video id="hand-video" src="assets/hand-video.mp4" autoplay loop muted playsinline preload="auto"></video>
       </div>
+      <p class="whisper-hint">click to show the love</p>
     </div>
 
-    <!-- Screen 2: The Soft Blooming ASCII Rose & Intimate Note -->
+    <!-- Screen 2: The Living Colored ASCII Rose (100% Seamless, No Box) -->
     <div id="rose-screen" class="scene">
-      <div class="rose-box">
-        <!-- Canvas rendering the living colored ASCII rose -->
-        <div class="canvas-holder">
-          <canvas id="rose-canvas" width="700" height="700"></canvas>
-        </div>
+      <div class="seamless-rose-wrapper">
+        <canvas id="rose-canvas" width="600" height="600"></canvas>
+      </div>
 
-        <!-- The Soft Love Note -->
-        <div class="love-note">
-          <p class="note-quote">
-            &ldquo;In every petal, a quiet thought of you.<br>
-            You bring warmth and grace to everything.&rdquo;
-          </p>
-          <p class="note-author">— forever yours, Kaushal</p>
-        </div>
-
-        <!-- Subtle replay link -->
+      <!-- Pure Borderless Love Note -->
+      <div class="pure-note">
+        <p class="note-quote">
+          &ldquo;In every petal, a quiet thought of you.<br>
+          You bring warmth and grace to everything.&rdquo;
+        </p>
+        <p class="note-author">— forever yours, Kaushal</p>
         <button id="btn-replay" class="replay-link">hold again</button>
       </div>
     </div>

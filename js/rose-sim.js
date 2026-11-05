@@ -263,13 +263,8 @@ export class RoseSimulator {
     // Clear background to clean transparent/dark studio atmosphere
     ctx.clearRect(0, 0, w, h);
 
-    // Subtle dark vignette background so colors pop realistically
-    const bgGrad = ctx.createRadialGradient(w / 2, h / 2, 80, w / 2, h / 2, 450);
-    bgGrad.addColorStop(0, '#100b12');
-    bgGrad.addColorStop(0.5, '#070509');
-    bgGrad.addColorStop(1, '#020104');
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, w, h);
+    // Pure transparent background — no dark card box or vignette
+    ctx.clearRect(0, 0, w, h);
 
     ctx.save();
 
