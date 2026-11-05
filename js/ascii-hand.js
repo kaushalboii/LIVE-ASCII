@@ -4,20 +4,19 @@
  * - Exact 30x56 character matrix from the reference breakdown video
  * - Character palette: '●' (dense filled circles), 'X', '1', '/'
  * - Electric cyan/cobalt blue square accent blocks ('■') along the knuckles and left rim silhouette
- * - Smooth breathing sway and digital character shimmer
- * - Circular click target with upward arrow (↑)
- * - Fingertip tap displacement & shockwave ring upon click
+ * - Continuous video-like clicking gesture animation loop (hand rises, taps circle, emits shockwave)
+ * - Perfectly aligned target circle with upward arrow (↑) right above the pointing index finger
  * - Pure black canvas with faint dot matrix background
  */
 
 const HAND_GRID = [
   '                        /     ',
-  '          /           111     ',
-  '        X●●●/         1X11    ',
-  '        ●●X●●         1XXX    ',
-  '       /●●●●●         1X●X    ',
-  '        ●●●●●         /X●X1   ',
-  '        1●●●          /XXXX   ',
+  '                      111     ',
+  '                      1X11    ',
+  '                      1XXX    ',
+  '                      1X●X    ',
+  '                      /X●X1   ',
+  '                      /XXXX   ',
   '                      /XXXX   ',
   '                  /////XXXX/  ',
   '              /111111111XXX1  ',
@@ -84,7 +83,7 @@ export class AsciiHandRenderer {
 
     // Set internal resolution
     this.canvas.width = 340;
-    this.canvas.height = 580;
+    this.canvas.height = 600;
   }
 
   triggerClick() {
@@ -115,21 +114,50 @@ export class AsciiHandRenderer {
     // 2. Faint After Effects dot matrix background
     this.drawDotGrid(ctx, w, h);
 
-    // 3. Motion dynamics: gentle sway + tap displacement
-    const swayY = Math.sin(this.time * 2.2) * 3.5;
-    const swayX = Math.cos(this.time * 1.4) * 1.5;
-    let tapDisplacement = 0;
-    if (this.isClicking) {
-      tapDisplacement = Math.sin(this.clickProgress * Math.PI) * 14;
-    } else if (this.isHovered) {
-      tapDisplacement = 4;
+    // 3. CONTINUOUS VIDEO-LIKE CLICKING GESTURE ANIMATION LOOP (cycle: 1.9s)
+    const cycle = (this.time % 1.9) / 1.9;
+    let autoLift = 0;
+    let isAutoTapping = false;
+    let autoRipple = 0;
+
+    if (cycle < 0.38) {
+      // Approach: Hand rises up smoothly toward circle
+      const p = cycle / 0.38;
+      autoLift = (1 - Math.cos(p * Math.PI)) * 0.5 * 16;
+    } else if (cycle < 0.48) {
+      // Impact: Fingertip taps circle with a crisp dip
+      const p = (cycle - 0.38) / 0.1;
+      autoLift = 16 - Math.sin(p * Math.PI) * 4;
+      isAutoTapping = true;
+    } else if (cycle < 0.72) {
+      // Shockwave expands, hand holds briefly then eases
+      const p = (cycle - 0.48) / 0.24;
+      autoRipple = p;
+      autoLift = 16 * (1 - p * 0.5);
+    } else {
+      // Smooth return to resting baseline
+      const p = (cycle - 0.72) / 0.28;
+      autoLift = 16 * 0.5 * (1 - p);
     }
 
-    // Origin to center the 30x56 grid
-    const totalGridW = this.cols * this.cell;
-    const totalGridH = this.rows * this.cell;
-    const startX = Math.round((w - totalGridW) / 2 + swayX);
-    const startY = Math.round((h - totalGridH) / 2 + swayY - tapDisplacement);
+    // User manual click overrides
+    let tapDisplacement = 0;
+    if (this.isClicking) {
+      tapDisplacement = Math.sin(this.clickProgress * Math.PI) * 16;
+    }
+
+    // Gentle organic swaying
+    const swayX = Math.cos(this.time * 1.5) * 1.5;
+    const swayY = Math.sin(this.time * 2.0) * 2.0;
+
+    // Center the hand horizontally (hand center is column 18.5)
+    const startX = Math.round(w / 2 - 18.5 * this.cell + swayX);
+    // Vertical placement: place hand so target circle is nicely framed near top
+    const startY = Math.round(65 + swayY - autoLift - tapDisplacement);
+
+    // Target circle coordinates: positioned right above index finger (col 23.5, row -3)
+    const circleX = startX + 23.5 * this.cell;
+    const circleY = 48 + swayY * 0.5;
 
     // 4. Render ASCII matrix characters and blue blocks
     ctx.textAlign = 'center';
@@ -146,17 +174,18 @@ export class AsciiHandRenderer {
 
         const posX = startX + x * this.cell + this.cell * 0.5;
 
-        // Digital shimmer effect matching After Effects ASCII rendering
-        const shimmer = 0.82 + 0.18 * Math.sin(this.time * 3.8 + x * 0.35 + y * 0.25);
+        // Digital matrix shimmer matching After Effects ASCII plugin
+        const shimmer = 0.82 + 0.18 * Math.sin(this.time * 4.2 + x * 0.4 + y * 0.3);
 
         if (char === 'B') {
           // Electric cyan/cobalt blue solid tile
           const sq = this.cell * 0.88;
-          const bluePulse = 0.88 + 0.12 * Math.sin(this.time * 3.2 + y * 0.3);
+          const flare = isAutoTapping ? 1.3 : 1.0;
+          const bluePulse = 0.88 + 0.12 * Math.sin(this.time * 3.5 + y * 0.3);
           ctx.save();
-          ctx.fillStyle = `rgba(46, 136, 255, ${shimmer * bluePulse})`;
+          ctx.fillStyle = `rgba(46, 136, 255, ${Math.min(1, shimmer * bluePulse * flare)})`;
           ctx.shadowColor = '#00d4ff';
-          ctx.shadowBlur = 8;
+          ctx.shadowBlur = isAutoTapping ? 14 : 8;
           ctx.fillRect(posX - sq * 0.5, posY - sq * 0.5, sq, sq);
           ctx.restore();
         } else if (char === '●') {
@@ -192,8 +221,8 @@ export class AsciiHandRenderer {
       }
     }
 
-    // 5. Draw Target Circle with Upward Arrow (↑)
-    this.drawTargetCircle(ctx, startX, startY);
+    // 5. Render Click Target Circle ( ↑ ) directly above pointing index finger
+    this.drawTargetCircle(ctx, circleX, circleY, isAutoTapping, autoRipple);
   }
 
   drawDotGrid(ctx, w, h) {
@@ -210,28 +239,24 @@ export class AsciiHandRenderer {
     ctx.restore();
   }
 
-  drawTargetCircle(ctx, startX, startY) {
-    // The target circle ( ↑ ) sits above the hand at columns 11-13, rows 3-5
-    const circleX = startX + 12 * this.cell;
-    const circleY = startY + 4 * this.cell;
-
+  drawTargetCircle(ctx, circleX, circleY, isTapping, rippleProg) {
     ctx.save();
 
-    // Pulsing circle ring
-    const pulse = Math.sin(this.time * 3.8) * 1.5;
-    const r = 14 + pulse;
+    // Pulse size: flashes on tap
+    const pulse = Math.sin(this.time * 4.0) * 1.5;
+    const r = (isTapping ? 17 : 14) + pulse;
 
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.92)';
-    ctx.lineWidth = 1.8;
+    ctx.strokeStyle = isTapping ? '#00f0ff' : 'rgba(255, 255, 255, 0.92)';
+    ctx.lineWidth = isTapping ? 2.6 : 1.8;
     ctx.shadowColor = '#00f0ff';
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = isTapping ? 18 : 10;
     ctx.beginPath();
     ctx.arc(circleX, circleY, r, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Upward arrow icon (↑)
+    // Upward arrow icon (↑) inside circle
     ctx.fillStyle = '#ffffff';
-    ctx.shadowBlur = 0;
+    ctx.shadowBlur = isTapping ? 8 : 0;
     ctx.beginPath();
     ctx.moveTo(circleX, circleY - 6);
     ctx.lineTo(circleX - 5, circleY);
@@ -243,24 +268,31 @@ export class AsciiHandRenderer {
     ctx.closePath();
     ctx.fill();
 
-    // Expanding shockwave ring upon click
+    // Continuous video-like shockwave ring
+    if (rippleProg > 0) {
+      const ringR = 14 + rippleProg * 65;
+      const alpha = (1.0 - rippleProg) * 0.85;
+
+      ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
+      ctx.lineWidth = 2.0;
+      ctx.shadowColor = '#00f0ff';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.arc(circleX, circleY, ringR, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // Manual user click expanding shockwave
     if (this.isClicking) {
-      const tipX = startX + 24 * this.cell;
-      const tipY = startY + 2 * this.cell;
-      const ringR = this.clickProgress * 75;
+      const ringR = this.clickProgress * 80;
       const alpha = 1.0 - this.clickProgress;
 
       ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
-      ctx.lineWidth = 2.4;
+      ctx.lineWidth = 3.0;
       ctx.shadowColor = '#00f0ff';
-      ctx.shadowBlur = 12;
+      ctx.shadowBlur = 16;
       ctx.beginPath();
-      ctx.arc(tipX, tipY, ringR, 0, Math.PI * 2);
-      ctx.stroke();
-
-      // Second ring from circle
-      ctx.beginPath();
-      ctx.arc(circleX, circleY, ringR * 0.85, 0, Math.PI * 2);
+      ctx.arc(circleX, circleY, ringR, 0, Math.PI * 2);
       ctx.stroke();
     }
 
