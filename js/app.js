@@ -1,8 +1,10 @@
 /**
  * A Minimal & Soft Love Rose
+ * With After Effects Style ASCII Hand Gesture (From Reference Video)
  * Clean, poetic, elegant and quiet intimacy.
  */
 
+import { AsciiHandRenderer } from './ascii-hand.js';
 import { RoseSimulator } from './rose-sim.js';
 import { AsciiEngine } from './ascii-engine.js';
 import { AudioManager } from './audio-fx.js';
@@ -18,12 +20,15 @@ class MinimalLoveRoseApp {
   }
 
   initCanvases() {
-    // Offscreen photoreal rose canvas
+    // 1. Hand Canvas
+    this.handCanvas = document.getElementById('hand-canvas');
+
+    // 2. Offscreen photoreal rose canvas
     this.realCanvas = document.createElement('canvas');
     this.realCanvas.width = 700;
     this.realCanvas.height = 700;
 
-    // Display canvas
+    // 3. Rose display canvas
     this.displayCanvas = document.getElementById('rose-canvas');
     this.displayCanvas.width = 700;
     this.displayCanvas.height = 700;
@@ -31,12 +36,19 @@ class MinimalLoveRoseApp {
 
   initEngines() {
     this.audioManager = new AudioManager();
+
+    // 1. Exact ASCII Hand Gesture from reference video
+    if (this.handCanvas) {
+      this.handRenderer = new AsciiHandRenderer(this.handCanvas);
+    }
+
+    // 2. Blooming Rose Simulation
     this.roseSim = new RoseSimulator(this.realCanvas);
     this.roseSim.speed = 0.06; // calm, unhurried blooming pace
     this.roseSim.isPlaying = true;
     this.roseSim.loopMode = 'pingpong';
 
-    // Soft colored ASCII engine
+    // 3. Soft colored ASCII engine
     this.asciiEngine = new AsciiEngine({
       columns: 95,
       charSet: 'standard',
@@ -48,25 +60,41 @@ class MinimalLoveRoseApp {
   initInteraction() {
     const introScreen = document.getElementById('intro-screen');
     const roseScreen = document.getElementById('rose-screen');
-    const trigger = document.getElementById('trigger-bloom');
+    const trigger = document.getElementById('hand-trigger');
     const replayBtn = document.getElementById('btn-replay');
     const soundBtn = document.getElementById('btn-sound');
     const soundIcon = document.getElementById('sound-icon');
 
+    if (trigger && this.handRenderer) {
+      trigger.addEventListener('mouseenter', () => {
+        this.handRenderer.isHovered = true;
+      });
+      trigger.addEventListener('mouseleave', () => {
+        this.handRenderer.isHovered = false;
+      });
+    }
+
     const showRose = () => {
       if (this.currentScreen === 'rose') return;
-      this.currentScreen = 'rose';
 
-      // Soft chime
+      // 1. Trigger hand finger tap down animation
+      if (this.handRenderer) {
+        this.handRenderer.triggerClick();
+      }
+
+      // 2. Soft chime
       this.audioManager.init();
       this.audioManager.playChime(523.25, 'sine', 0.12, 2.0);
 
-      // Smooth fade transition
-      introScreen.classList.remove('active');
+      // 3. Graceful fade transition after finger tap
       setTimeout(() => {
-        roseScreen.classList.add('active');
-        this.roseSim.setBloomProgress(0); // bloom gracefully
-      }, 300);
+        this.currentScreen = 'rose';
+        introScreen.classList.remove('active');
+        setTimeout(() => {
+          roseScreen.classList.add('active');
+          this.roseSim.setBloomProgress(0); // bloom gracefully
+        }, 300);
+      }, 200);
     };
 
     if (trigger) {
@@ -156,6 +184,13 @@ class MinimalLoveRoseApp {
       const dt = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
 
+      // Screen 1: Render the animated ASCII Hand
+      if (this.currentScreen === 'intro' && this.handRenderer) {
+        this.handRenderer.update(dt);
+        this.handRenderer.render();
+      }
+
+      // Screen 2: Render the living colored ASCII rose
       if (this.currentScreen === 'rose') {
         this.roseSim.update(dt);
         this.roseSim.render();

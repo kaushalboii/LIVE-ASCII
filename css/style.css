@@ -112,33 +112,36 @@ body.minimal-love {
   margin-bottom: 24px;
 }
 
-.ascii-hand-minimal {
+.ascii-hand-container {
   position: relative;
-  background: rgba(18, 12, 18, 0.6);
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 400 / 540;
+  background: radial-gradient(circle at 50% 60%, #150915 0%, #060206 80%);
   border: 1px solid rgba(225, 29, 72, 0.2);
-  border-radius: 20px;
-  padding: 24px 34px;
+  border-radius: 24px;
   cursor: pointer;
   backdrop-filter: blur(12px);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-  transition: all 0.4s ease;
+  box-shadow:
+    0 16px 50px rgba(0, 0, 0, 0.85),
+    0 0 35px rgba(0, 229, 255, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.ascii-hand-minimal:hover {
-  border-color: rgba(225, 29, 72, 0.45);
-  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(225, 29, 72, 0.15);
-  transform: translateY(-2px);
+.ascii-hand-container:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: rgba(0, 229, 255, 0.4);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.95),
+    0 0 45px rgba(0, 229, 255, 0.25);
 }
 
-.ascii-art {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.35;
-  color: #e28d9d;
-  margin: 0;
-  pointer-events: none;
-  text-shadow: 0 0 12px rgba(225, 29, 72, 0.4);
+.ascii-hand-container canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .tap-hint {

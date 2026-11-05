@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -19,35 +19,24 @@
   <!-- Ambient canvas for soft gentle floating particles -->
   <canvas id="ambient-canvas"></canvas>
 
-  <!-- Discreet sound button -->
+  <!-- Discreet sound button in top corner -->
   <button id="btn-sound" class="sound-pill" aria-label="Toggle sound">
     <span id="sound-icon">sound &bull; off</span>
   </button>
 
   <main class="viewport-stage">
 
-    <!-- Screen 1: The Minimal Hand Invitation -->
+    <!-- Screen 1: The Exact ASCII Hand from Reference Video -->
     <div id="intro-screen" class="scene active">
       <div class="intro-box">
         <p class="whisper-text">a gift for you</p>
         
-        <div class="ascii-hand-minimal" id="trigger-bloom" role="button" tabindex="0">
-          <pre class="ascii-art">
-          .
-         / \
-        |   |
-        |   |
-    .-. |   |
-   /   \|   | .-.
-  |     |   |/   \
-  |     '   '     |
-   \             /
-    \           /
-     |    ♡    |
-          </pre>
+        <!-- Interactive ASCII Hand Canvas (Forearm, Pointing Index Finger, Blue Rim Accent) -->
+        <div class="ascii-hand-container" id="hand-trigger" role="button" tabindex="0" title="Touch to bloom">
+          <canvas id="hand-canvas" width="400" height="540"></canvas>
         </div>
 
-        <p class="tap-hint">touch gently to bloom</p>
+        <p class="tap-hint">touch to bloom</p>
       </div>
     </div>
 
