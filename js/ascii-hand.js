@@ -1,11 +1,14 @@
 /**
  * Photorealistic After Effects ASCII Hand Renderer
- * Recreates the exact After Effects style ASCII pointing hand from @easebysrish reference video:
+ * Recreates the exact After Effects style ASCII pointing hand & button click animation
+ * from the @easebysrish reference video:
  * - Exact 30x56 character matrix from the reference breakdown video
  * - Character palette: '●' (dense filled circles), 'X', '1', '/'
  * - Electric cyan/cobalt blue square accent blocks ('■') along the knuckles and left rim silhouette
- * - Continuous video-like clicking gesture animation loop (hand rises, taps circle, emits shockwave)
- * - Perfectly aligned target circle with upward arrow (↑) right above the pointing index finger
+ * - Glowing interactive target pill button [ ✦ CLICK TO SHOW THE LOVE ↑ ]
+ * - Physical button depress animation (scale & dip) upon finger impact
+ * - Radiating electric cyan shockwave rings and knuckle neon flaring
+ * - Continuous 60 FPS video-like gesture cycle
  * - Pure black canvas with faint dot matrix background
  */
 
@@ -81,9 +84,8 @@ export class AsciiHandRenderer {
     this.rows = HAND_GRID.length;
     this.cell = 10;
 
-    // Set internal resolution
-    this.canvas.width = 340;
-    this.canvas.height = 600;
+    this.canvas.width = 360;
+    this.canvas.height = 620;
   }
 
   triggerClick() {
@@ -95,7 +97,7 @@ export class AsciiHandRenderer {
     this.time += dt;
 
     if (this.isClicking) {
-      this.clickProgress += dt * 3.2;
+      this.clickProgress += dt * 3.4;
       if (this.clickProgress >= 1.0) {
         this.isClicking = false;
         this.clickProgress = 0;
@@ -114,36 +116,46 @@ export class AsciiHandRenderer {
     // 2. Faint After Effects dot matrix background
     this.drawDotGrid(ctx, w, h);
 
-    // 3. CONTINUOUS VIDEO-LIKE CLICKING GESTURE ANIMATION LOOP (cycle: 1.9s)
-    const cycle = (this.time % 1.9) / 1.9;
+    // 3. CONTINUOUS VIDEO-LIKE CLICKING GESTURE ANIMATION LOOP (cycle: 2.0s)
+    const cycle = (this.time % 2.0) / 2.0;
     let autoLift = 0;
     let isAutoTapping = false;
     let autoRipple = 0;
+    let btnScale = 1.0;
+    let btnDepress = 0;
 
-    if (cycle < 0.38) {
-      // Approach: Hand rises up smoothly toward circle
-      const p = cycle / 0.38;
-      autoLift = (1 - Math.cos(p * Math.PI)) * 0.5 * 16;
+    if (cycle < 0.36) {
+      // Approach: Hand rises up smoothly toward the button
+      const p = cycle / 0.36;
+      autoLift = (1 - Math.cos(p * Math.PI)) * 0.5 * 18;
     } else if (cycle < 0.48) {
-      // Impact: Fingertip taps circle with a crisp dip
-      const p = (cycle - 0.38) / 0.1;
-      autoLift = 16 - Math.sin(p * Math.PI) * 4;
+      // Impact: Fingertip presses into button! Button visibly depresses
+      const p = (cycle - 0.36) / 0.12;
+      const pressCurve = Math.sin(p * Math.PI);
+      autoLift = 18 - pressCurve * 3;
+      btnDepress = pressCurve * 4;
+      btnScale = 1.0 - pressCurve * 0.08;
       isAutoTapping = true;
-    } else if (cycle < 0.72) {
-      // Shockwave expands, hand holds briefly then eases
-      const p = (cycle - 0.48) / 0.24;
+    } else if (cycle < 0.74) {
+      // Shockwave expands, button bounces elastically, hand eases
+      const p = (cycle - 0.48) / 0.26;
       autoRipple = p;
-      autoLift = 16 * (1 - p * 0.5);
+      btnScale = 1.0 + Math.sin(p * Math.PI) * 0.03;
+      autoLift = 18 * (1 - p * 0.55);
     } else {
       // Smooth return to resting baseline
-      const p = (cycle - 0.72) / 0.28;
-      autoLift = 16 * 0.5 * (1 - p);
+      const p = (cycle - 0.74) / 0.26;
+      autoLift = 18 * 0.45 * (1 - p);
     }
 
     // User manual click overrides
     let tapDisplacement = 0;
     if (this.isClicking) {
-      tapDisplacement = Math.sin(this.clickProgress * Math.PI) * 16;
+      const clickP = Math.sin(this.clickProgress * Math.PI);
+      tapDisplacement = clickP * 18;
+      btnScale = 1.0 - clickP * 0.12;
+      btnDepress = clickP * 6;
+      isAutoTapping = true;
     }
 
     // Gentle organic swaying
@@ -152,14 +164,23 @@ export class AsciiHandRenderer {
 
     // Center the hand horizontally (hand center is column 18.5)
     const startX = Math.round(w / 2 - 18.5 * this.cell + swayX);
-    // Vertical placement: place hand so target circle is nicely framed near top
-    const startY = Math.round(65 + swayY - autoLift - tapDisplacement);
+    // Vertical placement: place hand so target button is comfortably framed near top
+    const startY = Math.round(75 + swayY - autoLift - tapDisplacement);
 
-    // Target circle coordinates: positioned right above index finger (col 23.5, row -3)
-    const circleX = startX + 23.5 * this.cell;
-    const circleY = 48 + swayY * 0.5;
+    // Fingertip coordinates (tip of pointing index finger)
+    const tipX = startX + 23.5 * this.cell;
+    const tipY = startY + 0.5 * this.cell;
 
-    // 4. Render ASCII matrix characters and blue blocks
+    // Button coordinates: centered directly above the index finger & hand
+    const btnW = 210;
+    const btnH = 34;
+    const btnX = tipX;
+    const btnY = 50 + swayY * 0.5 + btnDepress;
+
+    // 4. Render the Glowing Interactive Pill Button
+    this.drawTargetButton(ctx, btnX, btnY, btnW, btnH, btnScale, isAutoTapping, autoRipple);
+
+    // 5. Render ASCII matrix characters and blue blocks
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = `700 ${this.cell - 1}px "JetBrains Mono", monospace`;
@@ -180,12 +201,12 @@ export class AsciiHandRenderer {
         if (char === 'B') {
           // Electric cyan/cobalt blue solid tile
           const sq = this.cell * 0.88;
-          const flare = isAutoTapping ? 1.3 : 1.0;
+          const flare = isAutoTapping ? 1.35 : 1.0;
           const bluePulse = 0.88 + 0.12 * Math.sin(this.time * 3.5 + y * 0.3);
           ctx.save();
           ctx.fillStyle = `rgba(46, 136, 255, ${Math.min(1, shimmer * bluePulse * flare)})`;
           ctx.shadowColor = '#00d4ff';
-          ctx.shadowBlur = isAutoTapping ? 14 : 8;
+          ctx.shadowBlur = isAutoTapping ? 16 : 8;
           ctx.fillRect(posX - sq * 0.5, posY - sq * 0.5, sq, sq);
           ctx.restore();
         } else if (char === '●') {
@@ -193,7 +214,7 @@ export class AsciiHandRenderer {
           ctx.save();
           ctx.fillStyle = `rgba(255, 255, 255, ${shimmer})`;
           ctx.shadowColor = 'rgba(255, 255, 255, 0.7)';
-          ctx.shadowBlur = 4;
+          ctx.shadowBlur = isAutoTapping ? 8 : 4;
           ctx.fillText('●', posX, posY);
           ctx.restore();
         } else if (char === 'X') {
@@ -220,9 +241,6 @@ export class AsciiHandRenderer {
         }
       }
     }
-
-    // 5. Render Click Target Circle ( ↑ ) directly above pointing index finger
-    this.drawTargetCircle(ctx, circleX, circleY, isAutoTapping, autoRipple);
   }
 
   drawDotGrid(ctx, w, h) {
@@ -239,63 +257,70 @@ export class AsciiHandRenderer {
     ctx.restore();
   }
 
-  drawTargetCircle(ctx, circleX, circleY, isTapping, rippleProg) {
+  drawTargetButton(ctx, cx, cy, w, h, scale, isTapping, rippleProg) {
     ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(scale, scale);
 
-    // Pulse size: flashes on tap
-    const pulse = Math.sin(this.time * 4.0) * 1.5;
-    const r = (isTapping ? 17 : 14) + pulse;
+    const r = h / 2;
+    const x = -w / 2;
+    const y = -h / 2;
 
-    ctx.strokeStyle = isTapping ? '#00f0ff' : 'rgba(255, 255, 255, 0.92)';
-    ctx.lineWidth = isTapping ? 2.6 : 1.8;
-    ctx.shadowColor = '#00f0ff';
-    ctx.shadowBlur = isTapping ? 18 : 10;
+    // Frosted glass background
     ctx.beginPath();
-    ctx.arc(circleX, circleY, r, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // Upward arrow icon (↑) inside circle
-    ctx.fillStyle = '#ffffff';
-    ctx.shadowBlur = isTapping ? 8 : 0;
-    ctx.beginPath();
-    ctx.moveTo(circleX, circleY - 6);
-    ctx.lineTo(circleX - 5, circleY);
-    ctx.lineTo(circleX - 2, circleY);
-    ctx.lineTo(circleX - 2, circleY + 6);
-    ctx.lineTo(circleX + 2, circleY + 6);
-    ctx.lineTo(circleX + 2, circleY);
-    ctx.lineTo(circleX + 5, circleY);
-    ctx.closePath();
+    ctx.roundRect(x, y, w, h, r);
+    ctx.fillStyle = isTapping ? 'rgba(0, 180, 255, 0.18)' : 'rgba(12, 14, 20, 0.75)';
     ctx.fill();
 
-    // Continuous video-like shockwave ring
+    // Glowing electric neon border
+    ctx.strokeStyle = isTapping ? '#00f0ff' : 'rgba(0, 220, 255, 0.72)';
+    ctx.lineWidth = isTapping ? 2.2 : 1.5;
+    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur = isTapping ? 22 : 12;
+    ctx.stroke();
+
+    // Button Typography: [ ✦ CLICK TO SHOW THE LOVE ↑ ]
+    ctx.shadowBlur = isTapping ? 10 : 0;
+    ctx.fillStyle = isTapping ? '#ffffff' : '#f0f4f8';
+    ctx.font = '600 11px "Inter", sans-serif';
+    ctx.letterSpacing = '1.8px';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('✦ CLICK TO SHOW THE LOVE ↑', 0, 1);
+
+    ctx.restore();
+
+    // Continuous video-like shockwave rings radiating outward on click
     if (rippleProg > 0) {
-      const ringR = 14 + rippleProg * 65;
+      const ringW = w * 0.5 + rippleProg * 70;
+      const ringH = h * 0.5 + rippleProg * 45;
       const alpha = (1.0 - rippleProg) * 0.85;
 
+      ctx.save();
       ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
       ctx.lineWidth = 2.0;
       ctx.shadowColor = '#00f0ff';
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 12;
       ctx.beginPath();
-      ctx.arc(circleX, circleY, ringR, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy, ringW, ringH, 0, 0, Math.PI * 2);
       ctx.stroke();
+      ctx.restore();
     }
 
     // Manual user click expanding shockwave
     if (this.isClicking) {
-      const ringR = this.clickProgress * 80;
+      const ringR = this.clickProgress * 95;
       const alpha = 1.0 - this.clickProgress;
 
+      ctx.save();
       ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
       ctx.lineWidth = 3.0;
       ctx.shadowColor = '#00f0ff';
-      ctx.shadowBlur = 16;
+      ctx.shadowBlur = 20;
       ctx.beginPath();
-      ctx.arc(circleX, circleY, ringR, 0, Math.PI * 2);
+      ctx.arc(cx, cy, ringR, 0, Math.PI * 2);
       ctx.stroke();
+      ctx.restore();
     }
-
-    ctx.restore();
   }
 }

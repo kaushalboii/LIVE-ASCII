@@ -1,9 +1,10 @@
 /**
  * A Minimal & Soft Love Rose
- * With After Effects Style ASCII Hand Gesture
+ * With After Effects Style ASCII Hand Gesture & Ambient Flank Petals
  * Pure seamless visuals on pitch black (#000000) — no boxes, no cards, no borders.
  */
 
+import { AmbientParticles } from './ambient-particles.js';
 import { AsciiHandRenderer } from './ascii-hand.js';
 import { RoseSimulator } from './rose-sim.js';
 import { AsciiEngine } from './ascii-engine.js';
@@ -13,6 +14,7 @@ class MinimalLoveRoseApp {
   constructor() {
     this.currentScreen = 'hand'; // 'hand' or 'rose'
     this.initElements();
+    this.initAmbientParticles();
     this.initHandRenderer();
     this.initRoseEngines();
     this.initInteractions();
@@ -20,6 +22,7 @@ class MinimalLoveRoseApp {
   }
 
   initElements() {
+    this.ambientCanvas = document.getElementById('ambient-canvas');
     this.handScreen = document.getElementById('hand-screen');
     this.roseScreen = document.getElementById('rose-screen');
     this.handTrigger = document.getElementById('hand-trigger');
@@ -30,13 +33,18 @@ class MinimalLoveRoseApp {
 
     // Offscreen canvas for rendering the realistic rose before ASCII conversion
     this.offscreenCanvas = document.createElement('canvas');
-    this.offscreenCanvas.width = 600;
-    this.offscreenCanvas.height = 600;
+    this.offscreenCanvas.width = 640;
+    this.offscreenCanvas.height = 640;
 
     if (this.displayCanvas) {
-      this.displayCanvas.width = 600;
-      this.displayCanvas.height = 600;
+      this.displayCanvas.width = 640;
+      this.displayCanvas.height = 640;
     }
+  }
+
+  initAmbientParticles() {
+    if (!this.ambientCanvas) return;
+    this.ambientParticles = new AmbientParticles(this.ambientCanvas);
   }
 
   initHandRenderer() {
@@ -64,12 +72,14 @@ class MinimalLoveRoseApp {
     this.roseSim.loopMode = 'pingpong';
     this.roseSim.colorScheme = 'crimson';
 
-    // 2. High-performance colored ASCII engine
+    // 2. High-performance colored ASCII engine with luminous velvety glow
     this.asciiEngine = new AsciiEngine({
-      columns: 96,
+      columns: 92,
       charSet: 'standard',
       colorMode: 'crimsonglow',
-      glow: false // Pure, crisp matte rendering with zero box artifacts
+      brightness: 1.15,
+      contrast: 1.25,
+      glow: true // Soft radiant velvety glow for rich visibility on large screens
     });
   }
 
@@ -78,7 +88,7 @@ class MinimalLoveRoseApp {
       if (this.currentScreen === 'rose') return;
       this.currentScreen = 'rose';
 
-      // 1. Trigger tap & shockwave on the hand canvas
+      // 1. Trigger impact tap & double shockwave on hand canvas
       if (this.handRenderer) {
         this.handRenderer.triggerClick();
       }
@@ -86,10 +96,10 @@ class MinimalLoveRoseApp {
       // 2. Play romantic harmonic chime
       try {
         this.audioManager.init();
-        this.audioManager.playChime(523.25, 'sine', 0.15, 2.4); // C5 soft chime
+        this.audioManager.playChime(523.25, 'sine', 0.16, 2.5); // C5 harmonic chime
       } catch (e) {}
 
-      // 3. Smoothly fade out hand gesture screen after click animation
+      // 3. Smoothly fade out hand gesture screen after click impact
       setTimeout(() => {
         if (this.handScreen) {
           this.handScreen.classList.remove('active');
@@ -104,8 +114,8 @@ class MinimalLoveRoseApp {
             this.roseSim.setBloomProgress(0); // Gracefully blossom from tight bud
             this.roseSim.isPlaying = true;
           }
-        }, 350);
-      }, 250);
+        }, 380);
+      }, 260);
     };
 
     if (this.handTrigger) {
@@ -134,7 +144,7 @@ class MinimalLoveRoseApp {
           if (this.handScreen) {
             this.handScreen.classList.add('active');
           }
-        }, 350);
+        }, 380);
       });
     }
 
@@ -143,9 +153,9 @@ class MinimalLoveRoseApp {
       this.displayCanvas.addEventListener('click', () => {
         if (this.currentScreen === 'rose' && this.roseSim) {
           try {
-            this.audioManager.playChime(659.25, 'sine', 0.08, 1.6); // E5 gentle chime
+            this.audioManager.playChime(659.25, 'sine', 0.09, 1.8); // E5 gentle chime
           } catch (e) {}
-          this.roseSim.bloomProgress = (this.roseSim.bloomProgress + 0.25) % 1.0;
+          this.roseSim.bloomProgress = (this.roseSim.bloomProgress + 0.22) % 1.0;
         }
       });
     }
@@ -158,13 +168,19 @@ class MinimalLoveRoseApp {
       const dt = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
 
-      // When hand screen is active, animate the After Effects ASCII hand
+      // 1. Always update & render ambient drifting petals on desktop flanks
+      if (this.ambientParticles) {
+        this.ambientParticles.update(dt);
+        this.ambientParticles.render();
+      }
+
+      // 2. When hand screen is active, animate the continuous After Effects hand & button
       if (this.currentScreen === 'hand' && this.handRenderer) {
         this.handRenderer.update(dt);
         this.handRenderer.render();
       }
 
-      // When rose screen is active, simulate and blit ASCII frame
+      // 3. When rose screen is active, simulate and blit ASCII frame
       if (this.currentScreen === 'rose' && this.roseSim && this.asciiEngine && this.displayCanvas) {
         this.roseSim.update(dt);
         this.roseSim.render();
