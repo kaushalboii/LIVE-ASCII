@@ -1,40 +1,32 @@
 /**
- * A Rose For You 🌹 — Romantic Experience & ASCII Engine
- * 1. Screen 1: ASCII Art Hand saying "Click to show the love"
- * 2. On click: Heart burst & romantic melody plays, reveals the blooming rose + small love note.
- * 3. Rose can be toggled between Photoreal and Living Colored ASCII!
+ * A Rose For You 🌹 — Pure ASCII Love Gift
+ * 1. Screen 1: The 2D ASCII Hand ("Click to show the love")
+ * 2. On Click: Floating hearts burst, music box melody starts.
+ * 3. Screen 2: Living Colored ASCII Rose blooms with a small intimate love note.
  */
 
 import { RoseSimulator } from './rose-sim.js';
 import { AsciiEngine } from './ascii-engine.js';
-import { HandInteractionController } from './hand-interaction.js';
 import { AudioManager } from './audio-fx.js';
 
-class RomanticRoseApp {
+class PureAsciiLoveRoseApp {
   constructor() {
     this.currentScreen = 'hand'; // 'hand' or 'rose'
     this.initCanvases();
     this.initEngines();
-    this.initHandInteraction();
     this.initAmbientPetals();
-    this.initLoveLetter();
-    this.initScreenTransitions();
-    this.initControls();
+    this.initLoveNote();
+    this.initTransitions();
     this.startLoop();
   }
 
   initCanvases() {
-    // 1. Offscreen Real Rose Canvas
+    // Offscreen Real Rose simulation canvas (800x800)
     this.realCanvas = document.createElement('canvas');
     this.realCanvas.width = 800;
     this.realCanvas.height = 800;
 
-    // 2. Offscreen ASCII Rose Canvas
-    this.asciiCanvas = document.createElement('canvas');
-    this.asciiCanvas.width = 800;
-    this.asciiCanvas.height = 800;
-
-    // 3. Main Hero Display Canvas
+    // Hero display canvas
     this.displayCanvas = document.getElementById('hero-canvas');
     this.displayCanvas.width = 800;
     this.displayCanvas.height = 800;
@@ -43,151 +35,71 @@ class RomanticRoseApp {
   initEngines() {
     this.audioManager = new AudioManager();
     this.roseSim = new RoseSimulator(this.realCanvas);
-    this.roseSim.speed = 0.07;
+    this.roseSim.speed = 0.08;
+    this.roseSim.isPlaying = true;
+    this.roseSim.loopMode = 'pingpong'; // blooms and closes continuously
 
+    // Living Colored ASCII Engine
     this.asciiEngine = new AsciiEngine({
       columns: 110,
       charSet: 'standard',
-      colorMode: 'truecolor',
+      colorMode: 'crimsonglow', // Velvet Crimson radiance
       glow: true
     });
   }
 
-  initScreenTransitions() {
+  initTransitions() {
     const handScreen = document.getElementById('ascii-hand-screen');
     const roseScreen = document.getElementById('rose-love-screen');
     const handTrigger = document.getElementById('ascii-hand-trigger');
     const showLoveBtn = document.getElementById('btn-show-love');
-    const backHandBtn = document.getElementById('btn-back-hand');
+    const replayBtn = document.getElementById('btn-replay-hand');
+    const audioBtn = document.getElementById('btn-audio-toggle');
+    const musicLabel = document.getElementById('music-label');
 
-    const triggerShowLove = (e) => {
-      if (this.currentScreen === 'rose') return;
+    const showRose = () => {
       this.currentScreen = 'rose';
 
-      // 1. Trigger audio melody and heart burst
+      // 1. Play heart burst sound and start sweet melody
       this.audioManager.init();
-      this.audioManager.toggleMute(); // starts the melody
-      const musicLabel = document.getElementById('music-label');
-      if (musicLabel) musicLabel.textContent = 'Pause Music';
-      const btnAudio = document.getElementById('btn-audio-toggle');
-      if (btnAudio) btnAudio.classList.add('active');
-
+      this.audioManager.toggleMute();
+      if (musicLabel) musicLabel.textContent = 'Pause';
+      if (audioBtn) audioBtn.classList.add('active');
       this.audioManager.playHeartBurst();
 
-      // 2. Spawn ripple on hero canvas
-      this.handController.createRipple(this.displayCanvas.width / 2, this.displayCanvas.height / 2);
-
-      // 3. Switch screens
+      // 2. Switch screens
       if (handScreen) handScreen.classList.remove('active');
       if (roseScreen) {
         roseScreen.classList.add('active');
-        // Restart bloom from tight bud
-        this.roseSim.setBloomProgress(0);
-        this.roseSim.isPlaying = true;
+        this.roseSim.setBloomProgress(0); // bloom from bud
       }
 
       this.showToast('With all my love... 💖');
     };
 
-    if (handTrigger) handTrigger.addEventListener('click', triggerShowLove);
-    if (showLoveBtn) showLoveBtn.addEventListener('click', triggerShowLove);
+    if (handTrigger) handTrigger.addEventListener('click', showRose);
+    if (showLoveBtn) showLoveBtn.addEventListener('click', showRose);
 
-    if (backHandBtn) {
-      backHandBtn.addEventListener('click', () => {
+    if (replayBtn) {
+      replayBtn.addEventListener('click', () => {
         this.currentScreen = 'hand';
         if (roseScreen) roseScreen.classList.remove('active');
         if (handScreen) handScreen.classList.add('active');
         this.audioManager.playClick();
       });
     }
-  }
 
-  initHandInteraction() {
-    this.handController = new HandInteractionController({
-      container: document.getElementById('hero-canvas-wrapper'),
-      realCanvas: this.realCanvas,
-      asciiCanvas: this.asciiCanvas,
-      outputCanvas: this.displayCanvas,
-      onModeChange: () => {},
-      onAudioTrigger: (type) => {
-        if (type === 'bloom') {
-          this.audioManager.playHeartBurst();
-        } else {
-          this.audioManager.playClick();
-        }
-        this.updateViewIndicator();
-      }
-    });
-
-    // Touch / Click button
-    const handClickBtn = document.getElementById('btn-hand-click');
-    if (handClickBtn) {
-      handClickBtn.addEventListener('click', () => {
-        this.handController.createRipple(this.displayCanvas.width / 2, this.displayCanvas.height / 2);
-        this.handController.toggleAscii();
-        this.updateViewIndicator();
-      });
-    }
-  }
-
-  updateViewIndicator() {
-    const isAscii = this.handController.isAsciiRevealed;
-    const indicator = document.getElementById('view-indicator');
-    const toggleText = document.getElementById('view-toggle-text');
-
-    if (indicator) {
-      indicator.innerHTML = isAscii
-        ? '<span>✨ Living ASCII Rose</span>'
-        : '<span>🌹 Photoreal Rose</span>';
-    }
-    if (toggleText) {
-      toggleText.textContent = isAscii ? 'Show Photoreal' : 'Show ASCII';
-    }
-  }
-
-  initControls() {
-    // Play / Pause
-    const btnPlay = document.getElementById('btn-play-pause');
-    if (btnPlay) {
-      btnPlay.addEventListener('click', () => {
-        this.roseSim.isPlaying = !this.roseSim.isPlaying;
-        btnPlay.innerHTML = this.roseSim.isPlaying
-          ? '<span class="icon">⏸</span> Pause'
-          : '<span class="icon">▶</span> Bloom';
-        this.audioManager.playClick();
-      });
-    }
-
-    // Color Theme
-    const rosePalette = document.getElementById('rose-palette');
-    if (rosePalette) {
-      rosePalette.addEventListener('change', (e) => {
-        this.roseSim.colorScheme = e.target.value;
-        this.audioManager.playBloomChime();
-      });
-    }
-
-    // Music Toggle
-    const btnAudio = document.getElementById('btn-audio-toggle');
-    const musicLabel = document.getElementById('music-label');
-    if (btnAudio) {
-      btnAudio.addEventListener('click', () => {
+    if (audioBtn) {
+      audioBtn.addEventListener('click', () => {
         const isMuted = this.audioManager.toggleMute();
         if (musicLabel) {
-          musicLabel.textContent = isMuted ? 'Play Music' : 'Pause Music';
+          musicLabel.textContent = isMuted ? 'Music' : 'Pause';
         }
-        btnAudio.classList.toggle('active', !isMuted);
+        audioBtn.classList.toggle('active', !isMuted);
       });
     }
-
-    // Scroll to Love Letter
-    document.getElementById('btn-open-letter')?.addEventListener('click', () => {
-      document.getElementById('love-letter-card')?.scrollIntoView({ behavior: 'smooth' });
-      this.audioManager.playHeartBurst();
-    });
   }
 
-  // --- AMBIENT FALLING ROSE PETALS ---
   initAmbientPetals() {
     const canvas = document.getElementById('ambient-petals-canvas');
     if (!canvas) return;
@@ -201,18 +113,18 @@ class RomanticRoseApp {
     window.addEventListener('resize', resize);
 
     const petals = [];
-    const count = Math.min(28, Math.floor(window.innerWidth / 45));
+    const count = Math.min(26, Math.floor(window.innerWidth / 50));
 
     for (let i = 0; i < count; i++) {
       petals.push({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
         size: 8 + Math.random() * 12,
-        speedX: -0.5 + Math.random() * 1.0,
-        speedY: 0.6 + Math.random() * 1.2,
+        speedX: -0.4 + Math.random() * 0.8,
+        speedY: 0.5 + Math.random() * 1.1,
         angle: Math.random() * Math.PI * 2,
         rotSpeed: (Math.random() - 0.5) * 0.02,
-        alpha: 0.2 + Math.random() * 0.4
+        alpha: 0.15 + Math.random() * 0.35
       });
     }
 
@@ -220,7 +132,7 @@ class RomanticRoseApp {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       for (let p of petals) {
-        p.x += p.speedX + Math.sin(p.angle) * 0.4;
+        p.x += p.speedX + Math.sin(p.angle) * 0.3;
         p.y += p.speedY;
         p.angle += p.rotSpeed;
 
@@ -236,7 +148,6 @@ class RomanticRoseApp {
         ctx.rotate(p.angle);
         ctx.globalAlpha = p.alpha;
 
-        // Draw delicate heart/petal shape
         ctx.fillStyle = '#e11d48';
         ctx.beginPath();
         ctx.moveTo(0, 0);
@@ -253,8 +164,7 @@ class RomanticRoseApp {
     animatePetals();
   }
 
-  // --- LOVE LETTER & PERSONALIZATION ---
-  initLoveLetter() {
+  initLoveNote() {
     const params = new URLSearchParams(window.location.search);
     const recipient = params.get('for') || params.get('to');
     const note = params.get('msg') || params.get('note');
@@ -264,53 +174,34 @@ class RomanticRoseApp {
       document.getElementById('display-recipient').textContent = `A Rose For ${recipient} 🌹`;
       document.getElementById('letter-title').textContent = `For ${recipient}, My Love`;
     }
-
     if (note) {
-      document.getElementById('letter-text').textContent = note;
+      document.getElementById('letter-text').textContent = `"${note}"`;
     }
-
     if (sender) {
       document.getElementById('display-sender').textContent = `${sender} 💖`;
     }
 
-    const modal = document.getElementById('personalize-modal');
-    const openBtn = document.getElementById('btn-customize-link');
+    // Modal
+    const modal = document.getElementById('edit-modal');
+    const editBtn = document.getElementById('btn-edit-note');
     const closeBtn = document.getElementById('modal-close-btn');
-    const genBtn = document.getElementById('btn-generate-love-link');
-    const shareBtn = document.getElementById('btn-share-link');
+    const saveBtn = document.getElementById('btn-save-note');
 
-    const openModal = () => {
-      if (modal) modal.classList.add('active');
-      this.audioManager.playClick();
-    };
-
-    const closeModal = () => {
-      if (modal) modal.classList.remove('active');
-    };
-
-    if (openBtn) openBtn.addEventListener('click', openModal);
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
+    if (editBtn) {
+      editBtn.addEventListener('click', () => {
+        if (modal) modal.classList.add('active');
+        this.audioManager.playClick();
       });
     }
 
-    const copyUrl = (url) => {
-      navigator.clipboard.writeText(url);
-      this.showToast('Copied personalized love link! 💖');
-      this.audioManager.playHeartBurst();
-    };
-
-    if (shareBtn) {
-      shareBtn.addEventListener('click', () => {
-        copyUrl(window.location.href);
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        if (modal) modal.classList.remove('active');
       });
     }
 
-    if (genBtn) {
-      genBtn.addEventListener('click', () => {
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => {
         const toVal = document.getElementById('input-recipient')?.value.trim();
         const msgVal = document.getElementById('input-message')?.value.trim();
         const fromVal = document.getElementById('input-sender')?.value.trim();
@@ -320,19 +211,22 @@ class RomanticRoseApp {
         if (msgVal) url.searchParams.set('msg', msgVal);
         if (fromVal) url.searchParams.set('from', fromVal);
 
-        copyUrl(url.toString());
-        closeModal();
+        navigator.clipboard.writeText(url.toString());
+        this.showToast('Copied personalized love link! 💖');
+        this.audioManager.playHeartBurst();
 
         if (toVal) {
           document.getElementById('display-recipient').textContent = `A Rose For ${toVal} 🌹`;
           document.getElementById('letter-title').textContent = `For ${toVal}, My Love`;
         }
         if (msgVal) {
-          document.getElementById('letter-text').textContent = msgVal;
+          document.getElementById('letter-text').textContent = `"${msgVal}"`;
         }
         if (fromVal) {
           document.getElementById('display-sender').textContent = `${fromVal} 💖`;
         }
+
+        if (modal) modal.classList.remove('active');
       });
     }
   }
@@ -358,16 +252,14 @@ class RomanticRoseApp {
       const dt = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
 
-      // Only calculate frames when rose screen is visible or transitioning
       if (this.currentScreen === 'rose') {
+        // 1. Simulate the blooming rose
         this.roseSim.update(dt);
         this.roseSim.render();
 
+        // 2. Render directly as pure Living Colored ASCII Rose!
         const frameData = this.asciiEngine.processFrame(this.realCanvas);
-        this.asciiEngine.renderToCanvas(this.asciiCanvas, frameData);
-
-        this.handController.update(dt);
-        this.handController.composite(this.realCanvas, this.asciiCanvas);
+        this.asciiEngine.renderToCanvas(this.displayCanvas, frameData);
       }
 
       requestAnimationFrame(loop);
@@ -378,5 +270,5 @@ class RomanticRoseApp {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  window.app = new RomanticRoseApp();
+  window.app = new PureAsciiLoveRoseApp();
 });
