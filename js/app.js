@@ -29,6 +29,7 @@ class MinimalLoveRoseApp {
     this.handCanvas = document.getElementById('hand-canvas');
     this.whisperHint = document.querySelector('.whisper-hint');
     this.displayCanvas = document.getElementById('rose-canvas');
+    this.cloudNote = document.getElementById('cloud-note');
     this.replayBtn = document.getElementById('btn-replay');
 
     // Offscreen canvas for rendering the realistic rose before ASCII conversion
@@ -65,12 +66,16 @@ class MinimalLoveRoseApp {
   initRoseEngines() {
     this.audioManager = new AudioManager();
 
-    // 1. Photorealistic botanical blooming rose
+    // 1. Photorealistic botanical blooming rose (Blooms into 2 Roses)
     this.roseSim = new RoseSimulator(this.offscreenCanvas);
     this.roseSim.speed = 0.07; // Calm, tender blooming speed
     this.roseSim.isPlaying = true;
-    this.roseSim.loopMode = 'pingpong';
     this.roseSim.colorScheme = 'crimson';
+    this.roseSim.onDuoReady = () => {
+      if (this.cloudNote) {
+        this.cloudNote.classList.add('visible');
+      }
+    };
 
     // 2. High-performance colored ASCII engine with luminous velvety glow
     this.asciiEngine = new AsciiEngine({
@@ -110,9 +115,17 @@ class MinimalLoveRoseApp {
           if (this.roseScreen) {
             this.roseScreen.classList.add('active');
           }
+          if (this.cloudNote) {
+            this.cloudNote.classList.remove('visible');
+          }
           if (this.roseSim) {
-            this.roseSim.setBloomProgress(0); // Gracefully blossom from tight bud
+            this.roseSim.resetBloom();
             this.roseSim.isPlaying = true;
+            this.roseSim.onDuoReady = () => {
+              if (this.cloudNote) {
+                this.cloudNote.classList.add('visible');
+              }
+            };
           }
         }, 380);
       }, 260);
@@ -137,6 +150,9 @@ class MinimalLoveRoseApp {
       this.replayBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         this.currentScreen = 'hand';
+        if (this.cloudNote) {
+          this.cloudNote.classList.remove('visible');
+        }
         if (this.roseScreen) {
           this.roseScreen.classList.remove('active');
         }

@@ -28,6 +28,11 @@ export class RoseSimulator {
     this.showStem = true;
     this.swayAmount = 0.03;
 
+    // Two-Rose Bloom Lifecycle: First rose blooms, then unfurls into 2 intertwined roses
+    this.stage = 'single'; // 'single' -> 'duo'
+    this.duoProgress = 0.0;
+    this.onDuoReady = null;
+
     // Pre-generate petal configurations for botanical realism
     this.initPetalArchitecture();
   }
@@ -157,28 +162,41 @@ export class RoseSimulator {
     this.time += dt;
 
     if (this.isPlaying) {
-      this.bloomProgress += this.direction * this.speed * dt;
-
-      if (this.bloomProgress >= 1.0) {
-        this.bloomProgress = 1.0;
-        if (this.loopMode === 'pingpong') {
-          this.direction = -1;
-        } else if (this.loopMode === 'loop') {
-          this.bloomProgress = 0.0;
-        } else {
-          this.isPlaying = false;
+      if (this.stage === 'single') {
+        this.bloomProgress += this.speed * dt;
+        if (this.bloomProgress >= 1.0) {
+          this.bloomProgress = 1.0;
+          this.stage = 'duo';
         }
-      } else if (this.bloomProgress <= 0.0) {
-        this.bloomProgress = 0.0;
-        if (this.loopMode === 'pingpong') {
-          this.direction = 1;
+      } else if (this.stage === 'duo') {
+        if (this.duoProgress < 1.0) {
+          this.duoProgress += dt * 0.42;
+          if (this.duoProgress >= 1.0) {
+            this.duoProgress = 1.0;
+            if (this.onDuoReady) {
+              const cb = this.onDuoReady;
+              this.onDuoReady = null;
+              cb();
+            }
+          }
         }
       }
     }
   }
 
+  resetBloom() {
+    this.bloomProgress = 0.0;
+    this.duoProgress = 0.0;
+    this.stage = 'single';
+    this.isPlaying = true;
+  }
+
   setBloomProgress(val) {
     this.bloomProgress = Math.max(0, Math.min(1, val));
+    if (val === 0) {
+      this.stage = 'single';
+      this.duoProgress = 0.0;
+    }
   }
 
   // Color palettes for petals & stem
@@ -253,6 +271,21 @@ export class RoseSimulator {
     }
   }
 
+  getDuoRightPalette() {
+    return {
+      petalDeep: '#660820',
+      petalBase: '#ad1136',
+      petalMid: '#eb2352',
+      petalHighlight: '#ff4d7a',
+      petalRim: '#ff94b0',
+      calyx: '#2e6b2c',
+      calyxHighlight: '#4e9e49',
+      stem: '#2a5a28',
+      stemShadow: '#153314',
+      stamens: '#ffcc33'
+    };
+  }
+
   render() {
     const ctx = this.ctx;
     const w = this.canvas.width;
@@ -260,63 +293,88 @@ export class RoseSimulator {
     const p = this.bloomProgress;
     const pal = this.getPalette();
 
-    // Clear background to clean transparent/dark studio atmosphere
+    // Clear background to clean transparent
     ctx.clearRect(0, 0, w, h);
 
-    // Pure transparent background — no dark card box or vignette
-    ctx.clearRect(0, 0, w, h);
-
-    ctx.save();
-
-    // Center of rose blossom
     const centerX = w / 2;
-    const centerY = h / 2 + 30; // slightly down to frame petals
+    const centerY = h / 2 + 15;
 
-    // Organic micro sway (breezy natural life movement)
+    // Organic micro sway
     const swayX = Math.sin(this.time * 1.5) * 4 * this.swayAmount * 30;
     const swayY = Math.cos(this.time * 1.8) * 2 * this.swayAmount * 30;
     const swayAngle = Math.sin(this.time * 1.2) * 0.015;
 
-    ctx.translate(centerX + swayX, centerY + swayY);
-    ctx.rotate(swayAngle);
+    if (this.duoProgress <= 0.001) {
+      // 1. Single central blooming rose
+      ctx.save();
+      ctx.translate(centerX + swayX, centerY + swayY);
+      ctx.rotate(swayAngle);
 
-    // 1. Draw Stem and Calyx Base underneath
-    if (this.showStem) {
-      this.drawStem(ctx, pal, p);
+      if (this.showStem) this.drawStem(ctx, pal, p);
+      this.drawSepals(ctx, pal, p);
+      this.drawPetalLayers(ctx, pal, p);
+      if (p > 0.6) this.drawStamens(ctx, pal, p);
+      if (this.showDewDrops && p > 0.25) this.drawDewDrops(ctx, p);
+      ctx.restore();
+    } else {
+      // 2. TWO intertwined blooming roses side by side
+      const duoP = this.duoProgress;
+
+      // Left Rose (Kaushal's rose - deep crimson ruby)
+      ctx.save();
+      const leftX = centerX - duoP * 120 + swayX;
+      const leftY = centerY + swayY - duoP * 10;
+      ctx.translate(leftX, leftY);
+      ctx.rotate(swayAngle - 0.18 * duoP);
+      const leftScale = 1.0 - 0.15 * duoP;
+      ctx.scale(leftScale, leftScale);
+
+      if (this.showStem) this.drawStem(ctx, pal, p, duoP * 35);
+      this.drawSepals(ctx, pal, p);
+      this.drawPetalLayers(ctx, pal, p);
+      if (p > 0.6) this.drawStamens(ctx, pal, p);
+      if (this.showDewDrops) this.drawDewDrops(ctx, p);
+      ctx.restore();
+
+      // Right Rose (Her rose - glowing warm scarlet pink)
+      const rightPal = this.getDuoRightPalette();
+      ctx.save();
+      const rightX = centerX + duoP * 120 + swayX * 0.9;
+      const rightY = centerY + swayY + duoP * 14;
+      ctx.translate(rightX, rightY);
+      ctx.rotate(swayAngle + 0.22 * duoP);
+      const rightScale = (1.0 - 0.18 * duoP) * Math.min(1, duoP * 1.35);
+      ctx.scale(rightScale, rightScale);
+
+      if (this.showStem) this.drawStem(ctx, rightPal, p, -duoP * 35);
+      this.drawSepals(ctx, rightPal, p);
+      this.drawPetalLayers(ctx, rightPal, p);
+      if (p > 0.6) this.drawStamens(ctx, rightPal, p);
+      if (this.showDewDrops) this.drawDewDrops(ctx, p);
+      ctx.restore();
     }
-
-    // 2. Draw Calyx Sepals (the green protective leafy cups that peel back)
-    this.drawSepals(ctx, pal, p);
-
-    // 3. Draw Rose Petals from outermost to innermost
-    // We sort/render layers so that outer back petals draw first, then center, then foreground outer petals
-    this.drawPetalLayers(ctx, pal, p);
-
-    // 4. Center Stamens (revealed at near full bloom)
-    if (p > 0.6) {
-      this.drawStamens(ctx, pal, p);
-    }
-
-    // 5. Dew drops
-    if (this.showDewDrops && p > 0.25) {
-      this.drawDewDrops(ctx, p);
-    }
-
-    ctx.restore();
   }
 
-  drawStem(ctx, pal, p) {
+  drawStem(ctx, pal, p, curveOffset = 0) {
     ctx.save();
     // Stem grows downward
     const stemStartY = 35 - p * 15;
     const stemLength = 340;
 
-    // Stem path
+    // Stem path with natural curvature toward partner stem
     ctx.beginPath();
     ctx.moveTo(-10, stemStartY);
-    ctx.bezierCurveTo(-14, stemStartY + 100, -6, stemStartY + 200, -8, stemStartY + stemLength);
-    ctx.lineTo(10, stemStartY + stemLength);
-    ctx.bezierCurveTo(8, stemStartY + 200, 14, stemStartY + 100, 12, stemStartY);
+    ctx.bezierCurveTo(
+      -14 + curveOffset * 0.4, stemStartY + 100,
+      -6 + curveOffset * 0.8, stemStartY + 200,
+      -8 + curveOffset, stemStartY + stemLength
+    );
+    ctx.lineTo(10 + curveOffset, stemStartY + stemLength);
+    ctx.bezierCurveTo(
+      8 + curveOffset * 0.8, stemStartY + 200,
+      14 + curveOffset * 0.4, stemStartY + 100,
+      12, stemStartY
+    );
     ctx.closePath();
 
     const stemGrad = ctx.createLinearGradient(-12, stemStartY, 12, stemStartY);

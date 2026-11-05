@@ -16,6 +16,9 @@
 </head>
 <body class="pure-black">
 
+  <!-- Live Looping Clicking Hand Video (Direct Stream) -->
+  <video id="hand-video" src="assets/hand-video.mp4" playsinline muted autoplay loop preload="auto" style="display:none;"></video>
+
   <!-- Ambient Botanical ASCII Petals & Stardust Field (Fills Desktop Flanks) -->
   <canvas id="ambient-canvas"></canvas>
 
@@ -29,20 +32,28 @@
       <p class="whisper-hint">click to show the love</p>
     </div>
 
-    <!-- Screen 2: The Living Colored ASCII Rose (Seamless & Prominent) -->
+    <!-- Screen 2: The Living Colored ASCII Rose (Blooms into 2 Roses + Cloud Note) -->
     <div id="rose-screen" class="scene">
       <div class="seamless-rose-wrapper">
         <canvas id="rose-canvas" width="680" height="680"></canvas>
       </div>
 
-      <!-- Pure Borderless Love Note -->
-      <div class="pure-note">
-        <p class="note-quote">
-          &ldquo;In every petal, a quiet thought of you.<br>
-          You bring warmth and grace to everything.&rdquo;
-        </p>
-        <p class="note-author">— forever yours, Kaushal</p>
-        <button id="btn-replay" class="replay-link">hold again</button>
+      <!-- Dreamy Floating Cloud Note (Pops after 2 Roses Bloom) -->
+      <div id="cloud-note" class="cloud-note">
+        <div class="cloud-puff puff-tl"></div>
+        <div class="cloud-puff puff-tr"></div>
+        <div class="cloud-puff puff-bl"></div>
+        <div class="cloud-puff puff-br"></div>
+        <div class="cloud-body">
+          <div class="cloud-tag">☁️ &nbsp;a quiet note for you &nbsp;✦</div>
+          <p class="cloud-quote">
+            &ldquo;You are my favorite thought in a crowded room,<br>
+            the warmth in every cold day, and the sweetest plot twist of my life.<br>
+            Two flowers blooming together, just like us &mdash; side by side, forever.&rdquo;
+          </p>
+          <p class="cloud-author">&mdash; all my love, Kaushal</p>
+          <button id="btn-replay" class="cloud-replay" title="Experience again">hold again ↺</button>
+        </div>
       </div>
     </div>
 
