@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A Rose For You 🌹 — With All My Love</title>
-  <meta name="description" content="A digital love gift: A photorealistic blooming rose that transforms into living colored ASCII art with a single touch.">
+  <title>A Rose For You 🌹 — Click To Show The Love</title>
+  <meta name="description" content="A romantic ASCII love gift. Touch the hand to reveal the blooming rose and a note of love.">
   <meta name="theme-color" content="#060408">
 
-  <!-- Open Graph for sharing on WhatsApp / Instagram / Messages -->
-  <meta property="og:title" content="A Rose For You 🌹 With All My Love">
-  <meta property="og:description" content="I sent you a blooming rose. Touch the rose to bloom it into living colored ASCII art.">
+  <!-- Open Graph -->
+  <meta property="og:title" content="A Rose For You 🌹 Click To Show The Love">
+  <meta property="og:description" content="Touch the hand to reveal the blooming rose and a secret love note.">
   <meta property="og:type" content="website">
 
   <!-- Favicon & Fonts -->
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -29,104 +29,145 @@
   <header class="romantic-header">
     <div class="header-left">
       <span class="heart-pulse">💖</span>
-      <span class="header-love-tag">A Special Gift For You</span>
+      <span class="header-love-tag">A Special Love Gift</span>
     </div>
 
     <div class="header-right">
-      <button id="btn-audio-toggle" class="btn btn-sm btn-glass" title="Toggle Soft Music Box Melody">
+      <button id="btn-audio-toggle" class="btn btn-sm btn-glass" title="Toggle Music Box Melody">
         <span class="icon">🎵</span> <span id="music-label">Play Music</span>
       </button>
-      <a href="studio.html" class="btn btn-sm btn-glass studio-link" title="Open Creator Studio (Image, Video, Webcam & Text)">
+      <a href="studio.html" class="btn btn-sm btn-glass studio-link" title="Open Creator Studio">
         <span>✨</span> ASCII Studio &rarr;
       </a>
     </div>
   </header>
 
-  <!-- Main Romantic Stage -->
+  <!-- Main Container -->
   <main class="romantic-main">
 
-    <!-- Romantic Hero Invitation -->
-    <div class="love-header">
-      <h1 class="love-title" id="display-recipient">A Rose For You</h1>
-      <p class="love-subtitle" id="display-subtitle">
-        Watch it bloom softly... then touch the rose to reveal its glowing ASCII soul.
-      </p>
-    </div>
+    <!-- ==================================================================
+         STAGE 1: THE ASCII HAND (Appears First: "Click to show the love")
+         ================================================================== -->
+    <section id="ascii-hand-screen" class="hand-screen active">
+      <div class="hand-screen-content">
+        <div class="love-badge-top">✧ TOUCH WITH YOUR HEART ✧</div>
+        
+        <!-- Preformatted ASCII Hand Graphic -->
+        <div class="ascii-hand-art-wrapper" id="ascii-hand-trigger" title="Click to show the love">
+          <pre class="ascii-hand-pre">
+     .-----------------------.
+    (   💖 CLICK TO SHOW 💖   )
+    (        THE LOVE         )
+     '----------.------------'
+                 \
+                  \   .---.
+                     /     \
+                    |   |   |
+                    |   |   |
+               .---.|   |   |
+              /     |   |   |
+             |  /\  |   |   |
+             | |  | |   |   | .---.
+             | |  | |   |   |/     \
+             | |  | |   '   '   /\  |
+             |  \/   \         |  | |
+              \       \        ' /  |
+               \       '           /
+                |                 |
+                |    [ TOUCH ]    |
+                '-----------------'
+          </pre>
+          <div class="hand-pulse-glow"></div>
+        </div>
 
-    <!-- Rose Canvas Stage -->
-    <div class="rose-stage-wrapper">
-      <div class="rose-canvas-container" id="hero-canvas-wrapper">
-        <canvas id="hero-canvas" width="800" height="800"></canvas>
+        <button id="btn-show-love" class="btn btn-lg btn-romantic btn-pulse" style="margin-top: 18px;">
+          <span>💖</span> Click to Show The Love <span>👆</span>
+        </button>
+        <p class="hand-prompt-sub">A secret flower blooms inside...</p>
+      </div>
+    </section>
 
-        <!-- Romantic Animated Hand Guide -->
-        <div class="hand-guide-overlay" id="hand-guide">
-          <div class="hand-cursor-icon">👆</div>
-          <div class="romantic-prompt-badge">
-            <span class="heart-icon">💖</span>
-            <span>Touch the Rose</span>
+    <!-- ==================================================================
+         STAGE 2: THE ROSE & NOTE (Revealed on Click)
+         ================================================================== -->
+    <section id="rose-love-screen" class="rose-screen">
+      
+      <!-- Romantic Hero Header -->
+      <div class="love-header">
+        <h1 class="love-title" id="display-recipient">A Rose For You</h1>
+        <p class="love-subtitle" id="display-subtitle">
+          Blooming forever in digital light. Touch the rose to view its ASCII soul.
+        </p>
+      </div>
+
+      <!-- Rose Canvas Stage -->
+      <div class="rose-stage-wrapper">
+        <div class="rose-canvas-container" id="hero-canvas-wrapper">
+          <canvas id="hero-canvas" width="800" height="800"></canvas>
+
+          <!-- Floating View Pill -->
+          <div class="view-indicator" id="view-indicator">
+            <span>🌹 Photoreal Rose</span>
           </div>
         </div>
-
-        <!-- Floating Quick View Pill -->
-        <div class="view-indicator" id="view-indicator">
-          <span>🌹 Photoreal Rose</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Romantic Floating Control Dock -->
-    <div class="romantic-dock">
-      <button id="btn-hand-click" class="btn btn-primary btn-romantic btn-pulse" title="Touch / Transform the Rose">
-        <span class="icon">👆</span> Touch Rose
-      </button>
-
-      <button id="btn-toggle-view" class="btn btn-glass" title="Toggle between Photoreal and Colored ASCII">
-        <span class="icon">✨</span> <span id="view-toggle-text">Show ASCII</span>
-      </button>
-
-      <button id="btn-play-pause" class="btn btn-glass" title="Pause / Play blooming">
-        <span class="icon">⏸</span> Pause
-      </button>
-
-      <!-- Rose Color Theme Selector -->
-      <div class="color-dropdown-wrapper">
-        <select id="rose-palette" class="romantic-select">
-          <option value="crimson" selected>🌹 Velvet Crimson</option>
-          <option value="pink">🌸 Royal Pink</option>
-          <option value="sunset">🌅 Ruby Sunset</option>
-          <option value="white">🤍 Moonlight White</option>
-          <option value="cyber">💜 Neon Dream</option>
-        </select>
       </div>
 
-      <button id="btn-open-letter" class="btn btn-glass" title="Read or Personalize Love Letter">
-        <span class="icon">💌</span> Love Letter
-      </button>
-    </div>
+      <!-- Floating Controls Dock -->
+      <div class="romantic-dock">
+        <button id="btn-hand-click" class="btn btn-primary btn-romantic" title="Toggle Photoreal and ASCII Rose">
+          <span class="icon">✨</span> <span id="view-toggle-text">Show ASCII</span>
+        </button>
 
-    <!-- Romantic Love Letter Card / Modal -->
-    <section class="love-letter-section" id="love-letter-card">
-      <div class="letter-inner">
-        <div class="letter-stamp">🌹</div>
-        <h2 class="letter-heading" id="letter-title">To the One Who Holds My Heart,</h2>
-        <p class="letter-body" id="letter-text">
-          Just like this rose unfolds its petals to the night sky, my love for you blooms deeper with every passing second. In a world full of noise, you are my softest melody and my favorite wonder.
-        </p>
-        <div class="letter-signature" id="letter-signature">
-          <span>With all my love,</span>
-          <span class="sig-name" id="display-sender">Forever & Always</span>
+        <button id="btn-play-pause" class="btn btn-glass" title="Pause / Play blooming">
+          <span class="icon">⏸</span> Pause
+        </button>
+
+        <!-- Rose Color Theme Selector -->
+        <div class="color-dropdown-wrapper">
+          <select id="rose-palette" class="romantic-select">
+            <option value="crimson" selected>🌹 Velvet Crimson</option>
+            <option value="pink">🌸 Royal Pink</option>
+            <option value="sunset">🌅 Ruby Sunset</option>
+            <option value="white">🤍 Moonlight White</option>
+            <option value="cyber">💜 Neon Dream</option>
+          </select>
         </div>
 
-        <!-- Personalize Button -->
-        <div class="letter-actions">
-          <button id="btn-customize-link" class="btn btn-sm btn-romantic">
-            <span>✏️</span> Personalize For Someone
-          </button>
-          <button id="btn-share-link" class="btn btn-sm btn-glass">
-            <span>🔗</span> Copy Love Link
-          </button>
-        </div>
+        <button id="btn-open-letter" class="btn btn-glass" title="Read Note">
+          <span class="icon">💌</span> Love Note
+        </button>
       </div>
+
+      <!-- ================================================================
+           THE SMALL INTIMATE LOVE NOTE
+           ================================================================ -->
+      <section class="small-love-note" id="love-letter-card">
+        <div class="note-inner">
+          <div class="note-flower">🌹</div>
+          <div class="note-to" id="letter-title">For You, My Love</div>
+          <p class="note-message" id="letter-text">
+            "Just like this rose unfolds its petals in the quiet night, my love for you blooms deeper with every beat of my heart. You bring colors to my world that words could never describe."
+          </p>
+          <div class="note-signature" id="letter-signature">
+            <span class="sig-label">Forever yours,</span>
+            <span class="sig-name" id="display-sender">Kaushal 💖</span>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="note-actions">
+            <button id="btn-customize-link" class="btn btn-sm btn-romantic">
+              <span>✏️</span> Edit Note / Name
+            </button>
+            <button id="btn-share-link" class="btn btn-sm btn-glass">
+              <span>🔗</span> Copy Love Link
+            </button>
+            <button id="btn-back-hand" class="btn btn-sm btn-glass" title="Show ASCII Hand again">
+              <span>👆</span> Replay Hand
+            </button>
+          </div>
+        </div>
+      </section>
+
     </section>
 
     <!-- Personalize Modal Drawer -->
@@ -142,38 +183,29 @@
             <input type="text" id="input-recipient" placeholder="e.g. My Love, Sophia, Alex..." maxlength="30">
           </div>
           <div class="form-group">
-            <label>Your Personal Love Message</label>
-            <textarea id="input-message" rows="3" placeholder="Write your heartfelt note..." maxlength="200"></textarea>
+            <label>Your Personal Love Note</label>
+            <textarea id="input-message" rows="3" placeholder="Write your heartfelt note..." maxlength="220"></textarea>
           </div>
           <div class="form-group">
             <label>From (Your Name)</label>
-            <input type="text" id="input-sender" placeholder="e.g. Yours Truly, Kaushal..." maxlength="30">
+            <input type="text" id="input-sender" placeholder="e.g. Yours Always, Kaushal..." maxlength="30">
           </div>
           <button id="btn-generate-love-link" class="btn btn-primary btn-romantic" style="width:100%; margin-top:10px;">
-            <span>✨</span> Create & Copy Custom Love Link
+            <span>✨</span> Save & Copy Personalized Link
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Hidden Scrubber & Resolution (preserves full app logic smoothly) -->
+    <!-- Hidden state elements -->
     <input type="range" id="bloom-scrubber" min="0" max="100" value="0" style="display:none;">
     <input type="range" id="bloom-speed" min="0.02" max="0.25" value="0.07" style="display:none;">
     <input type="range" id="ascii-resolution" min="50" max="180" value="110" style="display:none;">
-    <select id="ascii-colormode" style="display:none;">
-      <option value="truecolor" selected>True Color</option>
-    </select>
-    <select id="ascii-charset" style="display:none;">
-      <option value="standard" selected>Standard</option>
-    </select>
-    <select id="loop-mode" style="display:none;">
-      <option value="pingpong" selected>Pingpong</option>
-    </select>
+    <select id="ascii-colormode" style="display:none;"><option value="truecolor" selected>True Color</option></select>
+    <select id="ascii-charset" style="display:none;"><option value="standard" selected>Standard</option></select>
+    <select id="loop-mode" style="display:none;"><option value="pingpong" selected>Pingpong</option></select>
     <input type="checkbox" id="toggle-glow" checked style="display:none;">
     <input type="checkbox" id="toggle-invert" style="display:none;">
-    <span id="speed-val" style="display:none;"></span>
-    <span id="res-val" style="display:none;"></span>
-    <span id="bloom-stage-text" style="display:none;"></span>
 
   </main>
 

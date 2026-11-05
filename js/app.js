@@ -1,7 +1,8 @@
 /**
  * A Rose For You 🌹 — Romantic Experience & ASCII Engine
- * Designed as a digital love gift with photorealistic blooming rose,
- * living colored ASCII transformation, music box melody, and personalized love letter.
+ * 1. Screen 1: ASCII Art Hand saying "Click to show the love"
+ * 2. On click: Heart burst & romantic melody plays, reveals the blooming rose + small love note.
+ * 3. Rose can be toggled between Photoreal and Living Colored ASCII!
  */
 
 import { RoseSimulator } from './rose-sim.js';
@@ -11,11 +12,13 @@ import { AudioManager } from './audio-fx.js';
 
 class RomanticRoseApp {
   constructor() {
+    this.currentScreen = 'hand'; // 'hand' or 'rose'
     this.initCanvases();
     this.initEngines();
     this.initHandInteraction();
     this.initAmbientPetals();
     this.initLoveLetter();
+    this.initScreenTransitions();
     this.initControls();
     this.startLoop();
   }
@@ -50,6 +53,55 @@ class RomanticRoseApp {
     });
   }
 
+  initScreenTransitions() {
+    const handScreen = document.getElementById('ascii-hand-screen');
+    const roseScreen = document.getElementById('rose-love-screen');
+    const handTrigger = document.getElementById('ascii-hand-trigger');
+    const showLoveBtn = document.getElementById('btn-show-love');
+    const backHandBtn = document.getElementById('btn-back-hand');
+
+    const triggerShowLove = (e) => {
+      if (this.currentScreen === 'rose') return;
+      this.currentScreen = 'rose';
+
+      // 1. Trigger audio melody and heart burst
+      this.audioManager.init();
+      this.audioManager.toggleMute(); // starts the melody
+      const musicLabel = document.getElementById('music-label');
+      if (musicLabel) musicLabel.textContent = 'Pause Music';
+      const btnAudio = document.getElementById('btn-audio-toggle');
+      if (btnAudio) btnAudio.classList.add('active');
+
+      this.audioManager.playHeartBurst();
+
+      // 2. Spawn ripple on hero canvas
+      this.handController.createRipple(this.displayCanvas.width / 2, this.displayCanvas.height / 2);
+
+      // 3. Switch screens
+      if (handScreen) handScreen.classList.remove('active');
+      if (roseScreen) {
+        roseScreen.classList.add('active');
+        // Restart bloom from tight bud
+        this.roseSim.setBloomProgress(0);
+        this.roseSim.isPlaying = true;
+      }
+
+      this.showToast('With all my love... 💖');
+    };
+
+    if (handTrigger) handTrigger.addEventListener('click', triggerShowLove);
+    if (showLoveBtn) showLoveBtn.addEventListener('click', triggerShowLove);
+
+    if (backHandBtn) {
+      backHandBtn.addEventListener('click', () => {
+        this.currentScreen = 'hand';
+        if (roseScreen) roseScreen.classList.remove('active');
+        if (handScreen) handScreen.classList.add('active');
+        this.audioManager.playClick();
+      });
+    }
+  }
+
   initHandInteraction() {
     this.handController = new HandInteractionController({
       container: document.getElementById('hero-canvas-wrapper'),
@@ -71,15 +123,6 @@ class RomanticRoseApp {
     const handClickBtn = document.getElementById('btn-hand-click');
     if (handClickBtn) {
       handClickBtn.addEventListener('click', () => {
-        this.handController.createRipple(this.displayCanvas.width / 2, this.displayCanvas.height / 2);
-        this.handController.toggleAscii();
-        this.updateViewIndicator();
-      });
-    }
-
-    const toggleViewBtn = document.getElementById('btn-toggle-view');
-    if (toggleViewBtn) {
-      toggleViewBtn.addEventListener('click', () => {
         this.handController.createRipple(this.displayCanvas.width / 2, this.displayCanvas.height / 2);
         this.handController.toggleAscii();
         this.updateViewIndicator();
@@ -212,7 +255,6 @@ class RomanticRoseApp {
 
   // --- LOVE LETTER & PERSONALIZATION ---
   initLoveLetter() {
-    // Parse URL parameters (e.g. ?for=Sarah&msg=I+love+you&from=Kaushal)
     const params = new URLSearchParams(window.location.search);
     const recipient = params.get('for') || params.get('to');
     const note = params.get('msg') || params.get('note');
@@ -220,7 +262,7 @@ class RomanticRoseApp {
 
     if (recipient) {
       document.getElementById('display-recipient').textContent = `A Rose For ${recipient} 🌹`;
-      document.getElementById('letter-title').textContent = `Dearest ${recipient},`;
+      document.getElementById('letter-title').textContent = `For ${recipient}, My Love`;
     }
 
     if (note) {
@@ -228,10 +270,9 @@ class RomanticRoseApp {
     }
 
     if (sender) {
-      document.getElementById('display-sender').textContent = sender;
+      document.getElementById('display-sender').textContent = `${sender} 💖`;
     }
 
-    // Personalize Modal Dialog
     const modal = document.getElementById('personalize-modal');
     const openBtn = document.getElementById('btn-customize-link');
     const closeBtn = document.getElementById('modal-close-btn');
@@ -258,7 +299,7 @@ class RomanticRoseApp {
 
     const copyUrl = (url) => {
       navigator.clipboard.writeText(url);
-      this.showToast('Copied personalized love link to clipboard! 💖');
+      this.showToast('Copied personalized love link! 💖');
       this.audioManager.playHeartBurst();
     };
 
@@ -282,16 +323,15 @@ class RomanticRoseApp {
         copyUrl(url.toString());
         closeModal();
 
-        // Update current page immediately
         if (toVal) {
           document.getElementById('display-recipient').textContent = `A Rose For ${toVal} 🌹`;
-          document.getElementById('letter-title').textContent = `Dearest ${toVal},`;
+          document.getElementById('letter-title').textContent = `For ${toVal}, My Love`;
         }
         if (msgVal) {
           document.getElementById('letter-text').textContent = msgVal;
         }
         if (fromVal) {
-          document.getElementById('display-sender').textContent = fromVal;
+          document.getElementById('display-sender').textContent = `${fromVal} 💖`;
         }
       });
     }
@@ -318,17 +358,17 @@ class RomanticRoseApp {
       const dt = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
 
-      // 1. Update & Render Realistic Rose
-      this.roseSim.update(dt);
-      this.roseSim.render();
+      // Only calculate frames when rose screen is visible or transitioning
+      if (this.currentScreen === 'rose') {
+        this.roseSim.update(dt);
+        this.roseSim.render();
 
-      // 2. Convert Realistic Rose to Colored ASCII
-      const frameData = this.asciiEngine.processFrame(this.realCanvas);
-      this.asciiEngine.renderToCanvas(this.asciiCanvas, frameData);
+        const frameData = this.asciiEngine.processFrame(this.realCanvas);
+        this.asciiEngine.renderToCanvas(this.asciiCanvas, frameData);
 
-      // 3. Hand interaction controller composites to display canvas
-      this.handController.update(dt);
-      this.handController.composite(this.realCanvas, this.asciiCanvas);
+        this.handController.update(dt);
+        this.handController.composite(this.realCanvas, this.asciiCanvas);
+      }
 
       requestAnimationFrame(loop);
     };
