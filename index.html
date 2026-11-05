@@ -21,17 +21,20 @@
 
   <main class="stage">
 
-    <!-- Screen 1: The ASCII Knight with Flowing Red Cloak (Replaces Click Hand) -->
+    <!-- Screen 1: The ASCII Knight with Sealed Envelope Letter in Front -->
     <div id="knight-screen" class="scene active">
+      <!-- Background: ASCII Knight with waving red cloak -->
       <canvas id="knight-canvas" aria-label="ASCII Knight with waving red cloak"></canvas>
-      <p class="whisper-hint" id="knight-hint">touch the knight to reveal the love</p>
+      <!-- Foreground: Sealed ASCII Letter For You with heart seal & burning opening -->
+      <canvas id="envelope-canvas" aria-label="ASCII Sealed Letter For You"></canvas>
+      <p class="whisper-hint" id="knight-hint">touch the letter to open</p>
     </div>
 
-    <!-- Screen 2: 3D Blooming Rose & Lily Bouquet with Golden Fireflies -->
+    <!-- Screen 2: Combined 3D Blooming Rose & Lily Bouquet with Golden Fireflies -->
     <div id="bouquet-screen" class="scene">
-      <canvas id="bouquet-canvas" aria-label="3D Blooming Rose Bouquet in ASCII"></canvas>
+      <canvas id="bouquet-canvas" aria-label="Combined 3D Blooming Rose and Lily in ASCII"></canvas>
 
-      <!-- Dreamy Floating Cloud Love Note (Pops after the Bouquet Blooms) -->
+      <!-- Dreamy Floating Cloud Love Note (Pops after the Rose & Lily Bloom) -->
       <div id="cloud-note" class="cloud-note">
         <div class="cloud-puff puff-tl"></div>
         <div class="cloud-puff puff-tr"></div>
@@ -40,11 +43,13 @@
         <div class="cloud-body">
           <div class="cloud-tag">☁️ &nbsp;a quiet note for you &nbsp;✦</div>
           <p class="cloud-quote">
-            &ldquo;You are my favorite thought in a crowded room,<br>
-            the warmth in every cold day, and the sweetest plot twist of my life.<br>
-            Blooming together, just like us &mdash; side by side, forever.&rdquo;
+            &ldquo;In every petal, a quiet thought of you.<br>
+            The rose for the passion, the lily for the grace &mdash;<br>
+            blooming together side by side, just like us.<br>
+            You are my favorite thought in a crowded room,<br>
+            the warmth in every cold day, and the sweetest part of my life.&rdquo;
           </p>
-          <p class="cloud-author">&mdash; all my love, Kaushal</p>
+          <p class="cloud-author">&mdash; forever yours, Kaushal</p>
           <button id="btn-replay" class="cloud-replay" title="Experience again">hold again ↺</button>
         </div>
       </div>

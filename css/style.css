@@ -73,8 +73,21 @@ body.pure-black {
   display: block;
   object-fit: contain;
   background: #000000;
-  cursor: pointer;
   z-index: 3;
+}
+
+/* Foreground Sealed Envelope in Front of Knight */
+#envelope-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: block;
+  object-fit: contain;
+  background: transparent;
+  cursor: pointer;
+  z-index: 5;
 }
 
 .whisper-hint {
