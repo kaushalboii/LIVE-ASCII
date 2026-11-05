@@ -136,19 +136,20 @@ export class AsciiKnight {
     let ROWS, COLS, KX, KY, HORIZON;
 
     if (!isPortrait) {
-      // Desktop / Laptop Landscape
+      // Desktop / Laptop Landscape: Sleek ground floor (~36% of screen)
+      HORIZON = 0.64;
       ROWS = Math.max(this.KNIGHT.rows, 120);
       COLS = Math.max(this.KNIGHT.cols, Math.round(ROWS * (this.CH / this.CW) * (winW / winH)));
       KX = Math.max(0, Math.floor((COLS - this.KNIGHT.cols) * (COLS > this.KNIGHT.cols + 15 ? 0.88 : 0.50)));
-      KY = ROWS - this.KNIGHT.rows;
-      HORIZON = 0.56;
+      KY = Math.round(ROWS - this.KNIGHT.rows);
     } else {
-      // Mobile / Tablet Portrait: Match screen aspect ratio exactly to eliminate all letterboxing
+      // Mobile / Tablet Portrait: Compact ground floor (~34% of screen) adjusting dynamically
+      HORIZON = 0.66;
       COLS = Math.max(this.KNIGHT.cols, 152);
       ROWS = Math.max(this.KNIGHT.rows, Math.round(COLS * (this.CW / this.CH) * (winH / winW)));
       KX = Math.max(0, Math.floor((COLS - this.KNIGHT.cols) * 0.50)); // Center knight
-      KY = Math.max(10, Math.floor(ROWS * 0.16)); // Place knight gracefully in upper area
-      HORIZON = 0.46; // Grass covers the lower 54% of screen
+      const floorRow = ROWS * HORIZON;
+      KY = Math.max(6, Math.round(floorRow + 10 - this.KNIGHT.rows)); // Plant knight's feet in the grass
     }
 
     this.ROWS = ROWS;

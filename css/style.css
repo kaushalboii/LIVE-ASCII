@@ -144,12 +144,12 @@ body.pure-black {
 
 .seamless-rose-wrapper {
   position: absolute;
-  top: 36%;
+  top: 34%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 92vmin;
-  max-width: 680px;
-  max-height: 680px;
+  width: 88vmin;
+  max-width: 520px;
+  max-height: 520px;
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
@@ -265,8 +265,8 @@ body.pure-black {
    ========================================================================== */
 .corner-signature {
   position: fixed;
-  bottom: 22px;
-  right: 32px;
+  bottom: 20px;
+  right: 28px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -284,26 +284,26 @@ body.pure-black {
 
 .ascii-sig-box {
   font-family: 'JetBrains Mono', 'Courier New', monospace;
-  background: rgba(14, 5, 11, 0.78);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(14, 5, 11, 0.80);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 140, 175, 0.28);
-  border-radius: 12px;
-  padding: 10px 16px;
+  border-radius: 10px;
+  padding: 7px 12px;
   text-align: right;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 24px rgba(255, 30, 80, 0.16);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85), 0 0 16px rgba(255, 30, 80, 0.14);
 }
 
 .ascii-sig-head {
-  font-size: 11px;
+  font-size: 10px;
   color: #ff9ebb;
-  letter-spacing: 1.6px;
+  letter-spacing: 1.4px;
   opacity: 0.95;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 5px;
-  margin-bottom: 5px;
+  gap: 4px;
+  margin-bottom: 4px;
 }
 
 .sig-prompt {
@@ -315,7 +315,7 @@ body.pure-black {
   color: #ffb3c6;
   text-transform: lowercase;
   font-weight: 600;
-  letter-spacing: 1.8px;
+  letter-spacing: 1.6px;
 }
 
 .sig-colon {
@@ -325,33 +325,33 @@ body.pure-black {
 .ascii-key-cluster {
   display: flex;
   flex-wrap: nowrap;
-  gap: 8px;
+  gap: 6px;
   justify-content: flex-end;
-  margin: 4px 0 6px 0;
+  margin: 3px 0 4px 0;
 }
 
 .ascii-key-word {
   display: inline-flex;
-  gap: 3px;
+  gap: 2px;
 }
 
 .ascii-key {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 20px;
-  height: 22px;
-  padding: 0 4px;
+  min-width: 17px;
+  height: 20px;
+  padding: 0 3px;
   background: linear-gradient(180deg, rgba(42, 16, 26, 0.95) 0%, rgba(18, 6, 12, 0.98) 100%);
   border: 1px solid rgba(255, 140, 175, 0.45);
   border-bottom: 2px solid rgba(255, 50, 95, 0.75);
-  border-radius: 4px;
+  border-radius: 3.5px;
   box-shadow: 
-    0 2px 5px rgba(0, 0, 0, 0.7),
+    0 2px 4px rgba(0, 0, 0, 0.7),
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 0 10px rgba(255, 40, 85, 0.28);
+    0 0 8px rgba(255, 40, 85, 0.24);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   color: #fff0f4;
   text-shadow: 0 0 8px rgba(255, 60, 100, 0.85);
@@ -361,14 +361,14 @@ body.pure-black {
 .ascii-key:hover {
   transform: translateY(-1px);
   border-color: rgba(255, 180, 210, 0.7);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8), 0 0 14px rgba(255, 60, 110, 0.5);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8), 0 0 12px rgba(255, 60, 110, 0.45);
 }
 
 .ascii-sig-bytes {
-  font-size: 9.5px;
+  font-size: 8.5px;
   color: #d88fa2;
-  letter-spacing: 1.2px;
-  margin-top: 4px;
+  letter-spacing: 1.0px;
+  margin-top: 3px;
   opacity: 0.9;
 }
 
@@ -401,34 +401,34 @@ body.pure-black {
   /* Screen 1: Knight & Letter */
   .whisper-hint {
     left: 50%;
-    bottom: 20px;
-    font-size: 15px;
+    bottom: 18px;
+    font-size: 14px;
     letter-spacing: 2px;
   }
 
   /* Screen 2: Docked Mini Heart Logo */
   .heart-canvas.docked-corner {
-    transform: translate(calc(-50vw + 42px), calc(-50vh + 42px)) scale(0.10);
+    transform: translate(calc(-50vw + 38px), calc(-50vh + 38px)) scale(0.09);
   }
 
   /* Screen 2: Living Single Rose in Upper Half */
   .seamless-rose-wrapper {
-    top: 30%;
-    width: 92vmin;
-    max-width: 350px;
-    max-height: 350px;
+    top: 28%;
+    width: 90vmin;
+    max-width: 310px;
+    max-height: 310px;
   }
 
   /* Screen 2: Minimal Love Note Card (Above signature) */
   .minimal-note {
     position: fixed;
-    bottom: 84px;
+    bottom: 68px;
     left: 50%;
     transform: translateX(-50%) translateY(16px) scale(0.96);
-    max-width: 340px;
-    width: 90%;
-    padding: 10px 16px;
-    border-radius: 14px;
+    max-width: 320px;
+    width: 88%;
+    padding: 8px 14px;
+    border-radius: 12px;
   }
 
   .minimal-note.visible {
@@ -436,33 +436,33 @@ body.pure-black {
   }
 
   .note-pill {
-    font-size: 7.5px;
-    letter-spacing: 1.8px;
-    margin-bottom: 5px;
-  }
-
-  .note-quote {
-    font-size: 13.5px;
-    line-height: 1.4;
+    font-size: 7px;
+    letter-spacing: 1.6px;
     margin-bottom: 4px;
   }
 
+  .note-quote {
+    font-size: 13px;
+    line-height: 1.38;
+    margin-bottom: 3px;
+  }
+
   .note-subtext {
-    font-size: 10.5px;
-    margin-bottom: 6px;
+    font-size: 10px;
+    margin-bottom: 5px;
   }
 
   .note-replay {
-    font-size: 7.5px;
-    padding: 3px 12px;
+    font-size: 7px;
+    padding: 2.5px 10px;
   }
 
-  /* Screen 2: ASCII Key Signature (Centered at Bottom) */
+  /* Screen 2: ASCII Key Signature (Delicate, Compact & Centered at Bottom) */
   .corner-signature {
-    bottom: 10px;
+    bottom: 8px;
     left: 50%;
     right: auto;
-    transform: translateX(-50%) translateY(8px);
+    transform: translateX(-50%) translateY(4px);
     align-items: center;
   }
 
@@ -471,39 +471,64 @@ body.pure-black {
   }
 
   .ascii-sig-box {
-    padding: 6px 12px;
+    padding: 3px 8px;
     text-align: center;
-    border-radius: 9px;
+    border-radius: 6px;
+    background: rgba(12, 4, 9, 0.85);
+    border: 1px solid rgba(255, 140, 175, 0.22);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.85), 0 0 10px rgba(255, 30, 80, 0.10);
   }
 
   .ascii-sig-head {
     justify-content: center;
-    font-size: 9.5px;
+    font-size: 8px;
+    letter-spacing: 1.0px;
+    margin-bottom: 2px;
+  }
+
+  .sig-prompt {
+    font-size: 8px;
+  }
+
+  .sig-label {
+    font-size: 8px;
     letter-spacing: 1.2px;
-    margin-bottom: 3px;
   }
 
   .ascii-key-cluster {
     justify-content: center;
-    gap: 5px;
-    margin: 3px 0 4px 0;
+    gap: 3.5px;
+    margin: 1px 0 2px 0;
   }
 
   .ascii-key-word {
-    gap: 2px;
+    gap: 1.2px;
   }
 
   .ascii-key {
-    min-width: 16px;
-    height: 19px;
-    font-size: 10.5px;
-    padding: 0 2.5px;
+    min-width: 11.5px;
+    height: 14.5px;
+    font-size: 8.5px;
+    padding: 0 1px;
+    border-radius: 2px;
+    border-width: 0.8px;
+    border-bottom-width: 1.5px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
   }
 
   .ascii-sig-bytes {
-    font-size: 8px;
-    letter-spacing: 1px;
-    margin-top: 2px;
+    font-size: 7px;
+    letter-spacing: 0.6px;
+    margin-top: 1px;
+    opacity: 0.85;
+  }
+
+  .ascii-code {
+    font-size: 7px;
+  }
+
+  .sig-star {
+    font-size: 7px;
   }
 
   .ascii-sig-rule {
@@ -514,17 +539,22 @@ body.pure-black {
 /* Extra breakpoint for compact mobile screens (e.g. iPhone SE) */
 @media (max-height: 680px) and (max-width: 640px) {
   .seamless-rose-wrapper {
-    top: 26%;
-    max-width: 280px;
-    max-height: 280px;
+    top: 25%;
+    max-width: 260px;
+    max-height: 260px;
   }
 
   .minimal-note {
-    bottom: 74px;
-    padding: 8px 14px;
+    bottom: 60px;
+    padding: 6px 12px;
   }
 
   .note-quote {
-    font-size: 12.5px;
+    font-size: 11.5px;
+  }
+
+  .note-subtext {
+    font-size: 9.5px;
+    margin-bottom: 3px;
   }
 }

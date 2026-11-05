@@ -179,8 +179,8 @@ export class AsciiEnvelope {
       this.EW = Math.max(220, maxEW);
     } else {
       this.CX = this.W * 0.5;
-      this.ECY = this.H * 0.74;
-      this.EW = Math.min(this.W * 0.78, 280);
+      this.ECY = this.H * 0.77;
+      this.EW = Math.min(this.W * 0.72, 250);
     }
     this.EH = 0.64 * this.EW;
 
