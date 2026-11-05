@@ -821,3 +821,420 @@ input:checked + .slider-toggle:before {
   transform: translateY(0);
 }
 
+/* ==========================================================================
+   Romantic Love Theme & Atmospheric Rose Styles
+   ========================================================================== */
+
+.romantic-theme {
+  background: #060208;
+  background-image:
+    radial-gradient(circle at 50% 25%, rgba(225, 29, 72, 0.15) 0%, transparent 65%),
+    radial-gradient(circle at 15% 75%, rgba(136, 19, 55, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 85% 85%, rgba(244, 63, 94, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, #07030a 0%, #030105 100%);
+  background-attachment: fixed;
+  color: #fff1f2;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+#ambient-petals-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Header */
+.romantic-header {
+  position: relative;
+  z-index: 20;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.heart-pulse {
+  font-size: 20px;
+  animation: pulse-heart 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse-heart {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px #ff2a55); }
+  50% { transform: scale(1.22); filter: drop-shadow(0 0 14px #ff2a55); }
+}
+
+.header-love-tag {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #f472b6;
+}
+
+.romantic-main {
+  position: relative;
+  z-index: 10;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 10px 20px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Love Header */
+.love-header {
+  margin-bottom: 18px;
+}
+
+.love-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(32px, 5.5vw, 56px);
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.15;
+  background: linear-gradient(135deg, #ffffff 20%, #fecdd3 60%, #fb7185 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 16px rgba(225, 29, 72, 0.4));
+  margin-bottom: 8px;
+}
+
+.love-subtitle {
+  font-size: 15px;
+  color: #fda4af;
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Rose Canvas Stage */
+.rose-stage-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto 24px;
+}
+
+.rose-canvas-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle at 50% 50%, #150613 0%, #050207 70%);
+  border-radius: 28px;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.9),
+    0 0 50px rgba(225, 29, 72, 0.2),
+    inset 0 0 30px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rose-canvas-container:hover {
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.95),
+    0 0 70px rgba(244, 63, 94, 0.35);
+}
+
+.rose-canvas-container canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Animated Romantic Hand Prompt */
+.romantic-prompt-badge {
+  background: rgba(18, 6, 20, 0.88);
+  border: 1px solid #f43f5e;
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), 0 0 25px rgba(244, 63, 94, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(14px);
+  animation: pulse-badge 2s infinite ease-in-out;
+}
+
+.view-indicator {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(14, 5, 18, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fda4af;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Romantic Floating Dock */
+.romantic-dock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(20, 7, 24, 0.75);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  padding: 8px 14px;
+  border-radius: 9999px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(225, 29, 72, 0.2);
+  margin-bottom: 34px;
+  flex-wrap: wrap;
+}
+
+.btn-glass {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffe4e6;
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(244, 63, 94, 0.5);
+  color: #fff;
+}
+
+.btn-romantic {
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  border: 1px solid #fb7185;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(225, 29, 72, 0.45);
+}
+
+.btn-romantic:hover {
+  background: linear-gradient(135deg, #f43f5e, #e11d48);
+  box-shadow: 0 6px 26px rgba(225, 29, 72, 0.65);
+}
+
+.romantic-select {
+  background: rgba(20, 7, 24, 0.9);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: #ffe4e6;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.romantic-select:focus {
+  border-color: #fb7185;
+  box-shadow: 0 0 12px rgba(244, 63, 94, 0.4);
+}
+
+/* Romantic Love Letter Card */
+.love-letter-section {
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.letter-inner {
+  position: relative;
+  background: linear-gradient(145deg, rgba(28, 10, 32, 0.75), rgba(16, 5, 20, 0.85));
+  border: 1px solid rgba(244, 63, 94, 0.28);
+  border-radius: 24px;
+  padding: 36px 32px 28px;
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 16px 45px rgba(0, 0, 0, 0.7),
+    0 0 35px rgba(225, 29, 72, 0.15);
+  text-align: left;
+}
+
+.letter-stamp {
+  position: absolute;
+  top: -18px;
+  right: 28px;
+  font-size: 28px;
+  background: #19051b;
+  border: 1px solid #f43f5e;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
+}
+
+.letter-heading {
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fecdd3;
+  margin-bottom: 14px;
+  letter-spacing: 0.5px;
+}
+
+.letter-body {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #ffe4e6;
+  font-style: italic;
+  margin-bottom: 24px;
+  letter-spacing: 0.2px;
+}
+
+.letter-signature {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: #fda4af;
+}
+
+.sig-name {
+  font-family: 'Great Vibes', cursive;
+  font-size: 32px;
+  color: #fff;
+  letter-spacing: 1px;
+  margin-top: 2px;
+  text-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
+}
+
+.letter-actions {
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 18px;
+  flex-wrap: wrap;
+}
+
+/* Modal Backdrop & Card */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-backdrop.active {
+  display: flex;
+  animation: fadeIn 0.25s ease;
+}
+
+.modal-card {
+  background: #16081c;
+  border: 1px solid #f43f5e;
+  border-radius: 20px;
+  max-width: 480px;
+  width: 100%;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(225, 29, 72, 0.3);
+  text-align: left;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: #fda4af;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fda4af;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input, .form-group textarea {
+  width: 100%;
+  background: #0f0414;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+  border-color: #f43f5e;
+  box-shadow: 0 0 12px rgba(244, 63, 94, 0.4);
+}
+
+.romantic-footer {
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 13px;
+  color: #9f1239;
+  position: relative;
+  z-index: 10;
+}
+
+.romantic-footer a {
+  color: #fda4af;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.romantic-footer a:hover {
+  color: #fff;
+}

@@ -1,37 +1,37 @@
 /**
- * Live ASCII Rose & Creative Studio - Main Application Entrypoint
- * Coordinates the realistic blooming rose, ASCII conversion engine,
- * interactive hand-click transitions, and creative studio tools.
+ * A Rose For You 🌹 — Romantic Experience & ASCII Engine
+ * Designed as a digital love gift with photorealistic blooming rose,
+ * living colored ASCII transformation, music box melody, and personalized love letter.
  */
 
 import { RoseSimulator } from './rose-sim.js';
 import { AsciiEngine } from './ascii-engine.js';
 import { HandInteractionController } from './hand-interaction.js';
 import { AudioManager } from './audio-fx.js';
-import { AsciiStudio } from './studio.js';
 
-class LiveAsciiApp {
+class RomanticRoseApp {
   constructor() {
     this.initCanvases();
     this.initEngines();
     this.initHandInteraction();
-    this.initUI();
-    this.initStudio();
+    this.initAmbientPetals();
+    this.initLoveLetter();
+    this.initControls();
     this.startLoop();
   }
 
   initCanvases() {
-    // 1. Offscreen Real Rose Canvas (800x800)
+    // 1. Offscreen Real Rose Canvas
     this.realCanvas = document.createElement('canvas');
     this.realCanvas.width = 800;
     this.realCanvas.height = 800;
 
-    // 2. Offscreen ASCII Rose Canvas (800x800)
+    // 2. Offscreen ASCII Rose Canvas
     this.asciiCanvas = document.createElement('canvas');
     this.asciiCanvas.width = 800;
     this.asciiCanvas.height = 800;
 
-    // 3. Main Hero Display Canvas (Visible on page)
+    // 3. Main Hero Display Canvas
     this.displayCanvas = document.getElementById('hero-canvas');
     this.displayCanvas.width = 800;
     this.displayCanvas.height = 800;
@@ -40,6 +40,8 @@ class LiveAsciiApp {
   initEngines() {
     this.audioManager = new AudioManager();
     this.roseSim = new RoseSimulator(this.realCanvas);
+    this.roseSim.speed = 0.07;
+
     this.asciiEngine = new AsciiEngine({
       columns: 110,
       charSet: 'standard',
@@ -54,72 +56,67 @@ class LiveAsciiApp {
       realCanvas: this.realCanvas,
       asciiCanvas: this.asciiCanvas,
       outputCanvas: this.displayCanvas,
-      onModeChange: (mode) => {
-        document.querySelectorAll('.mode-btn').forEach(btn => {
-          btn.classList.toggle('active', btn.dataset.mode === mode);
-        });
-      },
+      onModeChange: () => {},
       onAudioTrigger: (type) => {
         if (type === 'bloom') {
-          this.audioManager.playTransformSound();
+          this.audioManager.playHeartBurst();
         } else {
           this.audioManager.playClick();
         }
+        this.updateViewIndicator();
       }
     });
 
-    // Dedicated Hand Click Trigger Button in UI
+    // Touch / Click button
     const handClickBtn = document.getElementById('btn-hand-click');
     if (handClickBtn) {
       handClickBtn.addEventListener('click', () => {
         this.handController.createRipple(this.displayCanvas.width / 2, this.displayCanvas.height / 2);
         this.handController.toggleAscii();
+        this.updateViewIndicator();
       });
     }
 
-    // Interaction mode buttons (Click, Split, Lens)
-    document.querySelectorAll('.mode-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const mode = btn.dataset.mode;
-        this.handController.setInteractionMode(mode);
-        this.audioManager.playClick();
+    const toggleViewBtn = document.getElementById('btn-toggle-view');
+    if (toggleViewBtn) {
+      toggleViewBtn.addEventListener('click', () => {
+        this.handController.createRipple(this.displayCanvas.width / 2, this.displayCanvas.height / 2);
+        this.handController.toggleAscii();
+        this.updateViewIndicator();
       });
-    });
+    }
   }
 
-  initUI() {
-    // Rose Bloom Playback Controls
-    const btnPlay = document.getElementById('btn-play-pause');
-    const bloomScrubber = document.getElementById('bloom-scrubber');
-    const bloomSpeed = document.getElementById('bloom-speed');
-    const rosePalette = document.getElementById('rose-palette');
-    const loopMode = document.getElementById('loop-mode');
+  updateViewIndicator() {
+    const isAscii = this.handController.isAsciiRevealed;
+    const indicator = document.getElementById('view-indicator');
+    const toggleText = document.getElementById('view-toggle-text');
 
+    if (indicator) {
+      indicator.innerHTML = isAscii
+        ? '<span>✨ Living ASCII Rose</span>'
+        : '<span>🌹 Photoreal Rose</span>';
+    }
+    if (toggleText) {
+      toggleText.textContent = isAscii ? 'Show Photoreal' : 'Show ASCII';
+    }
+  }
+
+  initControls() {
+    // Play / Pause
+    const btnPlay = document.getElementById('btn-play-pause');
     if (btnPlay) {
       btnPlay.addEventListener('click', () => {
         this.roseSim.isPlaying = !this.roseSim.isPlaying;
         btnPlay.innerHTML = this.roseSim.isPlaying
-          ? '<span class="icon">⏸</span> Pause Bloom'
-          : '<span class="icon">▶</span> Play Bloom';
+          ? '<span class="icon">⏸</span> Pause'
+          : '<span class="icon">▶</span> Bloom';
         this.audioManager.playClick();
       });
     }
 
-    if (bloomScrubber) {
-      bloomScrubber.addEventListener('input', (e) => {
-        const val = parseFloat(e.target.value) / 100;
-        this.roseSim.setBloomProgress(val);
-      });
-    }
-
-    if (bloomSpeed) {
-      bloomSpeed.addEventListener('input', (e) => {
-        const val = parseFloat(e.target.value);
-        this.roseSim.speed = val;
-        document.getElementById('speed-val').textContent = `${val.toFixed(2)}x`;
-      });
-    }
-
+    // Color Theme
+    const rosePalette = document.getElementById('rose-palette');
     if (rosePalette) {
       rosePalette.addEventListener('change', (e) => {
         this.roseSim.colorScheme = e.target.value;
@@ -127,97 +124,191 @@ class LiveAsciiApp {
       });
     }
 
-    if (loopMode) {
-      loopMode.addEventListener('change', (e) => {
-        this.roseSim.loopMode = e.target.value;
-      });
-    }
-
-    // ASCII Settings Controls
-    const asciiResolution = document.getElementById('ascii-resolution');
-    const charSetSelect = document.getElementById('ascii-charset');
-    const colorModeSelect = document.getElementById('ascii-colormode');
-    const toggleGlow = document.getElementById('toggle-glow');
-    const toggleInvert = document.getElementById('toggle-invert');
-
-    if (asciiResolution) {
-      asciiResolution.addEventListener('input', (e) => {
-        const cols = parseInt(e.target.value, 10);
-        this.asciiEngine.setResolution(cols);
-        document.getElementById('res-val').textContent = `${cols} cols`;
-      });
-    }
-
-    if (charSetSelect) {
-      charSetSelect.addEventListener('change', (e) => {
-        this.asciiEngine.setCharSet(e.target.value);
-      });
-    }
-
-    if (colorModeSelect) {
-      colorModeSelect.addEventListener('change', (e) => {
-        this.asciiEngine.setColorMode(e.target.value);
-        this.audioManager.playClick();
-      });
-    }
-
-    if (toggleGlow) {
-      toggleGlow.addEventListener('change', (e) => {
-        this.asciiEngine.glow = e.target.checked;
-      });
-    }
-
-    if (toggleInvert) {
-      toggleInvert.addEventListener('change', (e) => {
-        this.asciiEngine.invert = e.target.checked;
-      });
-    }
-
-    // Audio Mute/Unmute Toggle
+    // Music Toggle
     const btnAudio = document.getElementById('btn-audio-toggle');
+    const musicLabel = document.getElementById('music-label');
     if (btnAudio) {
       btnAudio.addEventListener('click', () => {
         const isMuted = this.audioManager.toggleMute();
-        btnAudio.innerHTML = isMuted
-          ? '<span class="icon">🔇</span> Sound Off'
-          : '<span class="icon">🔊</span> Sound On';
-      });
-    }
-
-    // Fullscreen Toggle
-    const btnFullscreen = document.getElementById('btn-fullscreen');
-    if (btnFullscreen) {
-      btnFullscreen.addEventListener('click', () => {
-        const wrapper = document.getElementById('hero-canvas-wrapper');
-        if (!document.fullscreenElement) {
-          wrapper.requestFullscreen().catch(err => console.warn(err));
-        } else {
-          document.exitFullscreen().catch(err => console.warn(err));
+        if (musicLabel) {
+          musicLabel.textContent = isMuted ? 'Play Music' : 'Pause Music';
         }
+        btnAudio.classList.toggle('active', !isMuted);
       });
     }
 
-    // Export Hero ASCII Frame
-    document.getElementById('btn-export-rose-png')?.addEventListener('click', () => {
-      const link = document.createElement('a');
-      link.download = `rose-ascii-${Math.round(this.roseSim.bloomProgress * 100)}pct.png`;
-      link.href = this.displayCanvas.toDataURL('image/png');
-      link.click();
-      this.studio.showToast('Downloaded Rose Frame as PNG!');
-      this.audioManager.playBloomChime();
-    });
-
-    document.getElementById('btn-copy-rose-txt')?.addEventListener('click', () => {
-      const frameData = this.asciiEngine.processFrame(this.realCanvas);
-      const text = this.asciiEngine.toPlainText(frameData);
-      navigator.clipboard.writeText(text);
-      this.studio.showToast('Copied Rose ASCII to clipboard!');
-      this.audioManager.playBloomChime();
+    // Scroll to Love Letter
+    document.getElementById('btn-open-letter')?.addEventListener('click', () => {
+      document.getElementById('love-letter-card')?.scrollIntoView({ behavior: 'smooth' });
+      this.audioManager.playHeartBurst();
     });
   }
 
-  initStudio() {
-    this.studio = new AsciiStudio(this.asciiEngine, this.audioManager);
+  // --- AMBIENT FALLING ROSE PETALS ---
+  initAmbientPetals() {
+    const canvas = document.getElementById('ambient-petals-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const petals = [];
+    const count = Math.min(28, Math.floor(window.innerWidth / 45));
+
+    for (let i = 0; i < count; i++) {
+      petals.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: 8 + Math.random() * 12,
+        speedX: -0.5 + Math.random() * 1.0,
+        speedY: 0.6 + Math.random() * 1.2,
+        angle: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.02,
+        alpha: 0.2 + Math.random() * 0.4
+      });
+    }
+
+    const animatePetals = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let p of petals) {
+        p.x += p.speedX + Math.sin(p.angle) * 0.4;
+        p.y += p.speedY;
+        p.angle += p.rotSpeed;
+
+        if (p.y > canvas.height + 20) {
+          p.y = -20;
+          p.x = Math.random() * canvas.width;
+        }
+        if (p.x < -20) p.x = canvas.width + 20;
+        if (p.x > canvas.width + 20) p.x = -20;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.globalAlpha = p.alpha;
+
+        // Draw delicate heart/petal shape
+        ctx.fillStyle = '#e11d48';
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(-p.size * 0.8, -p.size * 0.6, -p.size, p.size * 0.4, 0, p.size);
+        ctx.bezierCurveTo(p.size, p.size * 0.4, p.size * 0.8, -p.size * 0.6, 0, 0);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      requestAnimationFrame(animatePetals);
+    };
+
+    animatePetals();
+  }
+
+  // --- LOVE LETTER & PERSONALIZATION ---
+  initLoveLetter() {
+    // Parse URL parameters (e.g. ?for=Sarah&msg=I+love+you&from=Kaushal)
+    const params = new URLSearchParams(window.location.search);
+    const recipient = params.get('for') || params.get('to');
+    const note = params.get('msg') || params.get('note');
+    const sender = params.get('from');
+
+    if (recipient) {
+      document.getElementById('display-recipient').textContent = `A Rose For ${recipient} 🌹`;
+      document.getElementById('letter-title').textContent = `Dearest ${recipient},`;
+    }
+
+    if (note) {
+      document.getElementById('letter-text').textContent = note;
+    }
+
+    if (sender) {
+      document.getElementById('display-sender').textContent = sender;
+    }
+
+    // Personalize Modal Dialog
+    const modal = document.getElementById('personalize-modal');
+    const openBtn = document.getElementById('btn-customize-link');
+    const closeBtn = document.getElementById('modal-close-btn');
+    const genBtn = document.getElementById('btn-generate-love-link');
+    const shareBtn = document.getElementById('btn-share-link');
+
+    const openModal = () => {
+      if (modal) modal.classList.add('active');
+      this.audioManager.playClick();
+    };
+
+    const closeModal = () => {
+      if (modal) modal.classList.remove('active');
+    };
+
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+    }
+
+    const copyUrl = (url) => {
+      navigator.clipboard.writeText(url);
+      this.showToast('Copied personalized love link to clipboard! 💖');
+      this.audioManager.playHeartBurst();
+    };
+
+    if (shareBtn) {
+      shareBtn.addEventListener('click', () => {
+        copyUrl(window.location.href);
+      });
+    }
+
+    if (genBtn) {
+      genBtn.addEventListener('click', () => {
+        const toVal = document.getElementById('input-recipient')?.value.trim();
+        const msgVal = document.getElementById('input-message')?.value.trim();
+        const fromVal = document.getElementById('input-sender')?.value.trim();
+
+        const url = new URL(window.location.href.split('?')[0]);
+        if (toVal) url.searchParams.set('for', toVal);
+        if (msgVal) url.searchParams.set('msg', msgVal);
+        if (fromVal) url.searchParams.set('from', fromVal);
+
+        copyUrl(url.toString());
+        closeModal();
+
+        // Update current page immediately
+        if (toVal) {
+          document.getElementById('display-recipient').textContent = `A Rose For ${toVal} 🌹`;
+          document.getElementById('letter-title').textContent = `Dearest ${toVal},`;
+        }
+        if (msgVal) {
+          document.getElementById('letter-text').textContent = msgVal;
+        }
+        if (fromVal) {
+          document.getElementById('display-sender').textContent = fromVal;
+        }
+      });
+    }
+  }
+
+  showToast(message) {
+    let toast = document.getElementById('app-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'app-toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.className = 'toast show';
+    setTimeout(() => {
+      toast.className = 'toast';
+    }, 2800);
   }
 
   startLoop() {
@@ -227,30 +318,15 @@ class LiveAsciiApp {
       const dt = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
 
-      // 1. Update & Render Realistic Rose to realCanvas
+      // 1. Update & Render Realistic Rose
       this.roseSim.update(dt);
       this.roseSim.render();
 
-      // Update scrubber UI position smoothly if playing
-      const scrubber = document.getElementById('bloom-scrubber');
-      if (scrubber && this.roseSim.isPlaying) {
-        scrubber.value = Math.round(this.roseSim.bloomProgress * 100);
-      }
-      const stageText = document.getElementById('bloom-stage-text');
-      if (stageText) {
-        const pct = Math.round(this.roseSim.bloomProgress * 100);
-        let label = 'Tight Velvety Bud';
-        if (pct > 20 && pct <= 45) label = 'Sepals Opening';
-        else if (pct > 45 && pct <= 75) label = 'Petals Unfolding';
-        else if (pct > 75) label = 'Magnificent Full Bloom';
-        stageText.textContent = `${pct}% — ${label}`;
-      }
-
-      // 2. Convert Realistic Rose to Colored ASCII on asciiCanvas
+      // 2. Convert Realistic Rose to Colored ASCII
       const frameData = this.asciiEngine.processFrame(this.realCanvas);
       this.asciiEngine.renderToCanvas(this.asciiCanvas, frameData);
 
-      // 3. Hand interaction controller updates & composites to display canvas
+      // 3. Hand interaction controller composites to display canvas
       this.handController.update(dt);
       this.handController.composite(this.realCanvas, this.asciiCanvas);
 
@@ -261,8 +337,6 @@ class LiveAsciiApp {
   }
 }
 
-// Start application when DOM is ready
 window.addEventListener('DOMContentLoaded', () => {
-  window.app = new LiveAsciiApp();
+  window.app = new RomanticRoseApp();
 });
-

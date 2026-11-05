@@ -33,8 +33,9 @@ export class HandInteractionController {
     this.lensRadius = 150;
     this.isHovering = false;
 
-    // Click ripples
+    // Click ripples & romantic heart bursts
     this.ripples = [];
+    this.hearts = [];
 
     // Hand indicator state
     this.handVisible = true;
@@ -150,8 +151,29 @@ export class HandInteractionController {
       radius: 10,
       maxRadius: Math.max(this.outputCanvas.width, this.outputCanvas.height) * 1.2,
       alpha: 1.0,
-      speed: 18
+      speed: 16
     });
+
+    // Romantic floating hearts and sparkle particles
+    const glyphs = ['💖', '✨', '🌹', '❤️', '💫'];
+    const count = 14;
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+      const speed = 2 + Math.random() * 5;
+      this.hearts.push({
+        x: x + (Math.random() - 0.5) * 20,
+        y: y + (Math.random() - 0.5) * 20,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 3.5, // float upward
+        size: 14 + Math.random() * 16,
+        alpha: 1.0,
+        rotation: (Math.random() - 0.5) * 0.4,
+        rotSpeed: (Math.random() - 0.5) * 0.1,
+        glyph: glyphs[Math.floor(Math.random() * glyphs.length)],
+        life: 0,
+        maxLife: 1.2 + Math.random() * 0.8
+      });
+    }
   }
 
   update(dt = 0.016) {
@@ -167,6 +189,22 @@ export class HandInteractionController {
 
       if (rip.alpha <= 0) {
         this.ripples.splice(i, 1);
+      }
+    }
+
+    // Update floating romantic hearts
+    for (let i = this.hearts.length - 1; i >= 0; i--) {
+      const h = this.hearts[i];
+      h.x += h.vx;
+      h.y += h.vy;
+      h.vy -= 0.08; // upward buoyancy
+      h.vx *= 0.98;
+      h.rotation += h.rotSpeed;
+      h.life += dt;
+      h.alpha = Math.max(0, 1 - (h.life / h.maxLife));
+
+      if (h.life >= h.maxLife) {
+        this.hearts.splice(i, 1);
       }
     }
   }
@@ -277,6 +315,23 @@ export class HandInteractionController {
         ctx.beginPath();
         ctx.arc(rip.x, rip.y, rip.radius, 0, Math.PI * 2);
         ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    // Render floating romantic love hearts
+    if (this.hearts.length > 0) {
+      for (let h of this.hearts) {
+        ctx.save();
+        ctx.globalAlpha = h.alpha;
+        ctx.translate(h.x, h.y);
+        ctx.rotate(h.rotation);
+        ctx.font = `${h.size}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = '#ff2a55';
+        ctx.shadowBlur = 12;
+        ctx.fillText(h.glyph, 0, 0);
         ctx.restore();
       }
     }

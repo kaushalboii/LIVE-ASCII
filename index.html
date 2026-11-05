@@ -3,457 +3,191 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LIVE ASCII — Realistic Blooming Rose & Colored ASCII Studio</title>
-  <meta name="description" content="Experience a photorealistic blooming rose rendered in living true-color ASCII art. Interactive hand-click transformation, split view, image/video/camera ASCII generator.">
+  <title>A Rose For You 🌹 — With All My Love</title>
+  <meta name="description" content="A digital love gift: A photorealistic blooming rose that transforms into living colored ASCII art with a single touch.">
   <meta name="theme-color" content="#060408">
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="LIVE ASCII — Realistic Blooming Rose & Creative Studio">
-  <meta property="og:description" content="Transform a realistic blooming rose into living colored ASCII art with an interactive hand click.">
+  <!-- Open Graph for sharing on WhatsApp / Instagram / Messages -->
+  <meta property="og:title" content="A Rose For You 🌹 With All My Love">
+  <meta property="og:description" content="I sent you a blooming rose. Touch the rose to bloom it into living colored ASCII art.">
   <meta property="og:type" content="website">
 
-  <!-- Fonts -->
+  <!-- Favicon & Fonts -->
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="romantic-theme">
 
-  <!-- Site Header -->
-  <header class="site-header">
-    <div class="header-container">
-      <a href="#" class="brand">
-        <span class="brand-icon">⚘</span>
-        <div>
-          <div class="brand-title">LIVE ASCII</div>
-          <div class="brand-tagline">Rose Bloom & Studio</div>
-        </div>
+  <!-- Ambient Floating Petals Canvas -->
+  <canvas id="ambient-petals-canvas"></canvas>
+
+  <!-- Top Romantic Header Bar -->
+  <header class="romantic-header">
+    <div class="header-left">
+      <span class="heart-pulse">💖</span>
+      <span class="header-love-tag">A Special Gift For You</span>
+    </div>
+
+    <div class="header-right">
+      <button id="btn-audio-toggle" class="btn btn-sm btn-glass" title="Toggle Soft Music Box Melody">
+        <span class="icon">🎵</span> <span id="music-label">Play Music</span>
+      </button>
+      <a href="studio.html" class="btn btn-sm btn-glass studio-link" title="Open Creator Studio (Image, Video, Webcam & Text)">
+        <span>✨</span> ASCII Studio &rarr;
       </a>
-
-      <!-- Navigation Tabs -->
-      <nav class="nav-tabs">
-        <button class="nav-tab active" data-tab="rose">🌹 Rose Bloom</button>
-        <button class="nav-tab" data-tab="image">🖼️ Image Studio</button>
-        <button class="nav-tab" data-tab="video">🎥 Video Studio</button>
-        <button class="nav-tab" data-tab="camera">📷 Live Camera</button>
-        <button class="nav-tab" data-tab="text">🔤 Text Banner</button>
-      </nav>
-
-      <!-- Header Quick Actions -->
-      <div class="header-actions">
-        <button id="btn-audio-toggle" class="btn btn-sm" title="Toggle Synthesized Audio Chimes">
-          <span class="icon">🔇</span> Sound Off
-        </button>
-        <a href="https://github.com/kaushalboii/LIVE-ASCII" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary">
-          <span class="icon">★</span> GitHub
-        </a>
-      </div>
     </div>
   </header>
 
-  <!-- Main App Content -->
-  <main class="main-content">
+  <!-- Main Romantic Stage -->
+  <main class="romantic-main">
 
-    <!-- ====================================================================
-         VIEW 1: ROSE BLOOM SHOWCASE (Flagship Hero Experience)
-         ==================================================================== -->
-    <section id="view-rose" class="studio-view active">
-      <div class="hero-header">
-        <div class="badge-tag">✧ Living Botanical ASCII Simulation ✧</div>
-        <h1 class="hero-title">
-          <span class="gradient-text">Realistic Blooming Rose</span> in Live ASCII
-        </h1>
-        <p class="hero-subtitle">
-          Watch the photorealistic rose bloom in rich crimson, then click anywhere or use the hand to dissolve into living true-color ASCII characters.
+    <!-- Romantic Hero Invitation -->
+    <div class="love-header">
+      <h1 class="love-title" id="display-recipient">A Rose For You</h1>
+      <p class="love-subtitle" id="display-subtitle">
+        Watch it bloom softly... then touch the rose to reveal its glowing ASCII soul.
+      </p>
+    </div>
+
+    <!-- Rose Canvas Stage -->
+    <div class="rose-stage-wrapper">
+      <div class="rose-canvas-container" id="hero-canvas-wrapper">
+        <canvas id="hero-canvas" width="800" height="800"></canvas>
+
+        <!-- Romantic Animated Hand Guide -->
+        <div class="hand-guide-overlay" id="hand-guide">
+          <div class="hand-cursor-icon">👆</div>
+          <div class="romantic-prompt-badge">
+            <span class="heart-icon">💖</span>
+            <span>Touch the Rose</span>
+          </div>
+        </div>
+
+        <!-- Floating Quick View Pill -->
+        <div class="view-indicator" id="view-indicator">
+          <span>🌹 Photoreal Rose</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Romantic Floating Control Dock -->
+    <div class="romantic-dock">
+      <button id="btn-hand-click" class="btn btn-primary btn-romantic btn-pulse" title="Touch / Transform the Rose">
+        <span class="icon">👆</span> Touch Rose
+      </button>
+
+      <button id="btn-toggle-view" class="btn btn-glass" title="Toggle between Photoreal and Colored ASCII">
+        <span class="icon">✨</span> <span id="view-toggle-text">Show ASCII</span>
+      </button>
+
+      <button id="btn-play-pause" class="btn btn-glass" title="Pause / Play blooming">
+        <span class="icon">⏸</span> Pause
+      </button>
+
+      <!-- Rose Color Theme Selector -->
+      <div class="color-dropdown-wrapper">
+        <select id="rose-palette" class="romantic-select">
+          <option value="crimson" selected>🌹 Velvet Crimson</option>
+          <option value="pink">🌸 Royal Pink</option>
+          <option value="sunset">🌅 Ruby Sunset</option>
+          <option value="white">🤍 Moonlight White</option>
+          <option value="cyber">💜 Neon Dream</option>
+        </select>
+      </div>
+
+      <button id="btn-open-letter" class="btn btn-glass" title="Read or Personalize Love Letter">
+        <span class="icon">💌</span> Love Letter
+      </button>
+    </div>
+
+    <!-- Romantic Love Letter Card / Modal -->
+    <section class="love-letter-section" id="love-letter-card">
+      <div class="letter-inner">
+        <div class="letter-stamp">🌹</div>
+        <h2 class="letter-heading" id="letter-title">To the One Who Holds My Heart,</h2>
+        <p class="letter-body" id="letter-text">
+          Just like this rose unfolds its petals to the night sky, my love for you blooms deeper with every passing second. In a world full of noise, you are my softest melody and my favorite wonder.
         </p>
+        <div class="letter-signature" id="letter-signature">
+          <span>With all my love,</span>
+          <span class="sig-name" id="display-sender">Forever & Always</span>
+        </div>
 
-        <!-- Mode Switcher -->
-        <div class="mode-switcher-container">
-          <button class="mode-btn active" data-mode="click" title="Click anywhere on the rose to transform into ASCII">
-            <span>👆</span> Hand Click Mode
+        <!-- Personalize Button -->
+        <div class="letter-actions">
+          <button id="btn-customize-link" class="btn btn-sm btn-romantic">
+            <span>✏️</span> Personalize For Someone
           </button>
-          <button class="mode-btn" data-mode="split" title="Drag vertical slider to compare Photoreal and ASCII side by side">
-            <span>⇄</span> Split Comparison
-          </button>
-          <button class="mode-btn" data-mode="lens" title="Move cursor/hand to peek ASCII matrix through the petals">
-            <span>🔍</span> X-Ray Lens
+          <button id="btn-share-link" class="btn btn-sm btn-glass">
+            <span>🔗</span> Copy Love Link
           </button>
         </div>
       </div>
-
-      <!-- Main Showcase Stage -->
-      <div class="showcase-stage">
-        
-        <!-- Interactive Canvas Viewport -->
-        <div class="canvas-container-outer">
-          <div class="canvas-wrapper" id="hero-canvas-wrapper">
-            <canvas id="hero-canvas" width="800" height="800"></canvas>
-
-            <!-- Interactive Hand Guide Prompt -->
-            <div class="hand-guide-overlay" id="hand-guide">
-              <div class="hand-cursor-icon">👆</div>
-              <div class="hand-prompt-badge">
-                <span>Touch the Rose to Transform into ASCII</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bottom Canvas Bar -->
-          <div class="canvas-bottom-bar">
-            <div class="stage-badge">
-              <span class="pulse-dot">●</span>
-              <span id="bloom-stage-text">0% — Tight Velvety Bud</span>
-            </div>
-
-            <div class="canvas-actions">
-              <button id="btn-hand-click" class="btn btn-sm btn-primary btn-pulse" title="Trigger hand click transition">
-                <span>👆</span> Click Rose
-              </button>
-              <button id="btn-export-rose-png" class="btn btn-sm" title="Save current frame as High-Res PNG">
-                <span>📸</span> Save PNG
-              </button>
-              <button id="btn-copy-rose-txt" class="btn btn-sm" title="Copy ASCII text to clipboard">
-                <span>📋</span> Copy ASCII
-              </button>
-              <button id="btn-fullscreen" class="btn btn-sm" title="Toggle Fullscreen Canvas">
-                <span>⛶</span> Fullscreen
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Side Control Docks -->
-        <div class="control-sidebar">
-          
-          <!-- Rose Simulation Dock -->
-          <div class="control-card">
-            <div class="card-header">
-              <h2 class="card-title"><span>🌹</span> Bloom Controls</h2>
-              <button id="btn-play-pause" class="btn btn-sm btn-primary">
-                <span class="icon">⏸</span> Pause Bloom
-              </button>
-            </div>
-
-            <!-- Scrubber -->
-            <div class="control-group">
-              <div class="control-label">
-                <span>Bloom Progression</span>
-              </div>
-              <input type="range" id="bloom-scrubber" min="0" max="100" value="0" step="0.5">
-            </div>
-
-            <!-- Speed -->
-            <div class="control-group">
-              <div class="control-label">
-                <span>Bloom Speed</span>
-                <span id="speed-val" class="label-val">0.08x</span>
-              </div>
-              <input type="range" id="bloom-speed" min="0.02" max="0.25" value="0.08" step="0.01">
-            </div>
-
-            <!-- Color Palette -->
-            <div class="control-group">
-              <div class="control-label">
-                <span>Rose Variety</span>
-              </div>
-              <select id="rose-palette">
-                <option value="crimson" selected>Velvety Crimson Red</option>
-                <option value="sunset">Ruby Sunset Orange</option>
-                <option value="pink">Blushing Royal Pink</option>
-                <option value="white">Moonlight White</option>
-                <option value="cyber">Cyberpunk Violet / Neon</option>
-              </select>
-            </div>
-
-            <!-- Loop Mode -->
-            <div class="control-group">
-              <div class="control-label">
-                <span>Loop Animation</span>
-              </div>
-              <select id="loop-mode">
-                <option value="pingpong" selected>Ping-Pong (Bloom & Close)</option>
-                <option value="loop">Continuous Bloom</option>
-                <option value="once">Play Once & Stop</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- ASCII Art Styling Dock -->
-          <div class="control-card">
-            <div class="card-header">
-              <h2 class="card-title"><span>⌨️</span> ASCII Art Styling</h2>
-            </div>
-
-            <!-- Resolution -->
-            <div class="control-group">
-              <div class="control-label">
-                <span>Character Density</span>
-                <span id="res-val" class="label-val">110 cols</span>
-              </div>
-              <input type="range" id="ascii-resolution" min="50" max="180" value="110" step="5">
-            </div>
-
-            <!-- Color Mode -->
-            <div class="control-group">
-              <div class="control-label">
-                <span>Color Reproduction</span>
-              </div>
-              <select id="ascii-colormode">
-                <option value="truecolor" selected>True Color RGB (Original Rose)</option>
-                <option value="crimsonglow">Velvet Crimson Glow</option>
-                <option value="matrix">Cyber Matrix Green</option>
-                <option value="amber">Retro Amber CRT</option>
-                <option value="cyberpunk">Synthwave Neon</option>
-                <option value="mono">Silver Monochrome</option>
-              </select>
-            </div>
-
-            <!-- Character Set -->
-            <div class="control-group">
-              <div class="control-label">
-                <span>Character Glyphs</span>
-              </div>
-              <select id="ascii-charset">
-                <option value="standard" selected>Standard ( .:-=+*#%@ )</option>
-                <option value="botanical">Botanical ( .·:;+*❀✿⚘✾✦★#@ )</option>
-                <option value="dense">Ultra Dense 70-Glyph</option>
-                <option value="blocks">Half-Tone Blocks ( ░▒▓█ )</option>
-                <option value="binary">Binary Cyber ( 0 1 )</option>
-                <option value="minimal">Minimalist ( .:*#@ )</option>
-              </select>
-            </div>
-
-            <!-- Toggles -->
-            <div class="control-group">
-              <div class="toggle-row">
-                <span class="control-label" style="margin:0;">Luminous Character Glow</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="toggle-glow" checked>
-                  <span class="slider-toggle"></span>
-                </label>
-              </div>
-            </div>
-
-            <div class="control-group">
-              <div class="toggle-row">
-                <span class="control-label" style="margin:0;">Invert Luminance</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="toggle-invert">
-                  <span class="slider-toggle"></span>
-                </label>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
     </section>
 
-    <!-- ====================================================================
-         VIEW 2: IMAGE TO ASCII STUDIO
-         ==================================================================== -->
-    <section id="view-image" class="studio-view">
-      <div class="hero-header">
-        <div class="badge-tag">✧ Custom ASCII Generator ✧</div>
-        <h2 class="hero-title"><span class="gradient-text">Image to Colored ASCII</span></h2>
-        <p class="hero-subtitle">Upload any image or choose a botanical preset to render in full 24-bit color ASCII art.</p>
-      </div>
-
-      <div class="studio-layout">
-        <!-- Sidebar Upload & Presets -->
-        <div class="control-sidebar">
-          <div class="control-card">
-            <h3 class="card-title"><span>📂</span> Upload Photo</h3>
-            <div class="dropzone-box" id="img-dropzone">
-              <div class="dropzone-icon">🖼️</div>
-              <p style="font-size:13px; font-weight:600;">Drag & drop image here</p>
-              <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">or click to browse PNG, JPG, WebP</p>
-              <input type="file" id="img-file-input" accept="image/*" style="display:none;">
-            </div>
-
-            <h3 class="card-title" style="margin-top:16px;"><span>🌸</span> Botanical Presets</h3>
-            <div class="presets-grid">
-              <button class="preset-btn active" data-preset="rose">
-                <span>🌹</span> Rose
-              </button>
-              <button class="preset-btn" data-preset="lotus">
-                <span>🪷</span> Lotus
-              </button>
-              <button class="preset-btn" data-preset="sunflower">
-                <span>🌻</span> Sunflower
-              </button>
-            </div>
-
-            <div style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">
-              <button id="btn-download-img" class="btn btn-primary">
-                <span>📸</span> Download ASCII PNG
-              </button>
-              <button id="btn-copy-img-text" class="btn">
-                <span>📋</span> Copy Plain Text
-              </button>
-            </div>
+    <!-- Personalize Modal Drawer -->
+    <div class="modal-backdrop" id="personalize-modal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>💌 Personalize Your Love Gift</h3>
+          <button class="modal-close" id="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-content">
+          <div class="form-group">
+            <label>Who is this rose for? (Their Name)</label>
+            <input type="text" id="input-recipient" placeholder="e.g. My Love, Sophia, Alex..." maxlength="30">
           </div>
-        </div>
-
-        <!-- Output Canvas -->
-        <div class="studio-canvas-card">
-          <canvas id="studio-img-canvas" class="studio-canvas" width="800" height="800"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         VIEW 3: VIDEO TO ASCII STUDIO
-         ==================================================================== -->
-    <section id="view-video" class="studio-view">
-      <div class="hero-header">
-        <div class="badge-tag">✧ Live Video Processing ✧</div>
-        <h2 class="hero-title"><span class="gradient-text">Video to Colored ASCII</span></h2>
-        <p class="hero-subtitle">Upload your own video clip to play in real-time colored ASCII stream.</p>
-      </div>
-
-      <div class="studio-layout">
-        <div class="control-sidebar">
-          <div class="control-card">
-            <h3 class="card-title"><span>🎥</span> Select Video</h3>
-            <div class="control-group">
-              <input type="file" id="video-file-input" accept="video/mp4,video/webm">
-            </div>
-
-            <div class="control-group" style="margin-top:16px;">
-              <button id="btn-video-play" class="btn btn-primary" style="width:100%;">Play</button>
-            </div>
-
-            <div class="control-group">
-              <div class="control-label"><span>Video Timeline</span></div>
-              <input type="range" id="video-seekbar" min="0" max="100" value="0">
-            </div>
+          <div class="form-group">
+            <label>Your Personal Love Message</label>
+            <textarea id="input-message" rows="3" placeholder="Write your heartfelt note..." maxlength="200"></textarea>
           </div>
-        </div>
-
-        <div class="studio-canvas-card">
-          <canvas id="studio-video-canvas" class="studio-canvas" width="800" height="450"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         VIEW 4: LIVE WEBCAM TO ASCII
-         ==================================================================== -->
-    <section id="view-camera" class="studio-view">
-      <div class="hero-header">
-        <div class="badge-tag">✧ Real-Time Webcam Stream ✧</div>
-        <h2 class="hero-title"><span class="gradient-text">Webcam Mirror in Live ASCII</span></h2>
-        <p class="hero-subtitle">Turn your webcam into a real-time living colored ASCII mirror at 60 FPS.</p>
-      </div>
-
-      <div class="studio-layout">
-        <div class="control-sidebar">
-          <div class="control-card">
-            <h3 class="card-title"><span>📷</span> Camera Controls</h3>
-            <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
-              <button id="btn-camera-toggle" class="btn btn-primary">Start Camera Mirror</button>
-              <button id="btn-camera-snap" class="btn"><span>📸</span> Take Snapshot</button>
-            </div>
+          <div class="form-group">
+            <label>From (Your Name)</label>
+            <input type="text" id="input-sender" placeholder="e.g. Yours Truly, Kaushal..." maxlength="30">
           </div>
-        </div>
-
-        <div class="studio-canvas-card">
-          <canvas id="studio-camera-canvas" class="studio-canvas" width="640" height="480"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         VIEW 5: TEXT TO ASCII BANNER
-         ==================================================================== -->
-    <section id="view-text" class="studio-view">
-      <div class="hero-header">
-        <div class="badge-tag">✧ ASCII Typography ✧</div>
-        <h2 class="hero-title"><span class="gradient-text">Text to ASCII Banner</span></h2>
-        <p class="hero-subtitle">Generate stylish terminal typography banners for code, READMEs, or chat.</p>
-      </div>
-
-      <div class="studio-layout">
-        <div class="control-sidebar">
-          <div class="control-card">
-            <h3 class="card-title"><span>🔤</span> Text Input</h3>
-            <div class="control-group">
-              <input type="text" id="banner-input" value="ROSE" placeholder="Type text..." maxlength="16">
-            </div>
-
-            <div class="control-group">
-              <div class="control-label"><span>Banner Style</span></div>
-              <select id="banner-font-select">
-                <option value="standard" selected>Standard Blocky</option>
-                <option value="slant">Slant Italic</option>
-              </select>
-            </div>
-
-            <button id="btn-copy-banner" class="btn btn-primary" style="width:100%; margin-top:10px;">
-              <span>📋</span> Copy Banner Text
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <pre id="banner-output" class="banner-pre"></pre>
+          <button id="btn-generate-love-link" class="btn btn-primary btn-romantic" style="width:100%; margin-top:10px;">
+            <span>✨</span> Create & Copy Custom Love Link
+          </button>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- ====================================================================
-         DOCUMENTATION & GITHUB PAGES LAUNCH GUIDE
-         ==================================================================== -->
-    <section class="docs-section">
-      <div class="docs-grid">
-        <div class="docs-card">
-          <h3><span>🌹</span> Photorealistic Simulation</h3>
-          <p>
-            Features 25+ layered petals arranged in Fibonacci phyllotaxis whorls with Bézier edge ruffling, radial subsurface scattering gradients, botanical sepals, thorned stem, golden stamens, and glistening dew drops.
-          </p>
-        </div>
-
-        <div class="docs-card">
-          <h3><span>⚡</span> 60 FPS True-Color ASCII</h3>
-          <p>
-            Perceptual human luminance mapping (0.2126R + 0.7152G + 0.0722B) with 24-bit RGB character reproduction, monospace aspect ratio compensation, and zero-dependency Canvas glyph blitting.
-          </p>
-        </div>
-
-        <div class="docs-card">
-          <h3><span>🚀</span> Launching on GitHub Pages</h3>
-          <p>
-            This project is 100% standalone vanilla HTML5/JS without any build tools needed. Push to GitHub and enable Pages:
-          </p>
-          <div class="code-snippet">
-            git push origin main
-          </div>
-          <p style="margin-top:8px; font-size:12px;">
-            Go to <strong>Settings &rarr; Pages &rarr; Branch: main &rarr; / (root) &rarr; Save</strong>.
-          </p>
-        </div>
-      </div>
-    </section>
+    <!-- Hidden Scrubber & Resolution (preserves full app logic smoothly) -->
+    <input type="range" id="bloom-scrubber" min="0" max="100" value="0" style="display:none;">
+    <input type="range" id="bloom-speed" min="0.02" max="0.25" value="0.07" style="display:none;">
+    <input type="range" id="ascii-resolution" min="50" max="180" value="110" style="display:none;">
+    <select id="ascii-colormode" style="display:none;">
+      <option value="truecolor" selected>True Color</option>
+    </select>
+    <select id="ascii-charset" style="display:none;">
+      <option value="standard" selected>Standard</option>
+    </select>
+    <select id="loop-mode" style="display:none;">
+      <option value="pingpong" selected>Pingpong</option>
+    </select>
+    <input type="checkbox" id="toggle-glow" checked style="display:none;">
+    <input type="checkbox" id="toggle-invert" style="display:none;">
+    <span id="speed-val" style="display:none;"></span>
+    <span id="res-val" style="display:none;"></span>
+    <span id="bloom-stage-text" style="display:none;"></span>
 
   </main>
 
-  <!-- Site Footer -->
-  <footer class="site-footer">
+  <!-- Romantic Footer -->
+  <footer class="romantic-footer">
     <p>
-      Created with ♥ for <strong>LIVE-ASCII</strong>. Deployable instantly to GitHub Pages.
-      <br>
-      <a href="https://github.com/kaushalboii/LIVE-ASCII" target="_blank" rel="noopener noreferrer">github.com/kaushalboii/LIVE-ASCII</a>
+      Created with ♥ &bull; <a href="studio.html">Open ASCII Creator Studio ↗</a>
     </p>
   </footer>
 
-  <!-- Main Application Script (ES Module) -->
+  <!-- Toast Notification -->
+  <div id="app-toast" class="toast"></div>
+
+  <!-- Romantic App Logic -->
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

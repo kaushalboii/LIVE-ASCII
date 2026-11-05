@@ -1,6 +1,6 @@
 /**
  * Procedural Web Audio Sound Generator
- * Generates organic chimes, tactile clicks, and ambient synthesizer tones.
+ * Generates organic chimes, tactile clicks, and romantic music box melodies.
  * 100% synthesized in real time via Web Audio API - zero external assets.
  */
 
@@ -9,6 +9,9 @@ export class AudioManager {
     this.ctx = null;
     this.isMuted = true; // start muted by default to respect browser autoplay policies
     this.initialized = false;
+    this.isPlayingMelody = false;
+    this.melodyTimer = null;
+    this.melodyStep = 0;
   }
 
   init() {
@@ -31,7 +34,10 @@ export class AudioManager {
     }
     this.isMuted = !this.isMuted;
     if (!this.isMuted) {
-      this.playChime(523.25, 'sine', 0.15); // C5 chime to confirm un-mute
+      this.startRomanticMelody();
+      this.playChime(523.25, 'sine', 0.2, 1.5);
+    } else {
+      this.stopRomanticMelody();
     }
     return this.isMuted;
   }
@@ -41,22 +47,35 @@ export class AudioManager {
     this.init();
     if (!this.ctx) return;
 
-    // Organic tactile click
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
     osc.type = 'triangle';
-    osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(120, this.ctx.currentTime + 0.05);
+    osc.frequency.setValueAtTime(520, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(140, this.ctx.currentTime + 0.06);
 
-    gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+    gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.06);
 
     osc.connect(gain);
     gain.connect(this.ctx.destination);
 
     osc.start();
-    osc.stop(this.ctx.currentTime + 0.05);
+    osc.stop(this.ctx.currentTime + 0.06);
+  }
+
+  playHeartBurst() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    // Harmonic romantic chime chord (C major 9 / F major 7 warm love chord)
+    const chord = [261.63, 329.63, 392.00, 493.88, 523.25]; // C4, E4, G4, B4, C5
+    chord.forEach((freq, idx) => {
+      setTimeout(() => {
+        this.playChime(freq, 'sine', 0.15, 1.6);
+      }, idx * 45);
+    });
   }
 
   playBloomChime() {
@@ -64,30 +83,19 @@ export class AudioManager {
     this.init();
     if (!this.ctx) return;
 
-    // Pentatonic ascending chime (E minor / botanical harmonics)
-    const notes = [329.63, 392.00, 493.88, 587.33, 659.25]; // E4, G4, B4, D5, E5
+    const notes = [329.63, 392.00, 493.88, 587.33, 659.25];
     notes.forEach((freq, idx) => {
       setTimeout(() => {
-        this.playChime(freq, 'sine', 0.25, 1.2);
+        this.playChime(freq, 'sine', 0.2, 1.2);
       }, idx * 60);
     });
   }
 
   playTransformSound() {
-    if (this.isMuted) return;
-    this.init();
-    if (!this.ctx) return;
-
-    // Shimmering digital-to-organic sweep
-    const notes = [440, 554.37, 659.25, 830.61]; // A, C#, E, G#
-    notes.forEach((freq, idx) => {
-      setTimeout(() => {
-        this.playChime(freq, 'triangle', 0.18, 0.8);
-      }, idx * 45);
-    });
+    this.playHeartBurst();
   }
 
-  playChime(freq, type = 'sine', volume = 0.2, duration = 1.0) {
+  playChime(freq, type = 'sine', volume = 0.15, duration = 1.2) {
     if (!this.ctx) return;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
@@ -104,5 +112,48 @@ export class AudioManager {
     osc.start();
     osc.stop(this.ctx.currentTime + duration);
   }
-}
 
+  /**
+   * Delicate Music Box Romantic Melody (Canon / Lullaby pattern)
+   */
+  startRomanticMelody() {
+    if (this.isPlayingMelody || !this.ctx) return;
+    this.isPlayingMelody = true;
+
+    // Soft romantic arpeggio notes (Frequencies in Hz)
+    const melody = [
+      523.25, 659.25, 783.99, 659.25, // C5, E5, G5, E5
+      493.88, 587.33, 783.99, 587.33, // B4, D5, G5, D5
+      440.00, 523.25, 659.25, 523.25, // A4, C5, E5, C5
+      392.00, 493.88, 587.33, 493.88, // G4, B4, D5, B4
+      349.23, 440.00, 523.25, 440.00, // F4, A4, C5, A4
+      329.63, 392.00, 523.25, 392.00  // E4, G4, C5, G4
+    ];
+
+    const playNext = () => {
+      if (!this.isPlayingMelody || this.isMuted) return;
+      const freq = melody[this.melodyStep % melody.length];
+      this.melodyStep++;
+
+      // Warm music box bell tone
+      this.playChime(freq, 'sine', 0.1, 1.4);
+
+      // Octave bass note on downbeat
+      if (this.melodyStep % 4 === 1) {
+        this.playChime(freq / 2, 'triangle', 0.08, 2.0);
+      }
+
+      this.melodyTimer = setTimeout(playNext, 450);
+    };
+
+    playNext();
+  }
+
+  stopRomanticMelody() {
+    this.isPlayingMelody = false;
+    if (this.melodyTimer) {
+      clearTimeout(this.melodyTimer);
+      this.melodyTimer = null;
+    }
+  }
+}
