@@ -1,20 +1,22 @@
 /**
  * A Seamless Love Experience
- * Scene 1: The ASCII Knight with Sealed Envelope Letter ("FOR YOU") in front
- * Interaction: Touch the letter -> Letter bursts with sparks and burns open with cellular fire simulation
- * Scene 2: Combined 3D Blooming Crimson Rose & Ivory Lily with golden fireflies & multilingual love words
- * Scene 3: Dreamy Floating Cloud Love Note for Kaushal & His Love
+ * Scene 1: The ASCII Knight (on the right) + Sealed Envelope ("FOR YOU", in bottom-left) + Quote
+ * Interaction: Touch the letter -> Letter bursts with sparks and burns open
+ * Scene 2: The Multilingual Love Heart (with Tamil & global languages) builds in center
+ * Scene 3: Heart glides to top-left corner -> Pure Mathematical ASCII Rose blooms in center with light rays
+ * Scene 4: Dreamy Floating Cloud Love Note for Kaushal & His Love
  */
 
 import { AmbientParticles } from './ambient-particles.js';
 import { AsciiKnight } from './ascii-knight.js';
 import { AsciiEnvelope } from './ascii-envelope.js';
-import { AsciiBouquet } from './ascii-bouquet.js';
+import { AsciiHeart } from './ascii-heart.js';
+import { AsciiRose } from './ascii-rose.js';
 import { AudioManager } from './audio-fx.js';
 
 class LiveAsciiLoveApp {
   constructor() {
-    this.currentScreen = 'knight'; // 'knight' or 'bouquet'
+    this.currentScreen = 'knight'; // 'knight' or 'flower'
     this.isTransitioning = false;
 
     this.initElements();
@@ -28,13 +30,15 @@ class LiveAsciiLoveApp {
   initElements() {
     this.ambientCanvas = document.getElementById('ambient-canvas');
     this.knightScreen = document.getElementById('knight-screen');
-    this.bouquetScreen = document.getElementById('bouquet-screen');
+    this.flowerScreen = document.getElementById('flower-screen');
 
     this.knightCanvas = document.getElementById('knight-canvas');
     this.envelopeCanvas = document.getElementById('envelope-canvas');
+    this.knightQuote = document.getElementById('knight-quote');
     this.knightHint = document.getElementById('knight-hint');
 
-    this.bouquetCanvas = document.getElementById('bouquet-canvas');
+    this.heartCanvas = document.getElementById('heart-canvas');
+    this.roseCanvas = document.getElementById('rose-canvas');
     this.cloudNote = document.getElementById('cloud-note');
     this.replayBtn = document.getElementById('btn-replay');
   }
@@ -49,23 +53,31 @@ class LiveAsciiLoveApp {
   }
 
   initRenderers() {
-    // 1. Knight background renderer
+    // 1. Knight on the right side
     if (this.knightCanvas) {
       this.knightRenderer = new AsciiKnight(this.knightCanvas);
     }
 
-    // 2. Foreground Sealed Envelope with Burning / Opening physics
+    // 2. Sealed Envelope in bottom-left
     if (this.envelopeCanvas) {
       this.envelopeRenderer = new AsciiEnvelope(this.envelopeCanvas, () => {
-        // When envelope has completely burned away, transition to the blooming flowers!
-        this.transitionToFlowers();
+        // When envelope completes burning open, transition to the Multilingual Heart!
+        this.transitionToHeart();
       });
     }
 
-    // 3. Combined 3D Rose & Lily Bouquet
-    if (this.bouquetCanvas) {
-      this.bouquetRenderer = new AsciiBouquet(this.bouquetCanvas, () => {
-        // When 3D Rose & Lily reach full bloom (~4.5s), pop up the Cloud Love Note!
+    // 3. Multilingual Love Heart (Tamil + all languages)
+    if (this.heartCanvas) {
+      this.heartRenderer = new AsciiHeart(this.heartCanvas, () => {
+        // When heart finishes building and glides to corner, bloom the pure ASCII Rose!
+        this.bloomRose();
+      });
+    }
+
+    // 4. Pure Mathematical ASCII Rose with volumetric light rays
+    if (this.roseCanvas) {
+      this.roseRenderer = new AsciiRose(this.roseCanvas, () => {
+        // When Rose reaches full bloom, pop up the Cloud Love Note!
         if (this.cloudNote) {
           this.cloudNote.classList.add('visible');
         }
@@ -74,29 +86,28 @@ class LiveAsciiLoveApp {
   }
 
   initInteractions() {
-    // Click or touch letter to open / burn
     const handleLetterOpen = () => {
       if (this.currentScreen !== 'knight' || this.isTransitioning) return;
 
-      // 1. Play warm harmonic chime
+      // 1. Play warm harmonic love chime
       try {
         this.audioManager.init();
         this.audioManager.playHeartBurst();
       } catch (e) {}
 
-      // 2. Hide hint text
+      // 2. Hide hint and quote gently
       if (this.knightHint) {
         this.knightHint.style.opacity = '0';
         this.knightHint.style.pointerEvents = 'none';
       }
 
-      // 3. Trigger envelope bursting & cellular fire simulation
+      // 3. Trigger envelope ignition in bottom-left
       if (this.envelopeRenderer) {
         this.envelopeRenderer.triggerClick();
       }
     };
 
-    // Attach click handlers
+    // Attach click / touch handlers
     if (this.envelopeCanvas) {
       this.envelopeCanvas.addEventListener('click', handleLetterOpen);
       this.envelopeCanvas.addEventListener('touchstart', (e) => {
@@ -120,14 +131,13 @@ class LiveAsciiLoveApp {
       }
     });
 
-    // Handle resize
     window.addEventListener('resize', () => {
-      if (this.envelopeRenderer) {
-        this.envelopeRenderer.resize();
-      }
+      if (this.envelopeRenderer) this.envelopeRenderer.resize();
+      if (this.heartRenderer) this.heartRenderer.resize();
+      if (this.roseRenderer) this.roseRenderer.resize();
     });
 
-    // Replay interaction: return to knight + sealed letter
+    // Replay interaction
     if (this.replayBtn) {
       this.replayBtn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -136,17 +146,16 @@ class LiveAsciiLoveApp {
     }
   }
 
-  transitionToFlowers() {
-    if (this.isTransitioning || this.currentScreen === 'bouquet') return;
+  transitionToHeart() {
+    if (this.isTransitioning || this.currentScreen === 'flower') return;
     this.isTransitioning = true;
-    this.currentScreen = 'bouquet';
+    this.currentScreen = 'flower';
 
-    // Romantic chime on flower bloom
     try {
       this.audioManager.playBloomChime();
     } catch (e) {}
 
-    // 1. Smoothly fade out knight screen
+    // 1. Fade out knight screen
     if (this.knightScreen) {
       this.knightScreen.classList.remove('active');
     }
@@ -155,19 +164,34 @@ class LiveAsciiLoveApp {
       if (this.knightRenderer) this.knightRenderer.stop();
       if (this.envelopeRenderer) this.envelopeRenderer.stop();
 
-      // 2. Smoothly fade in bouquet screen & start 3D Rose & Lily bloom
-      if (this.bouquetScreen) {
-        this.bouquetScreen.classList.add('active');
+      // 2. Fade in flower screen
+      if (this.flowerScreen) {
+        this.flowerScreen.classList.add('active');
       }
       if (this.cloudNote) {
         this.cloudNote.classList.remove('visible');
       }
-      if (this.bouquetRenderer) {
-        this.bouquetRenderer.reset();
-        this.bouquetRenderer.start();
+
+      // 3. Start Multilingual Love Heart in center
+      if (this.heartRenderer) {
+        this.heartRenderer.reset();
+        this.heartRenderer.start();
       }
+
       this.isTransitioning = false;
     }, 600);
+  }
+
+  bloomRose() {
+    // When the Multilingual Heart glides to top-left corner, start the blooming Rose in center!
+    try {
+      this.audioManager.playChime(587.33, 'sine', 0.22, 2.5); // D5 chime
+    } catch (e) {}
+
+    if (this.roseRenderer) {
+      this.roseRenderer.reset();
+      this.roseRenderer.start();
+    }
   }
 
   restartExperience() {
@@ -177,16 +201,14 @@ class LiveAsciiLoveApp {
     if (this.cloudNote) {
       this.cloudNote.classList.remove('visible');
     }
-    if (this.bouquetScreen) {
-      this.bouquetScreen.classList.remove('active');
+    if (this.flowerScreen) {
+      this.flowerScreen.classList.remove('active');
     }
 
     setTimeout(() => {
-      if (this.bouquetRenderer) {
-        this.bouquetRenderer.stop();
-      }
+      if (this.roseRenderer) this.roseRenderer.stop();
+      if (this.heartRenderer) this.heartRenderer.stop();
 
-      // Reset envelope and knight
       if (this.envelopeRenderer) {
         this.envelopeRenderer.reset();
       }
@@ -211,7 +233,7 @@ class LiveAsciiLoveApp {
   }
 
   start() {
-    // 1. Start ambient drifting stardust & petals
+    // Start ambient drifting petals & stardust
     let lastTime = performance.now();
     const loop = (now) => {
       const dt = Math.min((now - lastTime) / 1000, 0.1);
@@ -225,7 +247,7 @@ class LiveAsciiLoveApp {
     };
     requestAnimationFrame(loop);
 
-    // 2. Start Scene 1: Knight in background + Sealed Letter in foreground
+    // Start Scene 1: Knight on right + Letter in bottom-left
     if (this.knightRenderer) {
       this.knightRenderer.start();
     }

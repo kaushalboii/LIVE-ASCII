@@ -48,7 +48,8 @@ const CW = Math.max(1, Math.round(probe.measureText("M").width)), CH = FONT_SIZE
 const fitCols = (rows) => Math.round(rows * CH / CW * innerWidth / Math.max(1, innerHeight));
 const ROWS = Math.max(KNIGHT.rows, Math.min(260, Math.round(KNIGHT.cols * CW / CH * innerHeight / Math.max(1, innerWidth))));
 const COLS = Math.max(KNIGHT.cols, Math.min(560, fitCols(ROWS))), N = COLS * ROWS;
-const KX = Math.floor((COLS - KNIGHT.cols) / 2), KY = ROWS - KNIGHT.rows;     // ตำแหน่งอัศวินในตาราง
+// Position warrior on the right side so the bottom-left remains open for the letter
+const KX = Math.max(0, Math.floor((COLS - KNIGHT.cols) * (COLS > KNIGHT.cols + 20 ? 0.76 : 0.50))), KY = ROWS - KNIGHT.rows;
 
 // ================================================================ คณิตศาสตร์
 const TAU = Math.PI * 2;

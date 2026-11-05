@@ -93,7 +93,7 @@ body.pure-black {
 .whisper-hint {
   position: fixed;
   bottom: 24px;
-  left: 50%;
+  left: 23%;
   transform: translateX(-50%);
   font-family: 'Cormorant Garamond', serif;
   font-size: 20px;
@@ -118,8 +118,61 @@ body.pure-black {
   50% { opacity: 0.95; }
 }
 
-/* Screen 2: Canvas for 3D Blooming Rose Bouquet */
-#bouquet-canvas {
+/* Thematic Quote in Unique Decorative Typeface */
+.thematic-quote {
+  position: fixed;
+  top: 36px;
+  left: 6%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Cinzel Decorative', 'Cormorant Garamond', serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 3.8px;
+  text-transform: lowercase;
+  color: #ffe0e8;
+  text-shadow: 
+    0 0 12px rgba(255, 60, 110, 0.75),
+    0 0 28px rgba(220, 20, 60, 0.45);
+  pointer-events: none;
+  z-index: 8;
+  animation: quoteFloat 4s ease-in-out infinite alternate;
+}
+
+.thematic-quote .quote-symbol {
+  font-size: 14px;
+  color: #ff85a2;
+  text-shadow: 0 0 10px rgba(255, 60, 110, 0.85);
+}
+
+@keyframes quoteFloat {
+  0% { transform: translateY(0); opacity: 0.88; }
+  100% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* Screen 2: Canvases for Multilingual Heart & Rose */
+.heart-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  object-fit: contain;
+  background: transparent;
+  pointer-events: none;
+  z-index: 7;
+  transform: scale(1) translate(0, 0);
+  transform-origin: top left;
+  transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+}
+
+.heart-canvas.docked-corner {
+  transform: scale(0.38) translate(40px, 36px);
+  opacity: 0.92;
+}
+
+.rose-canvas {
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -128,8 +181,7 @@ body.pure-black {
   display: block;
   object-fit: contain;
   background: #000000;
-  cursor: pointer;
-  z-index: 3;
+  z-index: 5;
 }
 
 /* ==========================================================================
@@ -272,9 +324,21 @@ body.pure-black {
 }
 
 @media (max-width: 640px) {
+  .thematic-quote {
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
   .whisper-hint {
+    left: 50%;
     font-size: 16px;
     bottom: 18px;
+  }
+  .heart-canvas.docked-corner {
+    transform: scale(0.32) translate(14px, 18px);
   }
   .cloud-note {
     padding: 18px 22px;

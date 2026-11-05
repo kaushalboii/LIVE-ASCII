@@ -171,13 +171,18 @@ export class AsciiEnvelope {
     this.H = this.ROWS * this.CH;
     this.S = this.H / 640.0;
 
-    // Center and sizing for Envelope
-    this.CX = this.W / 2.0;
-    // Scale envelope nicely so it floats in front of the knight
-    const maxEW = Math.min(this.W * 0.78, 520);
-    this.EW = Math.max(280, maxEW);
+    // Center and sizing for Envelope in the Bottom-Left
+    if (this.W > 720) {
+      this.CX = Math.max(160, this.W * 0.23);
+      this.ECY = this.H * 0.68;
+      const maxEW = Math.min(this.W * 0.34, 380);
+      this.EW = Math.max(250, maxEW);
+    } else {
+      this.CX = Math.max(140, this.W * 0.34);
+      this.ECY = this.H * 0.72;
+      this.EW = Math.min(this.W * 0.62, 300);
+    }
     this.EH = 0.64 * this.EW;
-    this.ECY = this.H * 0.58; // Sits slightly below middle, showing knight's head & shoulders
 
     this.EX0 = this.CX - this.EW / 2;
     this.EX1 = this.CX + this.EW / 2;
@@ -186,7 +191,7 @@ export class AsciiEnvelope {
 
     this.FLAP_H = 0.48 * this.EH;
     this.TIPY = this.EY0 + this.FLAP_H;
-    this.HR = 0.052 * this.H;
+    this.HR = 0.155 * this.EH;
     this.HCY = this.TIPY - 0.22 * this.HR;
 
     this.XPL = this.CX - 0.17 * this.EW;
@@ -740,3 +745,4 @@ export class AsciiEnvelope {
     }
   }
 }
+

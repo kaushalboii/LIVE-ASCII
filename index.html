@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -21,20 +21,33 @@
 
   <main class="stage">
 
-    <!-- Screen 1: The ASCII Knight with Sealed Envelope Letter in Front -->
+    <!-- Screen 1: The ASCII Knight with Sealed Envelope Letter in Bottom-Left -->
     <div id="knight-screen" class="scene active">
-      <!-- Background: ASCII Knight with waving red cloak -->
+      <!-- Background: ASCII Knight positioned on right side with waving red cloak -->
       <canvas id="knight-canvas" aria-label="ASCII Knight with waving red cloak"></canvas>
-      <!-- Foreground: Sealed ASCII Letter For You with heart seal & burning opening -->
+      
+      <!-- Foreground: Sealed ASCII Letter For You positioned in bottom-left -->
       <canvas id="envelope-canvas" aria-label="ASCII Sealed Letter For You"></canvas>
+      
+      <!-- Thematic Quote in Unique Decorative Typeface -->
+      <div id="knight-quote" class="thematic-quote">
+        <span class="quote-symbol">✦</span>
+        <span class="quote-text">my feelings for you will never end</span>
+        <span class="quote-symbol">✦</span>
+      </div>
+
       <p class="whisper-hint" id="knight-hint">touch the letter to open</p>
     </div>
 
-    <!-- Screen 2: Combined 3D Blooming Rose & Lily Bouquet with Golden Fireflies -->
-    <div id="bouquet-screen" class="scene">
-      <canvas id="bouquet-canvas" aria-label="Combined 3D Blooming Rose and Lily in ASCII"></canvas>
+    <!-- Screen 2: Multilingual Love Heart & Pure Mathematical ASCII Rose -->
+    <div id="flower-screen" class="scene">
+      <!-- 1. The Multilingual Love Heart (Builds in center, then glides to top-left corner) -->
+      <canvas id="heart-canvas" class="heart-canvas" aria-label="Multilingual Love Heart"></canvas>
 
-      <!-- Dreamy Floating Cloud Love Note (Pops after the Rose & Lily Bloom) -->
+      <!-- 2. The Pure Mathematical ASCII Blooming Rose with Light Rays -->
+      <canvas id="rose-canvas" class="rose-canvas" aria-label="Pure ASCII Blooming Rose"></canvas>
+
+      <!-- 3. Dreamy Floating Cloud Love Note (Pops after the Rose Blooms) -->
       <div id="cloud-note" class="cloud-note">
         <div class="cloud-puff puff-tl"></div>
         <div class="cloud-puff puff-tr"></div>
@@ -43,10 +56,9 @@
         <div class="cloud-body">
           <div class="cloud-tag">☁️ &nbsp;a quiet note for you &nbsp;✦</div>
           <p class="cloud-quote">
-            &ldquo;In every petal, a quiet thought of you.<br>
-            The rose for the passion, the lily for the grace &mdash;<br>
-            blooming together side by side, just like us.<br>
-            You are my favorite thought in a crowded room,<br>
+            &ldquo;My feelings for you will never end.<br>
+            In every language, in every beat of time &mdash;<br>
+            you are my favorite thought in a crowded room,<br>
             the warmth in every cold day, and the sweetest part of my life.&rdquo;
           </p>
           <p class="cloud-author">&mdash; forever yours, Kaushal</p>
