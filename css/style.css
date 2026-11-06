@@ -395,9 +395,9 @@ body.pure-black {
 }
 
 /* ==========================================================================
-   Full Responsive Layout (Mobile & Tablet Portrait Mode)
+   Full Responsive Layout (Mobile, Tablet & Portrait Mode)
    ========================================================================== */
-@media (max-width: 640px) {
+@media (max-width: 960px), (orientation: portrait), (max-aspect-ratio: 1/1) {
   /* Screen 1: Knight & Letter */
   .whisper-hint {
     left: 50%;
@@ -411,24 +411,25 @@ body.pure-black {
     transform: translate(calc(-50vw + 38px), calc(-50vh + 38px)) scale(0.09);
   }
 
-  /* Screen 2: Living Single Rose in Upper Half */
+  /* Screen 2: Living 3D Rose in Upper Space */
   .seamless-rose-wrapper {
-    top: 28%;
+    top: 29%;
     width: 90vmin;
-    max-width: 310px;
-    max-height: 310px;
+    max-width: 340px;
+    max-height: 340px;
   }
 
-  /* Screen 2: Minimal Love Note Card (Above signature) */
+  /* Screen 2: Minimal Love Note Card (Spaced comfortably in mid-lower zone) */
   .minimal-note {
     position: fixed;
-    bottom: 68px;
+    bottom: 110px;
     left: 50%;
     transform: translateX(-50%) translateY(16px) scale(0.96);
-    max-width: 320px;
-    width: 88%;
-    padding: 8px 14px;
-    border-radius: 12px;
+    max-width: 340px;
+    width: 90%;
+    padding: 10px 16px;
+    border-radius: 14px;
+    z-index: 20;
   }
 
   .minimal-note.visible {
@@ -438,32 +439,33 @@ body.pure-black {
   .note-pill {
     font-size: 7px;
     letter-spacing: 1.6px;
-    margin-bottom: 4px;
-  }
-
-  .note-quote {
-    font-size: 13px;
-    line-height: 1.38;
-    margin-bottom: 3px;
-  }
-
-  .note-subtext {
-    font-size: 10px;
     margin-bottom: 5px;
   }
 
-  .note-replay {
-    font-size: 7px;
-    padding: 2.5px 10px;
+  .note-quote {
+    font-size: 13.5px;
+    line-height: 1.4;
+    margin-bottom: 4px;
   }
 
-  /* Screen 2: ASCII Key Signature (Delicate, Compact & Centered at Bottom) */
+  .note-subtext {
+    font-size: 10.5px;
+    margin-bottom: 6px;
+  }
+
+  .note-replay {
+    font-size: 7.5px;
+    padding: 3px 12px;
+  }
+
+  /* Screen 2: ASCII Key Signature (Centered at Bottom with clear clearance) */
   .corner-signature {
-    bottom: 8px;
+    bottom: 14px;
     left: 50%;
     right: auto;
     transform: translateX(-50%) translateY(4px);
     align-items: center;
+    z-index: 25;
   }
 
   .corner-signature.visible {
@@ -471,11 +473,11 @@ body.pure-black {
   }
 
   .ascii-sig-box {
-    padding: 3px 8px;
+    padding: 4px 10px;
     text-align: center;
     border-radius: 6px;
-    background: rgba(12, 4, 9, 0.85);
-    border: 1px solid rgba(255, 140, 175, 0.22);
+    background: rgba(12, 4, 9, 0.88);
+    border: 1px solid rgba(255, 140, 175, 0.24);
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.85), 0 0 10px rgba(255, 30, 80, 0.10);
   }
 
@@ -506,10 +508,10 @@ body.pure-black {
   }
 
   .ascii-key {
-    min-width: 11.5px;
-    height: 14.5px;
-    font-size: 8.5px;
-    padding: 0 1px;
+    min-width: 12px;
+    height: 15px;
+    font-size: 9px;
+    padding: 0 1.5px;
     border-radius: 2px;
     border-width: 0.8px;
     border-bottom-width: 1.5px;
@@ -517,18 +519,18 @@ body.pure-black {
   }
 
   .ascii-sig-bytes {
-    font-size: 7px;
+    font-size: 7.5px;
     letter-spacing: 0.6px;
     margin-top: 1px;
     opacity: 0.85;
   }
 
   .ascii-code {
-    font-size: 7px;
+    font-size: 7.5px;
   }
 
   .sig-star {
-    font-size: 7px;
+    font-size: 7.5px;
   }
 
   .ascii-sig-rule {
@@ -536,17 +538,21 @@ body.pure-black {
   }
 }
 
-/* Extra breakpoint for compact mobile screens (e.g. iPhone SE) */
+/* Extra breakpoint for compact mobile screens (e.g. iPhone SE / small height) */
 @media (max-height: 680px) and (max-width: 640px) {
   .seamless-rose-wrapper {
     top: 25%;
-    max-width: 260px;
-    max-height: 260px;
+    max-width: 270px;
+    max-height: 270px;
   }
 
   .minimal-note {
-    bottom: 60px;
+    bottom: 84px;
     padding: 6px 12px;
+  }
+  
+  .corner-signature {
+    bottom: 8px;
   }
 
   .note-quote {
