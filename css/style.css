@@ -143,14 +143,11 @@ body.pure-black {
 }
 
 .seamless-rose-wrapper {
-  position: absolute;
-  top: 34%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 88vmin;
-  max-width: 520px;
-  max-height: 520px;
-  aspect-ratio: 1 / 1;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -159,8 +156,9 @@ body.pure-black {
 }
 
 .seamless-rose-wrapper canvas {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   object-fit: contain;
   display: block;
   background: transparent;
@@ -411,12 +409,18 @@ body.pure-black {
     transform: translate(calc(-50vw + 38px), calc(-50vh + 38px)) scale(0.09);
   }
 
-  /* Screen 2: Living 3D Rose in Upper Space */
+  /* Screen 2: Living 3D Rose spans the full screen */
   .seamless-rose-wrapper {
-    top: 29%;
-    width: 90vmin;
-    max-width: 340px;
-    max-height: 340px;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    transform: none;
+    top: 0;
+    left: 0;
+    max-width: none;
+    max-height: none;
   }
 
   /* Screen 2: Minimal Love Note Card (Spaced comfortably in mid-lower zone) */
@@ -541,9 +545,16 @@ body.pure-black {
 /* Extra breakpoint for compact mobile screens (e.g. iPhone SE / small height) */
 @media (max-height: 680px) and (max-width: 640px) {
   .seamless-rose-wrapper {
-    top: 25%;
-    max-width: 270px;
-    max-height: 270px;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    transform: none;
+    top: 0;
+    left: 0;
+    max-width: none;
+    max-height: none;
   }
 
   .minimal-note {
