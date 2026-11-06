@@ -59,19 +59,28 @@ export class AsciiRose {
   resize() {
     if (!this.canvas) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.dpr = dpr;
     const rect = this.canvas.getBoundingClientRect();
-    const w = Math.round((rect.width || window.innerWidth || 800) * dpr);
-    const h = Math.round((rect.height || window.innerHeight || 800) * dpr);
+    const cssW = Math.round(rect.width || window.innerWidth || 800);
+    const cssH = Math.round(rect.height || window.innerHeight || 800);
+    const w = cssW * dpr;
+    const h = cssH * dpr;
 
     if (this.canvas.width !== w || this.canvas.height !== h) {
       this.canvas.width = w;
       this.canvas.height = h;
     }
 
-    const isMobile = (window.innerWidth || 800) < 768;
-    this.columns = isMobile ? 96 : 124;
+    this.isPortrait = cssH > cssW;
     this.charAspect = 0.54;
-    this.rows = Math.floor(this.columns * (h / w) * this.charAspect);
+
+    // High-definition uniform character density across all screen sizes:
+    // We lock character cell height to a crisp ~7.2 - 8.2 CSS pixels.
+    // This maintains 105 - 135 rows of fine ASCII detail whether on desktop, tablet, or phone,
+    // completely preventing the 34-row low-res chunky collapse on widescreen monitors.
+    const targetCellH = Math.max(7.2, Math.min(8.2, cssH / 115));
+    this.rows = Math.max(90, Math.min(145, Math.round(cssH / targetCellH)));
+    this.columns = Math.round(this.rows * (w / h) / this.charAspect);
 
     if (this.simCanvas) {
       this.simCanvas.width = this.columns;
@@ -95,7 +104,7 @@ export class AsciiRose {
 
     const W = this.canvas.width;
     const H = this.canvas.height;
-    const isMobile = (window.innerWidth || 800) < 768;
+    const isPortrait = this.isPortrait;
 
     // ====================================================================
     // Botanical Growth & Blossoming Physics (Single Unified Rose):
@@ -162,13 +171,19 @@ export class AsciiRose {
 
       // Draw Unified Stage onto Simulation Grid with Natural Proportions & Root Sway
       const roseRatio = (sH / sW) * this.charAspect;
-      const maxH = rows * (isMobile ? 0.72 : 0.86);
-      const maxW = cols * (isMobile ? 0.92 : 0.60);
+      const winH = window.innerHeight || 800;
+      const isShort = winH < 720;
+
+      // Proportional vertical framing matching mobile:
+      // Rose crown begins in the upper-third and the long stem descends gracefully towards the note card.
+      const targetHeightRatio = isPortrait ? 0.65 : (isShort ? 0.58 : 0.65);
+      const maxH = rows * targetHeightRatio;
+      const maxW = cols * (isPortrait ? 0.90 : 0.46);
 
       const drawW = Math.min(maxW, maxH / roseRatio);
       const drawH = drawW * roseRatio;
       const drawX = (cols - drawW) / 2;
-      const drawY = isMobile ? (rows * 0.05) : (rows * 0.06);
+      const drawY = rows * (isShort ? 0.024 : 0.036);
 
       // Sinuous breeze sway anchored at stem root
       const anchorScreenX = drawX + drawW * (258 / sW);
@@ -197,7 +212,7 @@ export class AsciiRose {
 
     const cellW = W / cols;
     const cellH = H / rows;
-    const fontSize = Math.max(9, Math.round(cellH * 0.96));
+    const fontSize = Math.max(8, Math.round(cellH * 0.94));
     ctx.font = `bold ${fontSize}px Menlo, Consolas, "JetBrains Mono", monospace`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -208,6 +223,7 @@ export class AsciiRose {
     // Ambient floating golden stardust fireflies
     const stardustTime = Math.floor(t * 3.0);
     const pv = 0.55 * this.smoothstep(2.0, 3.6, t);
+    const dpr = this.dpr || 1;
 
     for (let r = 0; r < rows; r++) {
       const posY = r * cellH + cellH * 0.5;
@@ -265,9 +281,13 @@ export class AsciiRose {
           finalCol = `rgb(${red}, ${grn}, ${blu})`;
         }
 
-        // Luminous glowing character rendering
-        ctx.shadowColor = finalCol;
-        ctx.shadowBlur = lum > 0.60 ? 6 : 2;
+        // Luminous glowing character rendering with highlight glow
+        if (lum > 0.62 || isStardust) {
+          ctx.shadowColor = finalCol;
+          ctx.shadowBlur = dpr > 1 ? 5 : 3;
+        } else {
+          ctx.shadowBlur = 0;
+        }
         ctx.fillStyle = finalCol;
         ctx.fillText(char, posX, posY);
       }
@@ -280,7 +300,7 @@ export class AsciiRose {
 
     // Stem
     ctx.strokeStyle = '#287824';
-    ctx.lineWidth = 4;
+    ctx.lineWidth = Math.max(3, Math.round(rows * 0.035));
     ctx.beginPath();
     ctx.moveTo(stemBaseX, stemBaseY);
     ctx.quadraticCurveTo(stemBaseX - 6 + windSway * 0.3, (stemBaseY + curTopY) / 2, neckX, curTopY);
@@ -289,7 +309,7 @@ export class AsciiRose {
     // Blossoming rose head
     if (grow > 0.70) {
       const bloomT = (grow - 0.70) / 0.30;
-      const r = (cols * 0.22) * (0.30 + 0.70 * bloomT);
+      const r = (rows * 0.16) * (0.30 + 0.70 * bloomT);
       ctx.fillStyle = '#b80d28';
       ctx.beginPath();
       ctx.arc(neckX, neckY - 8, r, 0, Math.PI * 2);

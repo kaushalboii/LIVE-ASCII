@@ -169,13 +169,13 @@ body.pure-black {
    ========================================================================== */
 .minimal-note {
   position: fixed;
-  bottom: 20px;
+  bottom: 106px;
   left: 50%;
   transform: translateX(-50%) translateY(20px) scale(0.94);
-  max-width: 380px;
-  width: 86%;
+  max-width: 360px;
+  width: 88%;
   margin: 0 auto;
-  padding: 14px 22px;
+  padding: 12px 20px;
   background: rgba(12, 6, 12, 0.72);
   backdrop-filter: blur(28px) saturate(160%);
   -webkit-backdrop-filter: blur(28px) saturate(160%);
@@ -259,49 +259,50 @@ body.pure-black {
 }
 
 /* ==========================================================================
-   Pure ASCII Key Design Signature of Kaushal Maran at Right Bottom Corner
+   Pure ASCII Key Design Signature of Kaushal Maran (Centered at Bottom)
    ========================================================================== */
 .corner-signature {
   position: fixed;
-  bottom: 20px;
-  right: 28px;
+  bottom: 14px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%) translateY(12px);
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   pointer-events: none;
   z-index: 25;
   opacity: 0;
-  transform: translateY(12px);
   transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .corner-signature.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(-50%) translateY(0);
 }
 
 .ascii-sig-box {
   font-family: 'JetBrains Mono', 'Courier New', monospace;
-  background: rgba(14, 5, 11, 0.80);
+  background: rgba(14, 5, 11, 0.84);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 140, 175, 0.28);
-  border-radius: 10px;
-  padding: 7px 12px;
-  text-align: right;
+  border-radius: 8px;
+  padding: 5px 12px;
+  text-align: center;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85), 0 0 16px rgba(255, 30, 80, 0.14);
 }
 
 .ascii-sig-head {
-  font-size: 10px;
+  font-size: 9px;
   color: #ff9ebb;
-  letter-spacing: 1.4px;
+  letter-spacing: 1.2px;
   opacity: 0.95;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 4px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .sig-prompt {
@@ -313,7 +314,7 @@ body.pure-black {
   color: #ffb3c6;
   text-transform: lowercase;
   font-weight: 600;
-  letter-spacing: 1.6px;
+  letter-spacing: 1.4px;
 }
 
 .sig-colon {
@@ -323,9 +324,9 @@ body.pure-black {
 .ascii-key-cluster {
   display: flex;
   flex-wrap: nowrap;
-  gap: 6px;
-  justify-content: flex-end;
-  margin: 3px 0 4px 0;
+  gap: 5px;
+  justify-content: center;
+  margin: 2px 0 3px 0;
 }
 
 .ascii-key-word {
@@ -337,19 +338,19 @@ body.pure-black {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 17px;
-  height: 20px;
-  padding: 0 3px;
+  min-width: 15px;
+  height: 18px;
+  padding: 0 2.5px;
   background: linear-gradient(180deg, rgba(42, 16, 26, 0.95) 0%, rgba(18, 6, 12, 0.98) 100%);
   border: 1px solid rgba(255, 140, 175, 0.45);
   border-bottom: 2px solid rgba(255, 50, 95, 0.75);
-  border-radius: 3.5px;
+  border-radius: 3px;
   box-shadow: 
     0 2px 4px rgba(0, 0, 0, 0.7),
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     0 0 8px rgba(255, 40, 85, 0.24);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: #fff0f4;
   text-shadow: 0 0 8px rgba(255, 60, 100, 0.85);
@@ -363,11 +364,12 @@ body.pure-black {
 }
 
 .ascii-sig-bytes {
-  font-size: 8.5px;
+  font-size: 8px;
   color: #d88fa2;
-  letter-spacing: 1.0px;
-  margin-top: 3px;
+  letter-spacing: 0.8px;
+  margin-top: 2px;
   opacity: 0.9;
+  text-align: center;
 }
 
 .ascii-code {
@@ -381,10 +383,7 @@ body.pure-black {
 }
 
 .ascii-sig-rule {
-  font-size: 8px;
-  color: rgba(255, 120, 150, 0.35);
-  letter-spacing: 1px;
-  margin-top: 3px;
+  display: none;
 }
 
 @keyframes noteFloat {
@@ -542,24 +541,11 @@ body.pure-black {
   }
 }
 
-/* Extra breakpoint for compact mobile screens (e.g. iPhone SE / small height) */
-@media (max-height: 680px) and (max-width: 640px) {
-  .seamless-rose-wrapper {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    height: 100dvh;
-    transform: none;
-    top: 0;
-    left: 0;
-    max-width: none;
-    max-height: none;
-  }
-
+/* Extra breakpoint for compact heights (laptops with short viewports, compact mobile) */
+@media (max-height: 720px) {
   .minimal-note {
-    bottom: 84px;
-    padding: 6px 12px;
+    bottom: 82px;
+    padding: 7px 14px;
   }
   
   .corner-signature {
@@ -567,11 +553,13 @@ body.pure-black {
   }
 
   .note-quote {
-    font-size: 11.5px;
+    font-size: 12px;
+    line-height: 1.35;
+    margin-bottom: 3px;
   }
 
   .note-subtext {
     font-size: 9.5px;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
 }
