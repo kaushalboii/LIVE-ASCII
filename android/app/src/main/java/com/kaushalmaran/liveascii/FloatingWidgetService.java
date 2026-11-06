@@ -184,7 +184,7 @@ public class FloatingWidgetService extends Service {
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("LIVE ASCII Rose Active")
                 .setContentText("Touch or drag the floating widget on your screen")
-                .setSmallIcon(android.R.drawable.btn_star)
+                .setSmallIcon(R.drawable.ic_stat_rose)
                 .setContentIntent(pendingIntent)
                 .build();
 
