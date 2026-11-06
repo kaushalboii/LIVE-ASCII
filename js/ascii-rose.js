@@ -3,20 +3,21 @@
  * 
  * Features:
  * - Single Grand 3D Blooming Crimson Rose in the center
- * - True 3D side & top isometric perspective (axis = [0.06, -0.36, 0.93])
- * - Full-height organic stem rising from bottom with rose thorns
+ * - True 3D side & top isometric perspective (axis = [0.06, -0.38, 0.92])
+ * - Full-height organic stem rising from bottom of screen with rose thorns
  * - Natural rose leaves with serrated profiles and veins filling the vertical space
- * - Calyx with 5 green lanceolate sepals peeling back as the rose blooms
+ * - Calyx with green lanceolate sepals supporting the base
  * - 4 layered whorls of 3D curved petals:
  *   - Outer guard petals reflexing downward over the chalice rim
  *   - Mid chalice petals flaring outward
  *   - Inner swirl petals
  *   - Central spiral bud heart (Fibonacci spiral core)
- * - Deep velvet crimson palette: dark crevice shadows, rich ruby body, luminous rose-pink rim highlights
+ * - 100% Pure Velvet Crimson Palette (deep ruby shadows, radiant crimson body, luminous rose-pink rim highlights)
+ * - Smooth continuous edges with ZERO row-shearing cuts or tearing when swaying
  * - Once fully bloomed, the rose STAYS BLOOMED (never shrinks or closes into a ball)
  * - Living organic breeze sway & gentle breathing
  * - Ambient golden stardust fireflies
- * - Fully responsive: fills screen seamlessly on desktop and mobile without letterboxing
+ * - Fully responsive full-screen canvas on desktop and mobile
  */
 
 export class AsciiRose {
@@ -41,7 +42,6 @@ export class AsciiRose {
 
     // Font and cell configuration
     const FONT_SIZE = 10;
-    const FPS = 30;
     const FONT = `bold ${FONT_SIZE}px Menlo, Consolas, "DejaVu Sans Mono", "Courier New", monospace`;
     const probe = document.createElement("canvas").getContext("2d");
     probe.font = FONT;
@@ -55,15 +55,17 @@ export class AsciiRose {
     const BUCKETS = [" ", ".'`", ":;,-~", "!/\\|()[]{}<>?+=", "tfjrxnuvczil", "XYUJCLQ0OZmwqpdbkhao", "#MW&8%B", "@$"];
     const LEVELS = [0.05, 0.12, 0.25, 0.40, 0.55, 0.70, 0.85];
 
-    // Colors
-    const BUD = [0.38, 0.58, 0.24];
-    const STEM_COL = [0.20, 0.52, 0.20];
+    // Foliage & Stem Colors
+    const STEM_COL = [0.18, 0.52, 0.20];
+    const LEAF_DARK = [0.12, 0.42, 0.16];
+    const LEAF_LITE = [0.38, 0.78, 0.32];
+    const SEPAL_COL = [0.22, 0.56, 0.24];
 
-    // Rich Velvet Crimson Palette
+    // 100% PURE VELVET CRIMSON PALETTE (No green on petals!)
     const PALETTE = {
-      deep:  [0.62, 0.02, 0.12], // Deep wine shadow
-      mid:   [0.96, 0.08, 0.22], // Brilliant ruby crimson
-      tip:   [1.00, 0.40, 0.54], // Glowing scarlet highlight
+      deep:  [0.65, 0.02, 0.12], // Deep wine shadow
+      mid:   [0.98, 0.08, 0.22], // Brilliant ruby crimson
+      tip:   [1.00, 0.38, 0.52], // Glowing scarlet highlight
       sheen: [1.00, 0.85, 0.90], // Specular rim curl sheen
     };
 
@@ -75,7 +77,6 @@ export class AsciiRose {
       const t = clamp((x - a) / (b - a));
       return t * t * (3 - 2 * t);
     };
-    const lerp = (a, b, k) => a + (b - a) * k;
     const lerp3 = (a, b, k) => {
       k = clamp(k);
       return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
@@ -95,7 +96,7 @@ export class AsciiRose {
     };
     const lin = (n) => Array.from({ length: n }, (_, k) => k / (n - 1));
 
-    // Simple pseudo-random hash
+    // Pseudo-random hash
     const rnd = (i) => {
       let x = Math.sin(i * 127.1 + 311.7) * 43758.5453123;
       return x - Math.floor(x);
@@ -115,7 +116,6 @@ export class AsciiRose {
     // Buffer state
     const lum = new Float32Array(N);
     const rgb = new Float32Array(N * 3);
-    const rowShift = new Float64Array(ROWS);
 
     function set(i, l, r, g, b) {
       if (i < 0 || i >= N) return;
@@ -128,7 +128,7 @@ export class AsciiRose {
       }
     }
 
-    // Curve brush for drawing smooth 3D petals, stems, and leaves
+    // Curve brush for drawing smooth 3D petals, stems, and leaves without edge cuts
     const SEG = new Float64Array(16 * 9);
     function brush(pts, hws, av, fn) {
       const n = pts.length, ns = n - 1;
@@ -147,7 +147,7 @@ export class AsciiRose {
       const pad = maxw + 1;
       const r0 = Math.max(0, Math.floor(ymin - pad)), r1 = Math.min(ROWS, Math.ceil(ymax + pad));
       for (let r = r0; r < r1; r++) {
-        const py = Yr[r], sh = rowShift[r];
+        const py = Yr[r];
         let rx0 = 1e9, rx1 = -1e9;
         for (let s = 0, o = 0; s < ns; s++, o += 9) {
           const pw = Math.max(SEG[o + 5], SEG[o + 5] + SEG[o + 6]) + 1;
@@ -157,10 +157,10 @@ export class AsciiRose {
           rx0 = Math.min(rx0, Math.min(xa, xb) - pw); rx1 = Math.max(rx1, Math.max(xa, xb) + pw);
         }
         if (rx0 > rx1) continue;
-        const c0 = Math.max(0, Math.floor((rx0 + sh) * 2 + COLS / 2));
-        const c1 = Math.min(COLS, Math.ceil((rx1 + sh) * 2 + COLS / 2));
+        const c0 = Math.max(0, Math.floor(rx0 * 2 + COLS / 2));
+        const c1 = Math.min(COLS, Math.ceil(rx1 * 2 + COLS / 2));
         for (let c = c0; c < c1; c++) {
-          const px = Xc[c] - sh;
+          const px = Xc[c];
           let best = 1, bestS = -1, bestU = 0;
           for (let s = 0, o = 0; s < ns; s++, o += 9) {
             const qx = px - SEG[o], qy = py - SEG[o + 1], dx = SEG[o + 2], dy = SEG[o + 3];
@@ -198,7 +198,7 @@ export class AsciiRose {
     }
 
     // Curved Bézier spine
-    function curve(p0, p1, bulge, grow, n = 12) {
+    function curve(p0, p1, bulge, grow, n = 14) {
       const dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy) + 1e-9;
       const nx = -dy / L, ny = dx / L, out = [];
       for (let k = 0; k < n; k++) {
@@ -208,14 +208,14 @@ export class AsciiRose {
       return out;
     }
 
-    // Rose Leaf rendering with central rib and serrations
+    // Rose Leaf rendering with central rib and natural serration
     function drawRoseLeaf(lx, ly, stemAng, side, len, wid, unfurl, t, seed) {
       if (unfurl <= 0.05) return;
       const n = 11;
       const l = len * (0.35 + 0.65 * unfurl);
       const w = wid * (0.4 + 0.6 * unfurl);
-      const ang = stemAng + side * rad(32 + rnd(seed) * 18);
-      const sway = rad(3.5) * wave(t, 2.5, seed);
+      const ang = stemAng + side * rad(32 + rnd(seed) * 16);
+      const sway = rad(3.2) * wave(t, 2.4, seed);
       const pts = [], hws = [];
       let x = lx, y = ly;
 
@@ -224,7 +224,7 @@ export class AsciiRose {
         pts.push([x, y]);
         const profile = Math.pow(Math.sin(Math.PI * Math.pow(a, 0.55)), 0.85);
         hws.push(Math.max(0.08, w * profile));
-        const droop = rad(24) * a * a;
+        const droop = rad(22) * a * a;
         const curAng = ang + sway * a + side * droop;
         x += Math.cos(curAng) * l / (n - 1);
         y += Math.sin(curAng) * l / (n - 1);
@@ -232,9 +232,9 @@ export class AsciiRose {
 
       brush(pts, hws, lin(n), (i, a, q) => {
         const aq = Math.abs(q);
-        const rib = aq < 0.12 ? 1.3 : 1.0;
-        const light = 0.42 + 0.45 * (1 - aq * 0.5) * rib;
-        const col = lerp3([0.12, 0.44, 0.16], [0.36, 0.76, 0.30], a * 0.8);
+        const rib = aq < 0.12 ? 1.35 : 1.0;
+        const light = 0.45 + 0.45 * (1 - aq * 0.45) * rib;
+        const col = lerp3(LEAF_DARK, LEAF_LITE, a * 0.7 + (1 - aq) * 0.3);
         set(i, clamp(light), col[0], col[1], col[2]);
       });
     }
@@ -247,10 +247,32 @@ export class AsciiRose {
       const u3 = norm(cross(a3, ref));
       const v3 = cross(a3, u3);
       const c3 = [center[0], center[1], 0];
-      const spin = rad(20) + rad(3) * wave(t, 2.8, seed);
+      const spin = rad(20) + rad(2.5) * wave(t, 2.6, seed);
       const petals = [];
 
-      // 4 Botanical Whorl Layers
+      // 1. Draw 5 Green Calyx Sepals UNDER the flower head
+      for (let k = 0; k < 5; k++) {
+        const phi = spin + (k + 0.25) * (TAU / 5);
+        const radial = add(mul(u3, Math.cos(phi)), mul(v3, Math.sin(phi)));
+        const sepalTh = rad(16 + 65 * openness);
+        const sepalCurl = rad(38 * openness);
+        const sepalL = size * 0.52;
+        const sepalW = size * 0.11;
+        const ptsSepal = [], hwsSepal = [];
+        let p = add(c3, mul(radial, size * 0.02));
+        for (let i = 0; i < 7; i++) {
+          const a = i / 6;
+          ptsSepal.push([p[0], p[1]]);
+          hwsSepal.push(Math.max(0.06, sepalW * (1 - a)));
+          const th = sepalTh + sepalCurl * a;
+          p = add(p, mul(add(mul(a3, Math.cos(th)), mul(radial, Math.sin(th))), sepalL / 6));
+        }
+        brush(ptsSepal, hwsSepal, lin(7), (i) => {
+          set(i, 0.58, SEPAL_COL[0], SEPAL_COL[1], SEPAL_COL[2]);
+        });
+      }
+
+      // 2. 4 Botanical Whorl Layers of Pure Velvet Crimson Petals
       // Layer 0: 5 outer cupped guard petals with reflexing lips
       // Layer 1: 5 mid reflexing whorl petals
       // Layer 2: 4 inner swirl petals
@@ -317,34 +339,11 @@ export class AsciiRose {
           if (aq < 0.1) l *= 0.75; // Central petal crease shadow
           if (aq > 0.82) l *= 1.25; // Luminous petal rim edge curl!
 
+          // PURE 100% CRIMSON RED VELVET GRADIENT
           let col = lerp3(PALETTE.deep, PALETTE.mid, a * 2.2);
-          col = lerp3(col, PALETTE.tip, (a - 0.5) * 1.8 + (aq - 0.65) * 1.5);
+          col = lerp3(col, PALETTE.tip, (a - 0.45) * 1.9 + (aq - 0.6) * 1.4);
           col = lerp3(col, PALETTE.sheen, (light - 0.68) * 2.2 * (1 - aq));
-          col = lerp3(BUD, col, (1 - openness) * clamp(0.3 + a * 1.5));
           set(i, clamp(l), col[0], col[1], col[2]);
-        });
-      }
-
-      // 5 Botanical Lanceolate Sepals at the rose calyx base
-      for (let k = 0; k < 5; k++) {
-        const phi = spin + (k + 0.25) * (TAU / 5);
-        const radial = add(mul(u3, Math.cos(phi)), mul(v3, Math.sin(phi)));
-        // Sepals peel back and curl downward along stem as flower blooms
-        const sepalTh = rad(18 + 75 * openness);
-        const sepalCurl = rad(40 * openness);
-        const sepalL = size * 0.55;
-        const sepalW = size * 0.12;
-        const ptsSepal = [], hwsSepal = [];
-        let p = add(c3, mul(radial, size * 0.02));
-        for (let i = 0; i < 7; i++) {
-          const a = i / 6;
-          ptsSepal.push([p[0], p[1]]);
-          hwsSepal.push(sepalW * (1 - a)); // Tapers to sharp point
-          const th = sepalTh + sepalCurl * a;
-          p = add(p, mul(add(mul(a3, Math.cos(th)), mul(radial, Math.sin(th))), sepalL / 6));
-        }
-        brush(ptsSepal, hwsSepal, lin(7), (i) => {
-          set(i, 0.65, 0.20, 0.52, 0.20);
         });
       }
     }
@@ -390,15 +389,15 @@ export class AsciiRose {
       const t = Math.max(0, (now - this.t0) / 1000);
 
       // Bloom timing:
-      // 0s - 1.0s: Stem rises and leaves emerge
-      // 1.0s - 3.8s: Rose bud unfurls into full crimson bloom
-      // >= 3.8s: STAYS BLOOMED (never closes into a ball), sways and breathes in the breeze
-      const stemGrow = smoothstep(0.0, 1.6, t);
-      const bloom = smoothstep(1.0, 3.8, t);
+      // 0s - 1.2s: Stem rises from bottom and leaves unfurl
+      // 1.2s - 3.8s: Rose bud unfurls smoothly into full crimson bloom
+      // >= 3.8s: STAYS BLOOMED (never shrinks or closes into a ball), sways and breathes in the breeze
+      const stemGrow = smoothstep(0.0, 1.8, t);
+      const bloom = smoothstep(1.2, 3.8, t);
 
-      // Living organic breath and wind sway
-      const breath = bloom >= 1.0 ? 1.0 + 0.02 * Math.sin(t * 1.6) : 1.0;
-      const windSway = Math.sin(t * 0.85) * 4.5;
+      // Living organic breath and gentle 3D wind sway (smooth 3D curves, NO row-shearing cuts)
+      const breath = bloom >= 1.0 ? 1.0 + 0.02 * Math.sin(t * 1.5) : 1.0;
+      const windSway = Math.sin(t * 0.82) * 3.8;
 
       // Trigger completion callback when full bloom is achieved
       if (t >= 3.8 && !this.hasTriggeredBloom) {
@@ -410,32 +409,26 @@ export class AsciiRose {
       lum.fill(0);
       rgb.fill(0);
 
-      // Compute row shift for wind breeze
-      for (let r = 0; r < ROWS; r++) {
-        const h = clamp((ROWS + 10 - Yr[r]) / 140);
-        rowShift[r] = Math.sin(t * 0.9 - 0.4 * h) * 1.6 * (1 - h * 0.3);
-      }
-
-      // 1. Draw Stem rising from bottom of screen [0, 168] up to flower head [0, 56]
-      const stemHeadY = 56;
+      // 1. Draw Stem rising from bottom of screen [0, 168] up to flower head [0, 50]
+      const stemHeadY = 50;
       const stemBaseY = 168;
-      const stemHeadX = windSway * 0.6;
-      const stemPath = curve([0, stemBaseY], [stemHeadX, stemHeadY], 3.8 * Math.sin(t * 0.75), stemGrow, 16);
-      tube(stemPath, 2.2, 1.4, STEM_COL);
+      const stemHeadX = windSway * 0.5;
+      const stemPath = curve([0, stemBaseY], [stemHeadX, stemHeadY], 3.8 * Math.sin(t * 0.72), stemGrow, 16);
+      tube(stemPath, 2.2, 1.3, STEM_COL);
 
-      // 2. Draw Rose Leaves along the stem
+      // 2. Draw Rose Leaves branching out along the stem on both sides
       if (stemGrow > 0.25) {
         // Lower left leaf
         drawRoseLeaf(-0.8, 126, rad(90), -1, 26, 6.2, smoothstep(0.3, 1.8, t), t, 11);
         // Lower right leaf
         drawRoseLeaf(1.2, 108, rad(90), 1, 28, 6.5, smoothstep(0.5, 2.0, t), t, 19);
         // Mid left leaf
-        drawRoseLeaf(-0.6, 88, rad(90), -1, 24, 5.8, smoothstep(0.8, 2.3, t), t, 27);
+        drawRoseLeaf(-0.6, 86, rad(90), -1, 24, 5.8, smoothstep(0.8, 2.3, t), t, 27);
         // Upper right leaf
-        drawRoseLeaf(0.8, 74, rad(90), 1, 20, 5.0, smoothstep(1.0, 2.6, t), t, 33);
+        drawRoseLeaf(0.8, 72, rad(90), 1, 20, 5.0, smoothstep(1.0, 2.6, t), t, 33);
       }
 
-      // 3. Draw The Grand 3D Blooming Rose
+      // 3. Draw The Grand 3D Blooming Crimson Rose
       // Tilted at authentic 3D three-quarter side & top angle
       const roseSize = 31 * breath * (0.35 + 0.65 * stemGrow);
       const roseAxis = [0.06 + windSway * 0.015, -0.38, 0.92];
