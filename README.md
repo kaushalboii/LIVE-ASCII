@@ -2,16 +2,16 @@
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-kaushalboii.github.io-ff2a55?style=for-the-badge&logo=github)](https://kaushalboii.github.io/LIVE-ASCII/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-38bdf8?style=for-the-badge)](LICENSE)
-[![Pure Vanilla JS](https://img.shields.io/badge/Dependencies-0_Vanilla_JS-2e8540?style=for-the-badge)](#)
+[![Vanilla JS](https://img.shields.io/badge/Dependencies-0_Vanilla_JS-2e8540?style=for-the-badge)](#)
 
 > **“In a world of fleeting moments, you are my constant. My feelings for you will never end.”**  
-> A romantic interactive storytelling web experience built with pure vanilla HTML5, Canvas 2D, and mathematical 3D colored ASCII art.
+> A romantic interactive storytelling web experience built with pure vanilla HTML5, Canvas 2D, and mathematical 24-bit true-color glowing ASCII art.
 
 ---
 
 ## 📸 Preview
 
-![LIVE ASCII — The Knight & The Letter](assets/preview.jpg)
+![LIVE ASCII — The Knight & The Letter](https://raw.githubusercontent.com/kaushalboii/LIVE-ASCII/main/assets/preview-banner.jpg)
 
 ---
 
@@ -30,16 +30,22 @@
 
 ---
 
-### 🌹 Act III — The Grand 3D Blooming Rose
-- **Authentic 3D Perspective**: Tilted at a classical three-quarter side and top angle ($\approx 36^\circ$ elevation), showcasing the complete chalice depth and botanical contour.
-- **Full-Height Sinuous Stem**: Rises organically from the bottom floor with natural rose thorns and 4 serrated leaves branching out on both sides to fill the vertical space.
-- **4 Botanical Petal Whorls**:
-  - **Outer Guard Petals**: Reflex and curl downward over the chalice rim.
-  - **Mid Chalice Petals**: Flared wide in full blossom.
-  - **Inner Swirl Petals**: Enclosing the depths.
-  - **The Spiral Rose Heart**: Tight Fibonacci golden spiral bud core.
-- **Velvet Crimson Palette**: Rich burgundy crevice shadows (`#4a0512`), vibrant ruby crimson body (`#c81438`), and luminous rose-pink curled rim highlights (`#ff7a98`).
-- **Living Organic Motion**: The rose smoothly blossoms over $3.8\text{s}$ and **remains in full bloom**, gently swaying in the breeze with subtle organic breathing and ambient stardust motes (no row-shearing or edge cuts).
+### 🌹 Act III — The Grand Living Crimson Rose
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/kaushalboii/LIVE-ASCII/main/assets/rose-botanical.png" alt="Grand Living Crimson Rose" width="280">
+</p>
+
+- **100% Pure Velvet Crimson Red Petals**: Rich burgundy crevice shadows (`#38030c`), radiant ruby crimson body (`#d81033`), glowing scarlet highlights (`#ff3d68`), and luminous petal rim reflections.
+- **Natural Botanical Anatomy**:
+  - Full-height sinuous green stem rising from the bottom floor with hooked thorns.
+  - Serrated emerald rose leaves with visible leaf veins and morning dew droplets.
+  - Layered chalice whorls with a spiral Fibonacci bud core.
+- **Living Organic Motion**:
+  - Blossoms smoothly from a tight bud into full bloom over $3.8\text{s}$.
+  - **Stays in Full Bloom Forever**: Once bloomed, it never closes or shrinks into a ball.
+  - Multi-harmonic breeze sway ($\pm 4\text{px}$) with gentle living breath ($\pm 1.5\%$) and ambient golden stardust fireflies.
+  - Zero row-shearing tearing or edge cuts.
 
 ---
 
@@ -58,7 +64,7 @@
 
 ## 🛠️ Tech Stack & Architecture
 
-- **Rendering**: Pure HTML5 Canvas 2D + 32-bit pixel buffer rasterization (`ImageData`).
+- **Rendering**: Pure HTML5 Canvas 2D + 32-bit pixel buffer rasterization (`ImageData`) & glowing monospace glyphs.
 - **No Frameworks**: 100% Vanilla ES6 Modules, 0 KB external runtime dependencies.
 - **Audio Engine**: Synthesized romantic Web Audio API harmonic chimes.
 - **Styling**: Modular CSS3 with hardware-accelerated backdrop blur and pure pitch black background (`#000000`).
