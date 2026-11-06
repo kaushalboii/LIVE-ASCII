@@ -33,19 +33,21 @@
 ### 🌹 Act III — The Grand Living Crimson Rose
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kaushalboii/LIVE-ASCII/main/assets/rose-botanical.png" alt="Grand Living Crimson Rose" width="280">
+  <img src="https://raw.githubusercontent.com/kaushalboii/LIVE-ASCII/main/assets/rose-ascii.png" alt="Grand Living ASCII Crimson Rose" width="280">
 </p>
 
+- **High-Definition Glowing ASCII Art**: Thousands of vibrant characters rendered in real time at 60 FPS using 24-bit true-color rasterization.
 - **100% Pure Velvet Crimson Red Petals**: Rich burgundy crevice shadows (`#38030c`), radiant ruby crimson body (`#d81033`), glowing scarlet highlights (`#ff3d68`), and luminous petal rim reflections.
 - **Natural Botanical Anatomy**:
-  - Full-height sinuous green stem rising from the bottom floor with hooked thorns.
-  - Serrated emerald rose leaves with visible leaf veins and morning dew droplets.
+  - Full-height sinuous green stem rising from the floor with hooked thorns.
+  - Serrated emerald rose leaves with veins and foliage textures.
   - Layered chalice whorls with a spiral Fibonacci bud core.
 - **Living Organic Motion**:
-  - Blossoms smoothly from a tight bud into full bloom over $3.8\text{s}$.
+  - Blossoms smoothly from a tight bud into full bloom over $3.6\text{s}$.
   - **Stays in Full Bloom Forever**: Once bloomed, it never closes or shrinks into a ball.
-  - Multi-harmonic breeze sway ($\pm 4\text{px}$) with gentle living breath ($\pm 1.5\%$) and ambient golden stardust fireflies.
+  - Multi-harmonic breeze sway anchored at the stem root with gentle living breath ($\pm 1.5\%$) and ambient golden stardust fireflies.
   - Zero row-shearing tearing or edge cuts.
+- **Universal Responsive Design**: Dynamically scales across mobile, tablet, and widescreen desktop displays with uniform character density.
 
 ---
 
