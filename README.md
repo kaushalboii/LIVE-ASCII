@@ -1,6 +1,7 @@
 # 🌹 LIVE ASCII — For You
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-kaushalboii.github.io-ff2a55?style=for-the-badge&logo=github)](https://kaushalboii.github.io/LIVE-ASCII/)
+[![Android Widget APK](https://img.shields.io/badge/Android_APK-Download_Widget-10b981?style=for-the-badge&logo=android)](https://github.com/kaushalboii/LIVE-ASCII/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-38bdf8?style=for-the-badge)](LICENSE)
 [![Vanilla JS](https://img.shields.io/badge/Dependencies-0_Vanilla_JS-2e8540?style=for-the-badge)](#)
 
@@ -77,6 +78,19 @@
 
 Experience it live at:  
 👉 **[https://kaushalboii.github.io/LIVE-ASCII/](https://kaushalboii.github.io/LIVE-ASCII/)**
+
+---
+
+## 📱 Android Interactive Widget App
+
+You can run LIVE ASCII directly on your Android phone as an **interactive floating widget** or add it to your home screen!
+
+- **Interactive Floating Widget**: A floating, draggable card running the live 60 FPS ASCII Canvas directly on top of your home screen. Touch the letter to burn it open, watch the rose bloom, and tap the quote buttons anytime!
+- **Minimize to Badge**: Tap the minimize button `—` to tuck the widget into a cute floating `🌹` badge on the edge of your screen; tap it again to expand.
+- **Home Screen Widget**: Also includes a native Android home screen app widget that you can pin between your launcher icons.
+- **Automated Cloud Build**: Built automatically via GitHub Actions as a downloadable APK.
+
+👉 **[Download the Android APK from GitHub Releases](https://github.com/kaushalboii/LIVE-ASCII/releases)** or check the [GitHub Actions artifacts](https://github.com/kaushalboii/LIVE-ASCII/actions).
 
 ---
 

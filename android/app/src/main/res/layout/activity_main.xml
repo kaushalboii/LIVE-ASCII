@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="serif"
+            android:text="🌹 LIVE ASCII"
+            android:textColor="#FFFFFF"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="serif"
+            android:fontStyle="italic"
+            android:text="“In a world of fleeting moments, you are my constant.”"
+            android:textColor="#FF9EBB"
+            android:textSize="13sp" />
+
+        <!-- Live Preview Frame -->
+        <FrameLayout
+            android:layout_width="260dp"
+            android:layout_height="360dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/widget_bg"
+            android:padding="6dp">
+
+            <WebView
+                android:id="@+id/preview_webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000000" />
+        </FrameLayout>
+
+        <!-- Action Button -->
+        <Button
+            android:id="@+id/btn_launch_widget"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#FF2A55"
+            android:fontFamily="sans-serif-medium"
+            android:text="Launch Floating Rose Widget"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/btn_stop_widget"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#260C16"
+            android:fontFamily="sans-serif"
+            android:text="Close Floating Widget"
+            android:textAllCaps="false"
+            android:textColor="#D88FA2"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:text="💡 Tip: You can also long-press your home screen, tap 'Widgets', and add the 'LIVE ASCII Rose' widget to your desktop!"
+            android:textColor="#88FFFFFF"
+            android:textSize="11sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="monospace"
+            android:text="> with love : KAUSHAL MARAN"
+            android:textColor="#66FF80A0"
+            android:textSize="10sp" />
+    </LinearLayout>
+</ScrollView>

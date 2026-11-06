@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">LIVE ASCII Rose</string>
+    <string name="widget_name">ASCII Rose Widget</string>
+    <string name="widget_desc">A living, interactive glowing ASCII Rose card</string>
+    <string name="btn_start_widget">Launch Floating Rose Widget</string>
+    <string name="btn_stop_widget">Close Floating Widget</string>
+    <string name="permission_title">Screen Overlay Permission</string>
+    <string name="permission_desc">To display the live interactive ASCII Rose floating widget on your home screen, please tap below to enable "Display over other apps".</string>
+    <string name="grant_permission">Enable Overlay Permission</string>
+</resources>

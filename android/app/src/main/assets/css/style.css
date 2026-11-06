@@ -1,0 +1,565 @@
+/* ==========================================================================
+   Pure Seamless ASCII Love Experience — ASCII Knight & 3D Bouquet
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  overflow: hidden;
+}
+
+body.pure-black {
+  background-color: #000000;
+  background-image: radial-gradient(circle at 50% 50%, rgba(150, 16, 45, 0.08) 0%, rgba(20, 5, 10, 0.02) 55%, #000000 85%);
+  color: #f7eded;
+  font-family: 'Cormorant Garamond', serif;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ambient Drifting ASCII Petals & Stardust Canvas (Fills Desktop Flanks) */
+#ambient-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  display: block;
+}
+
+/* Screen Scenes */
+.stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.scene {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+}
+
+.scene.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Screen 1: Canvas for ASCII Knight with Red Cloak */
+#knight-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: block;
+  object-fit: cover;
+  object-position: center bottom;
+  background: #000000;
+  z-index: 3;
+}
+
+/* Foreground Sealed Envelope in Front of Knight */
+#envelope-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: block;
+  object-fit: cover;
+  object-position: center bottom;
+  background: transparent;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.whisper-hint {
+  position: fixed;
+  bottom: 24px;
+  left: 23%;
+  transform: translateX(-50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-style: italic;
+  letter-spacing: 2.8px;
+  color: #ff9ebb;
+  text-shadow: 0 0 16px rgba(255, 20, 80, 0.55);
+  cursor: pointer;
+  z-index: 10;
+  animation: breathing 3s infinite ease-in-out;
+  transition: color 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+}
+
+.whisper-hint:hover {
+  color: #ffffff;
+  transform: translateX(-50%) scale(1.04);
+}
+
+@keyframes breathing {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.95; }
+}
+
+/* Screen 2: Canvases for Multilingual Heart & Rose */
+.heart-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  object-fit: contain;
+  background: transparent;
+  pointer-events: none;
+  z-index: 7;
+  transform: scale(1) translate(0, 0);
+  transform-origin: 50% 50%;
+  transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+}
+
+.heart-canvas.docked-corner {
+  transform: translate(calc(-50vw + 68px), calc(-50vh + 60px)) scale(0.14);
+  opacity: 0.95;
+  filter: drop-shadow(0 0 16px rgba(255, 30, 80, 0.55));
+}
+
+.seamless-rose-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.seamless-rose-wrapper canvas {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  object-fit: contain;
+  display: block;
+  background: transparent;
+}
+
+/* ==========================================================================
+   Minimal & Compact Floating Love Note (Small & Elegant)
+   ========================================================================== */
+.minimal-note {
+  position: fixed;
+  bottom: 106px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px) scale(0.94);
+  max-width: 360px;
+  width: 88%;
+  margin: 0 auto;
+  padding: 12px 20px;
+  background: rgba(12, 6, 12, 0.72);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  border: 1px solid rgba(255, 170, 195, 0.22);
+  border-radius: 16px;
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.92),
+    0 0 24px rgba(230, 20, 60, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.14);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 20;
+}
+
+.minimal-note.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+  pointer-events: auto;
+  animation: noteFloat 4.6s infinite ease-in-out alternate 1.1s;
+}
+
+.note-pill {
+  font-family: 'Inter', sans-serif;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  color: #ff9ebb;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.note-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #fff2f5;
+  letter-spacing: 0.3px;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
+}
+
+.note-subtext {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 300;
+  color: #d89aa8;
+  letter-spacing: 0.4px;
+  margin-bottom: 10px;
+  opacity: 0.85;
+}
+
+.note-replay {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 8px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: #d68f9e;
+  cursor: pointer;
+  padding: 4px 14px;
+  transition: all 0.3s ease;
+}
+
+.note-replay:hover {
+  background: rgba(255, 20, 80, 0.22);
+  border-color: rgba(255, 100, 140, 0.45);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Pure ASCII Key Design Signature of Kaushal Maran (Centered at Bottom)
+   ========================================================================== */
+.corner-signature {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%) translateY(12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  z-index: 25;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.corner-signature.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.ascii-sig-box {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  background: rgba(14, 5, 11, 0.84);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 140, 175, 0.28);
+  border-radius: 8px;
+  padding: 5px 12px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85), 0 0 16px rgba(255, 30, 80, 0.14);
+}
+
+.ascii-sig-head {
+  font-size: 9px;
+  color: #ff9ebb;
+  letter-spacing: 1.2px;
+  opacity: 0.95;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 2px;
+}
+
+.sig-prompt {
+  color: #ff3366;
+  font-weight: 700;
+}
+
+.sig-label {
+  color: #ffb3c6;
+  text-transform: lowercase;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+}
+
+.sig-colon {
+  color: #ff6690;
+}
+
+.ascii-key-cluster {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 5px;
+  justify-content: center;
+  margin: 2px 0 3px 0;
+}
+
+.ascii-key-word {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.ascii-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 15px;
+  height: 18px;
+  padding: 0 2.5px;
+  background: linear-gradient(180deg, rgba(42, 16, 26, 0.95) 0%, rgba(18, 6, 12, 0.98) 100%);
+  border: 1px solid rgba(255, 140, 175, 0.45);
+  border-bottom: 2px solid rgba(255, 50, 95, 0.75);
+  border-radius: 3px;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 8px rgba(255, 40, 85, 0.24);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff0f4;
+  text-shadow: 0 0 8px rgba(255, 60, 100, 0.85);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.ascii-key:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 180, 210, 0.7);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8), 0 0 12px rgba(255, 60, 110, 0.45);
+}
+
+.ascii-sig-bytes {
+  font-size: 8px;
+  color: #d88fa2;
+  letter-spacing: 0.8px;
+  margin-top: 2px;
+  opacity: 0.9;
+  text-align: center;
+}
+
+.ascii-code {
+  color: #ff6690;
+  font-weight: 600;
+}
+
+.sig-star {
+  color: #ffb3c6;
+  margin-left: 2px;
+}
+
+.ascii-sig-rule {
+  display: none;
+}
+
+@keyframes noteFloat {
+  0% { transform: translateX(-50%) translateY(0) scale(1); }
+  100% { transform: translateX(-50%) translateY(-6px) scale(1.008); }
+}
+
+/* ==========================================================================
+   Full Responsive Layout (Mobile, Tablet & Portrait Mode)
+   ========================================================================== */
+@media (max-width: 960px), (orientation: portrait), (max-aspect-ratio: 1/1) {
+  /* Screen 1: Knight & Letter */
+  .whisper-hint {
+    left: 50%;
+    bottom: 18px;
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+
+  /* Screen 2: Docked Mini Heart Logo */
+  .heart-canvas.docked-corner {
+    transform: translate(calc(-50vw + 38px), calc(-50vh + 38px)) scale(0.09);
+  }
+
+  /* Screen 2: Living 3D Rose spans the full screen */
+  .seamless-rose-wrapper {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    transform: none;
+    top: 0;
+    left: 0;
+    max-width: none;
+    max-height: none;
+  }
+
+  /* Screen 2: Minimal Love Note Card (Spaced comfortably in mid-lower zone) */
+  .minimal-note {
+    position: fixed;
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%) translateY(16px) scale(0.96);
+    max-width: 340px;
+    width: 90%;
+    padding: 10px 16px;
+    border-radius: 14px;
+    z-index: 20;
+  }
+
+  .minimal-note.visible {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  .note-pill {
+    font-size: 7px;
+    letter-spacing: 1.6px;
+    margin-bottom: 5px;
+  }
+
+  .note-quote {
+    font-size: 13.5px;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+
+  .note-subtext {
+    font-size: 10.5px;
+    margin-bottom: 6px;
+  }
+
+  .note-replay {
+    font-size: 7.5px;
+    padding: 3px 12px;
+  }
+
+  /* Screen 2: ASCII Key Signature (Centered at Bottom with clear clearance) */
+  .corner-signature {
+    bottom: 14px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) translateY(4px);
+    align-items: center;
+    z-index: 25;
+  }
+
+  .corner-signature.visible {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .ascii-sig-box {
+    padding: 4px 10px;
+    text-align: center;
+    border-radius: 6px;
+    background: rgba(12, 4, 9, 0.88);
+    border: 1px solid rgba(255, 140, 175, 0.24);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.85), 0 0 10px rgba(255, 30, 80, 0.10);
+  }
+
+  .ascii-sig-head {
+    justify-content: center;
+    font-size: 8px;
+    letter-spacing: 1.0px;
+    margin-bottom: 2px;
+  }
+
+  .sig-prompt {
+    font-size: 8px;
+  }
+
+  .sig-label {
+    font-size: 8px;
+    letter-spacing: 1.2px;
+  }
+
+  .ascii-key-cluster {
+    justify-content: center;
+    gap: 3.5px;
+    margin: 1px 0 2px 0;
+  }
+
+  .ascii-key-word {
+    gap: 1.2px;
+  }
+
+  .ascii-key {
+    min-width: 12px;
+    height: 15px;
+    font-size: 9px;
+    padding: 0 1.5px;
+    border-radius: 2px;
+    border-width: 0.8px;
+    border-bottom-width: 1.5px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  }
+
+  .ascii-sig-bytes {
+    font-size: 7.5px;
+    letter-spacing: 0.6px;
+    margin-top: 1px;
+    opacity: 0.85;
+  }
+
+  .ascii-code {
+    font-size: 7.5px;
+  }
+
+  .sig-star {
+    font-size: 7.5px;
+  }
+
+  .ascii-sig-rule {
+    display: none;
+  }
+}
+
+/* Extra breakpoint for compact heights (laptops with short viewports, compact mobile) */
+@media (max-height: 720px) {
+  .minimal-note {
+    bottom: 82px;
+    padding: 7px 14px;
+  }
+  
+  .corner-signature {
+    bottom: 8px;
+  }
+
+  .note-quote {
+    font-size: 12px;
+    line-height: 1.35;
+    margin-bottom: 3px;
+  }
+
+  .note-subtext {
+    font-size: 9.5px;
+    margin-bottom: 4px;
+  }
+}

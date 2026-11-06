@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>for you 🌹</title>
+  <meta name="description" content="A gentle flower for someone special.">
+  <meta name="theme-color" content="#000000">
+
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Homemade+Apple&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="pure-black">
+
+  <!-- Ambient Botanical ASCII Petals & Stardust Field (Fills Desktop Flanks) -->
+  <canvas id="ambient-canvas"></canvas>
+
+  <main class="stage">
+
+    <!-- Screen 1: The ASCII Knight with Sealed Envelope Letter in Bottom-Left -->
+    <div id="knight-screen" class="scene active">
+      <!-- Background: ASCII Knight positioned on right side with waving red cloak -->
+      <canvas id="knight-canvas" aria-label="ASCII Knight with waving red cloak"></canvas>
+      
+      <!-- Foreground: Sealed ASCII Letter For You positioned in bottom-left -->
+      <canvas id="envelope-canvas" aria-label="ASCII Sealed Letter For You"></canvas>
+
+      <p class="whisper-hint" id="knight-hint">touch the letter to open</p>
+    </div>
+
+    <!-- Screen 2: Multilingual Love Heart & Realistic Blooming Rose -->
+    <div id="flower-screen" class="scene">
+      <!-- 1. The Multilingual Love Heart (Builds in center, then glides to top-left corner as logo badge) -->
+      <canvas id="heart-canvas" class="heart-canvas" aria-label="Multilingual Love Heart"></canvas>
+
+      <!-- 2. The Living Colored ASCII Rose (Blooms organically, moves with the breeze) -->
+      <div class="seamless-rose-wrapper">
+        <canvas id="rose-canvas" width="720" height="720" aria-label="Blooming ASCII Rose"></canvas>
+      </div>
+
+      <!-- 3. Minimal, Compact Love Note (Small & Elegant) -->
+      <div id="cloud-note" class="minimal-note">
+        <div class="note-pill">✦ &nbsp;FOREVER WRITTEN IN STARLIGHT &nbsp;✦</div>
+        
+        <p class="note-quote">
+          &ldquo;In a world of fleeting moments, you are my constant.<br>
+          My feelings for you will never end.&rdquo;
+        </p>
+
+        <p class="note-subtext">
+          Every quiet thought finds its way to you &mdash; today, tomorrow, always.
+        </p>
+
+        <button id="btn-replay" class="note-replay" title="Experience again">hold again ↺</button>
+      </div>
+
+      <!-- 4. Pure ASCII Key Design Signature of Kaushal Maran -->
+      <div id="corner-signature" class="corner-signature" aria-label="ASCII Key Signature of Kaushal Maran">
+        <div class="ascii-sig-box">
+          <div class="ascii-sig-head">
+            <span class="sig-prompt">&gt;</span> <span class="sig-label">with love</span> <span class="sig-colon">:</span>
+          </div>
+          <div class="ascii-key-cluster" aria-label="Kaushal Maran">
+            <div class="ascii-key-word">
+              <span class="ascii-key">K</span>
+              <span class="ascii-key">A</span>
+              <span class="ascii-key">U</span>
+              <span class="ascii-key">S</span>
+              <span class="ascii-key">H</span>
+              <span class="ascii-key">A</span>
+              <span class="ascii-key">L</span>
+            </div>
+            <div class="ascii-key-word">
+              <span class="ascii-key">M</span>
+              <span class="ascii-key">A</span>
+              <span class="ascii-key">R</span>
+              <span class="ascii-key">A</span>
+              <span class="ascii-key">N</span>
+            </div>
+          </div>
+          <div class="ascii-sig-bytes">
+            <span class="ascii-code">ASCII_KEY:</span> 77 69 74 68 &bull; 6C 6F 76 65 <span class="sig-star">✦</span>
+          </div>
+          <div class="ascii-sig-rule">+-------------------------------+</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
