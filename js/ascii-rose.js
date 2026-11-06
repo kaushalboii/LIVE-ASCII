@@ -2,21 +2,19 @@
  * Grand Living ASCII Blooming Rose Engine
  * 
  * Features:
- * - True Botanical Time-Lapse Growth & Blossoming Animation:
- *   1. Phase 1 (0.0s - 1.8s): Stem climbs organically from the bottom floor to the calyx neck
- *   2. Phase 2 (0.8s - 2.5s): Rose leaves branch out from stem nodes and unfurl with serrated edges
- *   3. Phase 3 (1.6s - 2.6s): Calyx receptacle forms, green sepals part, and tight crimson bud emerges
- *   4. Phase 4 (1.8s - 4.2s): Petals blossom and unfurl outward from the base up into full majestic crown
- *   5. Phase 5 (>= 4.2s): STAYS IN FULL BLOOM FOREVER, swaying gently in the breeze
- * - Separated pristine layers:
- *   - assets/rose-stem.png: 100% green foliage, thorny stem, and leaves (ZERO premature petals)
- *   - assets/rose-head.png: 100% velvet crimson flower head with spiral center and upper calyx
- * - 100% Pure Velvet Crimson Red Petals (deep ruby shadows, radiant crimson body, luminous coral highlights)
- * - Rich emerald foliage: textured stem with thorns and serrated rose leaves with veins
- * - Living organic breeze sway anchored at the stem root & subtle breathing physics
- * - High-definition true-color 24-bit glowing colored ASCII rasterization at 60 FPS
- * - Zero edge cuts, zero horizontal shearing, seamless smooth silhouettes
- * - Fully responsive: dynamically adapts to desktop, tablet, and mobile portrait layouts
+ * - Single Unified Botanical Rose Artwork:
+ *   Stem, thorns, leaves, calyx, and velvet crimson petals are all part of ONE unified piece.
+ *   Never split into separate layers or detached images.
+ * - Organic Time-Lapse Growth & Blossoming (0.0s -> 3.6s):
+ *   The unified rose emerges from the bottom floor, stem climbing upward with arched botanical crest,
+ *   leaves unfurling as the stem passes them, calyx parting, and crimson petals blossoming open.
+ * - Full Bloom Living State (>= 3.6s):
+ *   STAYS IN FULL BLOOM FOREVER, swaying gently in the night breeze with living breath physics.
+ *   ZERO CLIPPING: 100% seamless, smooth, organic silhouettes without edge cuts.
+ * - 100% Pure Velvet Crimson Red Petals (deep ruby shadows, radiant crimson body, luminous coral highlights).
+ * - Rich emerald foliage: textured stem with thorns and serrated rose leaves with veins.
+ * - High-definition true-color 24-bit glowing colored ASCII rasterization at 60 FPS.
+ * - Fully responsive: dynamically adapts to desktop, tablet, and mobile portrait layouts.
  */
 
 export class AsciiRose {
@@ -31,26 +29,19 @@ export class AsciiRose {
     this.t0 = performance.now();
     this.lastDraw = -1e9;
 
-    // Load Separated High-Resolution Botanical Rose Assets
-    this.stemImg = new Image();
-    this.stemLoaded = false;
-    this.stemImg.onload = () => {
-      this.stemLoaded = true;
+    // Load Single High-Resolution Unified Botanical Rose Asset
+    this.roseImg = new Image();
+    this.roseImgLoaded = false;
+    this.roseImg.onload = () => {
+      this.roseImgLoaded = true;
     };
-    this.stemImg.src = 'assets/rose-stem.png';
-
-    this.headImg = new Image();
-    this.headLoaded = false;
-    this.headImg.onload = () => {
-      this.headLoaded = true;
-    };
-    this.headImg.src = 'assets/rose-head.png';
+    this.roseImg.src = 'assets/rose-botanical.png';
 
     // Offscreen simulation canvas for botanical physics & growth
     this.simCanvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
     this.simCtx = this.simCanvas ? this.simCanvas.getContext('2d', { willReadFrequently: true }) : null;
 
-    // High-resolution staging canvas for drawing the rose layers
+    // High-resolution staging canvas for drawing the unified rose
     this.stageCanvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
     this.stageCtx = this.stageCanvas ? this.stageCanvas.getContext('2d') : null;
 
@@ -107,26 +98,21 @@ export class AsciiRose {
     const isMobile = (window.innerWidth || 800) < 768;
 
     // ====================================================================
-    // Botanical Growth & Blossoming Physics (From Bottom to Top):
-    // 1. Stem climbs from bottom: 0.0s -> 1.8s
-    // 2. Leaves sprout and unfurl: 0.8s -> 2.5s
-    // 3. Calyx & bud emerge: 1.6s -> 2.6s
-    // 4. Petals blossom & unfurl from base upward: 1.8s -> 4.2s
-    // 5. Full bloom living state: >= 4.2s (STAYS BLOOMED FOREVER)
+    // Botanical Growth & Blossoming Physics (Single Unified Rose):
+    // Builds smoothly from bottom floor to full crown over 3.6s
+    // Stays bloomed forever for t >= 3.6s
     // ====================================================================
-    const stemGrow = this.smoothstep(0.0, 1.8, t);
-    const budEmerge = this.smoothstep(1.6, 2.6, t);
-    const blossom = this.smoothstep(1.8, 4.2, t);
+    const grow = this.smoothstep(0.0, 3.6, t);
+    const isFullBloom = t >= 3.6;
 
-    // Living organic breathing (subtle 1.5% pulsation)
-    const isFullBloom = t >= 4.2;
+    // Living organic breathing (subtle 1.5% pulsation once in full bloom)
     const breath = isFullBloom ? 1.0 + 0.015 * Math.sin(t * 1.8) : 1.0;
 
     // Multi-harmonic breeze sway anchored at stem root
-    const windSway = (Math.sin(t * 0.85) * 3.6 + Math.sin(t * 1.6) * 1.2) * stemGrow;
+    const windSway = (Math.sin(t * 0.85) * 3.6 + Math.sin(t * 1.6) * 1.2) * grow;
 
     // Trigger completion callback when full blossom is achieved
-    if (t >= 4.2 && !this.hasTriggeredBloom) {
+    if (t >= 3.6 && !this.hasTriggeredBloom) {
       this.hasTriggeredBloom = true;
       if (this.onBloomComplete) this.onBloomComplete();
     }
@@ -137,75 +123,44 @@ export class AsciiRose {
 
     this.simCtx.clearRect(0, 0, cols, rows);
 
-    // Check if separated layers are ready
-    const assetsReady = this.stemLoaded && this.headLoaded && this.stemImg.width > 0 && this.headImg.width > 0;
-
-    if (assetsReady && this.stageCanvas && this.stageCtx) {
+    // Draw on high-resolution stage first if asset is loaded
+    if (this.roseImgLoaded && this.roseImg.width > 0 && this.stageCanvas && this.stageCtx) {
       const sW = this.stageCanvas.width;
       const sH = this.stageCanvas.height;
       this.stageCtx.clearRect(0, 0, sW, sH);
 
-      // Calyx attachment anchor where flower head meets stem
-      const anchorX = 370;
-      const anchorY = 395;
-
-      // ------------------------------------------------------------------
-      // A. Stem & Leaves Growth (Climbs from floor Y=1019 up to calyx Y=385)
-      // Contains ZERO flower head petals, ensuring no premature red pixels!
-      // ------------------------------------------------------------------
       const stemBaseY = 1019;
-      const stemTipY = 385;
-      const currentStemY = stemBaseY - (stemBaseY - stemTipY) * stemGrow;
+      const flowerTopY = 62;
+      const currentCutY = stemBaseY - (stemBaseY - flowerTopY) * grow;
 
-      this.stageCtx.save();
-      this.stageCtx.beginPath();
-      this.stageCtx.rect(0, currentStemY, sW, sH - currentStemY);
-      this.stageCtx.clip();
-      this.stageCtx.drawImage(this.stemImg, 0, 0, sW, sH);
-      this.stageCtx.restore();
+      if (!isFullBloom) {
+        // Organic upward growth & blossoming:
+        // Stem and central bud lead upward with a natural botanical arch
+        const arch = 24;
+        this.stageCtx.save();
+        this.stageCtx.beginPath();
+        this.stageCtx.moveTo(0, sH);
+        this.stageCtx.lineTo(0, currentCutY + arch * 0.5);
+        this.stageCtx.quadraticCurveTo(sW * 0.5, currentCutY - arch, sW, currentCutY + arch * 0.5);
+        this.stageCtx.lineTo(sW, sH);
+        this.stageCtx.closePath();
+        this.stageCtx.clip();
 
-      // ------------------------------------------------------------------
-      // B. Rose Blossoming: Unified flower head blooms from calyx upward
-      // ------------------------------------------------------------------
-      if (budEmerge > 0.01) {
-        if (!isFullBloom) {
-          // Blossoming animation: bud expands upward & outward from calyx
-          const scaleX = (0.20 + 0.80 * Math.pow(blossom, 0.85)) * breath;
-          const scaleY = (0.18 + 0.82 * Math.pow(blossom, 0.70)) * breath;
-          const flowerRot = (1 - blossom) * -0.05 * Math.sin(blossom * Math.PI);
+        this.stageCtx.drawImage(this.roseImg, 0, 0, sW, sH);
+        this.stageCtx.restore();
+      } else {
+        // Full Bloom Living State (t >= 3.6s):
+        // ZERO CLIPPING! 100% complete unified rose with living breath
+        this.stageCtx.save();
+        this.stageCtx.translate(sW * 0.5, sH * 0.38);
+        this.stageCtx.scale(breath, breath);
+        this.stageCtx.translate(-sW * 0.5, -sH * 0.38);
 
-          // Organic upward reveal from calyx base (Y=395) up to petal tips (Y=62)
-          const topPetalY = 62;
-          const currentRevealY = anchorY - (anchorY - topPetalY) * (0.25 + 0.75 * Math.pow(blossom, 0.65));
-
-          this.stageCtx.save();
-          this.stageCtx.beginPath();
-          this.stageCtx.rect(0, currentRevealY, sW, sH - currentRevealY);
-          this.stageCtx.clip();
-
-          this.stageCtx.translate(anchorX, anchorY);
-          this.stageCtx.rotate(flowerRot);
-          this.stageCtx.scale(scaleX, scaleY);
-          this.stageCtx.translate(-anchorX, -anchorY);
-
-          this.stageCtx.drawImage(this.headImg, 0, 0, sW, sH);
-          this.stageCtx.restore();
-        } else {
-          // Living Full Bloom Forever (t >= 4.2s):
-          // ZERO CLIPPING! Pristine natural embroidered edges with living breath
-          this.stageCtx.save();
-          this.stageCtx.translate(anchorX, anchorY);
-          this.stageCtx.scale(breath, breath);
-          this.stageCtx.translate(-anchorX, -anchorY);
-
-          this.stageCtx.drawImage(this.headImg, 0, 0, sW, sH);
-          this.stageCtx.restore();
-        }
+        this.stageCtx.drawImage(this.roseImg, 0, 0, sW, sH);
+        this.stageCtx.restore();
       }
 
-      // ------------------------------------------------------------------
-      // C. Draw Stage onto Simulation Grid with Natural Proportions & Root Sway
-      // ------------------------------------------------------------------
+      // Draw Unified Stage onto Simulation Grid with Natural Proportions & Root Sway
       const roseRatio = (sH / sW) * this.charAspect;
       const maxH = rows * (isMobile ? 0.72 : 0.86);
       const maxW = cols * (isMobile ? 0.92 : 0.60);
@@ -227,8 +182,8 @@ export class AsciiRose {
       this.simCtx.drawImage(this.stageCanvas, drawX, drawY, drawW, drawH);
       this.simCtx.restore();
     } else {
-      // Procedural fallback while images load
-      this.drawProceduralGrowthFallback(this.simCtx, cols, rows, cols * 0.5, rows * 0.96, cols * 0.5, rows * 0.38, stemGrow, blossom, windSway);
+      // Procedural fallback while image loads
+      this.drawProceduralGrowthFallback(this.simCtx, cols, rows, cols * 0.5, rows * 0.96, cols * 0.5, rows * 0.38, grow, windSway);
     }
 
     // ====================================================================
@@ -252,7 +207,7 @@ export class AsciiRose {
 
     // Ambient floating golden stardust fireflies
     const stardustTime = Math.floor(t * 3.0);
-    const pv = 0.55 * this.smoothstep(2.5, 4.2, t);
+    const pv = 0.55 * this.smoothstep(2.0, 3.6, t);
 
     for (let r = 0; r < rows; r++) {
       const posY = r * cellH + cellH * 0.5;
@@ -319,9 +274,9 @@ export class AsciiRose {
     }
   }
 
-  // Fallback procedural growth while image assets load
-  drawProceduralGrowthFallback(ctx, cols, rows, stemBaseX, stemBaseY, neckX, neckY, stemGrow, blossom, windSway) {
-    const curTopY = stemBaseY - (stemBaseY - neckY) * stemGrow;
+  // Fallback procedural growth while image asset loads
+  drawProceduralGrowthFallback(ctx, cols, rows, stemBaseX, stemBaseY, neckX, neckY, grow, windSway) {
+    const curTopY = stemBaseY - (stemBaseY - neckY) * grow;
 
     // Stem
     ctx.strokeStyle = '#287824';
@@ -332,8 +287,9 @@ export class AsciiRose {
     ctx.stroke();
 
     // Blossoming rose head
-    if (stemGrow > 0.85) {
-      const r = (cols * 0.22) * (0.30 + 0.70 * blossom);
+    if (grow > 0.70) {
+      const bloomT = (grow - 0.70) / 0.30;
+      const r = (cols * 0.22) * (0.30 + 0.70 * bloomT);
       ctx.fillStyle = '#b80d28';
       ctx.beginPath();
       ctx.arc(neckX, neckY - 8, r, 0, Math.PI * 2);
